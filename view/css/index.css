@@ -1,0 +1,25 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style: none;
+  text-decoration: none;
+  scroll-behavior: smooth;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.cabecera,
+.formulario,
+.pie {
+  padding: 10px;
+  flex: 1;
+}
+
+.cabecera {
+  padding: 0;
+}
