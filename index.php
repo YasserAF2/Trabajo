@@ -7,11 +7,12 @@ require_once 'model/Carnet.php';
 require_once 'model/Cuartillo.php';
 require_once 'model/Horario.php';
 require_once 'model/Turno.php';
-require_once 'controller/trace.php';
+require_once 'model/Trace.php';
+require_once 'controller/controlador.php';
 
 if (!isset($_GET["action"])) $_GET["action"] = constant("DEFAULT_ACTION");
 
-$controlador = new trace();
+$controlador = new controlador();
 
 $dataToView = array();
 $dataToView  = $controlador->{$_GET["action"]}();
