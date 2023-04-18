@@ -26,17 +26,21 @@ class controlador
             if ($this->trace->validarUsuario($usuario, $password)) {
                 session_start();
                 $_SESSION['usuario'] = $usuario;
-                $this->view = 'logeado';
-                header('Location: index.php?action=' . $this->view);
-                exit;
             } else {
                 $_SESSION['mensaje_error'] = 'Usuario o contraseña incorrectos';
-                $this->view = 'inicio';
             }
+        }
+
+        // Comprobamos si el usuario está logeado
+        if (isset($_SESSION['usuario'])) {
+            // Si el usuario está logeado, cambiamos la vista a "logeado.php"
+            $this->view = 'logeado';
         } else {
+            // Si el usuario no está logeado, mostramos la vista de inicio de sesión
             $this->view = 'inicio';
         }
     }
+
 
     public function logout()
     {
