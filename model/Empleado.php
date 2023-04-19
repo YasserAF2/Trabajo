@@ -134,4 +134,84 @@ class Empleado
     {
         return $this->NOMBRE;
     }
+
+    public function getFechAntigu()
+    {
+        return $this->FECH_ANTIGU;
+    }
+
+    public function getFechAltaEmpr()
+    {
+        return $this->FECH_ALTA_EMPR;
+    }
+
+    public function getTipoContrato()
+    {
+        return $this->TIPO_CONTRATO;
+    }
+
+    public function getDireccion()
+    {
+        return $this->DIRECCION;
+    }
+
+    public function getCiudad()
+    {
+        return $this->CIUDAD;
+    }
+
+    public function getProvincia()
+    {
+        return $this->PROVINCIA;
+    }
+
+    public function getCp()
+    {
+        return $this->CP;
+    }
+
+    public function getTelfCasa()
+    {
+        return $this->TELF_CASA;
+    }
+
+    public function getTlfMovil()
+    {
+        return $this->TLF_MOVIL;
+    }
+
+    public function getFamiliaNum()
+    {
+        return $this->FAMILIA_NUM;
+    }
+
+    public function getDocumentoFamNum()
+    {
+        return $this->DOCUMENTO_FAM_NUM;
+    }
+
+    public function getUltmoReconocMed()
+    {
+        return $this->ULTMO_RECONOC_MED;
+    }
+
+    public function getObservaciones()
+    {
+        return $this->OBSERVACIONES;
+    }
+
+    public function getNivelFormativo()
+    {
+        return $this->NIVEL_FORMATIVO;
+    }
+
+    public function getPais()
+    {
+        return $this->PAIS;
+    }
+
+    public function getCodZkt()
+    {
+        return $this->COD_ZKT;
+    }
 }
