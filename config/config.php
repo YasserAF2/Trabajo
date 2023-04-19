@@ -7,4 +7,4 @@ define("DB_USER", "root");
 define("DB_PASS", "");
 
 /* Default options */
-define("DEFAULT_ACTION", "login");
+define("DEFAULT_ACTION", "logeado");

@@ -1,6 +1,3 @@
-<?php
-session_start();
-?>
 ejemplo@correo.com
 <div class="formulario">
     <form action="index.php?action=logeado" method="post" class="needs-validation d-flex flex-column justify-content-center align-items-center" novalidate>
