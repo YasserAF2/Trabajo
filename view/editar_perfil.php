@@ -10,25 +10,32 @@ $empleado = $trace->getEmpleadoCorreo($correo);
         <label for="nombre">Nombre:</label>
         <input type="text" name="nombre" id="nombre" value="<?php echo $empleado->getNOMBRE(); ?>" required><br><br>
         <label for="apellido1">Apellido 1:</label>
-        <input type="text" name="apellido1" id="apellido1" required><br><br>
+        <input type="text" name="apellido1" id="apellido1" value="<?php echo $empleado->getAPELLIDO_1(); ?>"
+            required><br><br>
         <label for="apellido2">Apellido 2:</label>
-        <input type="text" name="apellido2" id="apellido2" required><br><br>
+        <input type="text" name="apellido2" id="apellido2" value="<?php echo $empleado->getAPELLIDO_2(); ?>"
+            required><br><br>
         <label for="email">Email:</label>
-        <input type="email" name="email" id="email" required><br><br>
+        <input type="email" name="email" id="email" value="<?php echo $empleado->getEMAIL(); ?>" required><br><br>
         <label for="direccion">Dirección:</label>
-        <input type="text" name="direccion" id="direccion" required><br><br>
+        <input type="text" name="direccion" id="direccion" value="<?php echo $empleado->getDireccion(); ?>"
+            required><br><br>
         <label for="ciudad">Ciudad:</label>
-        <input type="text" name="ciudad" id="ciudad" required><br><br>
+        <input type="text" name="ciudad" id="ciudad" value="<?php echo $empleado->getCiudad(); ?>" required><br><br>
         <label for="provincia">Provincia:</label>
-        <input type="text" name="provincia" id="provincia" required><br><br>
+        <input type="text" name="provincia" id="provincia" value="<?php echo $empleado->getProvincia(); ?>"
+            required><br><br>
         <label for="codigo_postal">Código Postal:</label>
-        <input type="text" name="codigo_postal" id="codigo_postal" required><br><br>
+        <input type="text" name="codigo_postal" id="codigo_postal" value="<?php echo $empleado->getCp(); ?>"
+            required><br><br>
         <label for="telefono_fijo">Teléfono Fijo:</label>
-        <input type="text" name="telefono_fijo" id="telefono_fijo" required><br><br>
+        <input type="text" name="telefono_fijo" id="telefono_fijo" value="<?php echo $empleado->getTelfCasa(); ?>"
+            required><br><br>
         <label for="telefono_movil">Teléfono Móvil:</label>
-        <input type="text" name="telefono_movil" id="telefono_movil" required><br><br>
+        <input type="text" name="telefono_movil" id="telefono_movil" value="<?php echo $empleado->getTlfMovil(); ?>"
+            required><br><br>
         <label for="pais">País:</label>
-        <input type="text" name="pais" id="pais" required><br><br>
+        <input type="text" name="pais" id="pais" value="<?php echo $empleado->getPais(); ?>" required><br><br>
         <input type="submit" value="Guardar cambios">
     </form>
 </main>
