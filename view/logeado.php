@@ -8,6 +8,11 @@ $empleado = $trace->getEmpleadoCorreo($correo);
 <main>
     <div>
         <div>
+            <form method="post" action="index.php?action=editar_perfil">
+                <input type="hidden" name="correo" value="<?php echo $correo; ?>">
+                <input type="submit" value="Editar perfil">
+            </form>
+
             <h2>Perfil del Empleado</h2>
             <ul>
                 <li><strong>Nombre:</strong> <?php echo $empleado->getNOMBRE(); ?></li>

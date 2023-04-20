@@ -73,4 +73,11 @@ class controlador
         setcookie('usuario', '', time() - 3600, '/');
         header('Location: index.php');
     }
+
+    public function editar_perfil()
+    {
+        $correo = $_POST['correo'];
+        $this->view = "editar_perfil";
+        return $correo;
+    }
 }
