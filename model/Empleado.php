@@ -28,6 +28,7 @@ class Empleado
     private $NIVEL_FORMATIVO;
     private $PAIS;
     private $COD_ZKT;
+    private $conection;
 
     public function __construct(
         $DNI,

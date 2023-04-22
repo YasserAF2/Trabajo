@@ -67,4 +67,28 @@ class Trace
             return $empleado;
         }
     }
+    public function guardar_empleado($DNI, $NOMBRE, $APELLIDO_1, $APELLIDO_2, $EMAIL, $DIRECCION, $CIUDAD, $PROVINCIA, $CP, $TELF_CASA, $TLF_MOVIL, $PAIS)
+    {
+        $this->getConection();
+        $sql = "UPDATE empleado SET 
+        NOMBRE = '$NOMBRE', 
+        APELLIDO_1 = '$APELLIDO_1', 
+        APELLIDO_2 = '$APELLIDO_2', 
+        EMAIL = '$EMAIL', 
+        DIRECCION = '$DIRECCION', 
+        CIUDAD = '$CIUDAD', 
+        PROVINCIA = '$PROVINCIA', 
+        CP = '$CP', 
+        TELF_CASA = '$TELF_CASA', 
+        TLF_MOVIL = '$TLF_MOVIL', 
+        PAIS = '$PAIS' 
+        WHERE DNI = '$DNI';
+        ";
+
+        if ($this->conection->query($sql) === TRUE) {
+            echo "Record updated successfully";
+        } else {
+            echo "Error: " . $sql . "<br>" . $this->conection->error;
+        }
+    }
 }

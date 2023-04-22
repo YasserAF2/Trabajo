@@ -80,4 +80,27 @@ class controlador
         $this->view = "editar_perfil";
         return $correo;
     }
+
+
+    public function guardar_perfil()
+    {
+        session_start();
+
+        $DNI = $_POST['dni'];
+        $NOMBRE = $_POST['nombre'];
+        $APELLIDO_1 = $_POST['apellido1'];
+        $APELLIDO_2 = $_POST['apellido2'];
+        $EMAIL = $_POST['email'];
+        $DIRECCION = $_POST['direccion'];
+        $CIUDAD = $_POST['ciudad'];
+        $PROVINCIA = $_POST['provincia'];
+        $CP = $_POST['cp'];
+        $TELF_CASA = $_POST['telefono_fijo'];
+        $TLF_MOVIL = $_POST['telefono_movil'];
+        $PAIS = $_POST['pais'];
+
+        $trace = new Trace();
+        $trace->guardar_empleado($DNI, $NOMBRE, $APELLIDO_1, $APELLIDO_2, $EMAIL, $DIRECCION, $CIUDAD, $PROVINCIA, $CP, $TELF_CASA, $TLF_MOVIL, $PAIS);
+        $this->view = 'logeado';
+    }
 }
