@@ -1,4 +1,4 @@
-<footer class="pie bg-dark text-white py-3">
+<footer class="pie bg-dark text-white py-1">
     <div class="container">
         <div class="row">
             <div class="col-md-6">
