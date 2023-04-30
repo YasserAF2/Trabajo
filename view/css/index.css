@@ -7,10 +7,19 @@
   scroll-behavior: smooth;
 }
 
-.formulario,
+html,
+body {
+  height: 100%;
+}
+
+.formulario {
+  min-height: calc(100vh - 350px);
+}
+
 .pie {
-  padding: 10px;
-  flex: 1;
+  height: 226px;
+  position: relative;
+  bottom: 0;
 }
 
 /* cabecera */
@@ -55,19 +64,6 @@
   position: relative;
   z-index: 2;
 }
-
-/* Estilos para la diagonal */
-/* .cabecera > div:last-child::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 50%;
-  background-color: #007bff;
-  transform-origin: bottom left;
-  transform: skew(-30deg);
-  z-index: 1;
-} */
 
 /* vista inicio con el login */
 /* Añadimos un poco de espacio entre los elementos del formulario */
@@ -141,6 +137,7 @@ li {
 
 /* Estilo para el botón de editar perfil */
 input[type='submit'] {
+  margin-top: 10px;
   background-color: #007bff;
   border: none;
   color: #fff;
@@ -155,7 +152,8 @@ input[type='submit']:hover {
 
 /* Estilo para el botón de cerrar sesión */
 input[type='submit'][value='Cerrar sesión'] {
-  margin-top: 1.5rem;
+  margin-top: 10px;
+  margin-bottom: 10px;
   background-color: #dc3545;
 }
 
