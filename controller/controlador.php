@@ -106,4 +106,16 @@ class controlador
         $trace->guardar_empleado($DNI, $NOMBRE, $APELLIDO_1, $APELLIDO_2, $EMAIL, $DIRECCION, $CIUDAD, $PROVINCIA, $CP, $TELF_CASA, $TLF_MOVIL, $PAIS);
         $this->view = 'logeado';
     }
+
+    public function lista_usuarios()
+    {
+        $this->view = 'lista_usuarios';
+        $empleados = $this->trace->getEmpleados();
+
+        $datos = array(
+            'empleados' => $empleados,
+        );
+
+        return $datos;
+    }
 }

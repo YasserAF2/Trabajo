@@ -179,3 +179,30 @@ ul li strong {
 ul li:not(:last-child) {
   margin-bottom: 0.75rem;
 }
+
+/* tabla usuarios vista lista_usuarios.php */
+.tabla-empleados {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla-empleados th,
+.tabla-empleados td {
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+
+.tabla-empleados th {
+  background-color: #f2f2f2;
+  color: #333;
+  font-weight: bold;
+  text-align: left;
+}
+
+.tabla-empleados tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.tabla-empleados tr:hover {
+  background-color: #ddd;
+}
