@@ -12,25 +12,17 @@ class controlador
         $this->trace = new Trace();
     }
 
-    public function login()
-    {
-        if (isset($_COOKIE['usuario'])) {
-            session_start();
-            $sessionId = preg_replace('/[^a-zA-Z0-9,-]/', '', $_COOKIE['usuario']);
-            session_id($sessionId);
-            header('Location: index.php?action=logeado');
-        } else {
-            // Mostrar el formulario de inicio de sesión
-            $this->view = 'inicio';
-        }
-    }
-
-
     public function logeado()
     {
+        session_start();
+
         // Si el usuario ya ha iniciado sesión, mostrar la página de inicio de sesión
         if (isset($_SESSION['usuario'])) {
-            $this->view = 'logeado';
+            if ($_SESSION['tipo'] == 'Administrador') {
+                $this->view = 'admin';
+            } else {
+                $this->view = 'logeado';
+            }
             return;
         }
 
@@ -41,29 +33,40 @@ class controlador
             $recordar = isset($_POST['recordar']) ? $_POST['recordar'] : '';
 
             if ($this->trace->validarUsuario($usuario, $password)) {
-                session_start();
                 $_SESSION['usuario'] = $usuario;
+                $_SESSION['tipo'] = $this->trace->empleadoTipo($usuario);
 
                 if ($recordar == 'on') {
                     $expire = time() + (60 * 60 * 24 * 30);
                     setcookie('usuario', $usuario, $expire, '/');
                 }
-                $this->view = 'logeado';
+
+                if ($_SESSION['tipo'] == 'Administrador') {
+                    $this->view = 'admin';
+                } else {
+                    $this->view = 'logeado';
+                }
             } else {
                 $_SESSION['mensaje_error'] = 'Usuario o contraseña incorrectos';
                 $this->view = 'inicio';
             }
         } else {
             // Mostrar el formulario de inicio de sesión
-            session_start();
             if (isset($_COOKIE['usuario'])) {
                 $_SESSION['usuario'] = $_COOKIE['usuario'];
-                $this->view = 'logeado';
+                $_SESSION['tipo'] = $this->trace->empleadoTipo($_COOKIE['usuario']);
+
+                if ($_SESSION['tipo'] == 'Administrador') {
+                    $this->view = 'admin';
+                } else {
+                    $this->view = 'logeado';
+                }
             } else {
                 $this->view = 'inicio';
             }
         }
     }
+
 
 
     public function logout()

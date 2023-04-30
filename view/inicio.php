@@ -1,7 +1,6 @@
 ejemplo@correo.com
 <div class="formulario">
-    <form action="index.php?action=logeado" method="post"
-        class="needs-validation d-flex flex-column justify-content-center align-items-center" novalidate>
+    <form action="index.php?action=logeado" method="post" class="needs-validation d-flex flex-column justify-content-center align-items-center" novalidate>
         <div class="form-group w-50">
             <label for="usuario">Usuario:</label>
             <input type="text" class="form-control" id="usuario" name="usuario" required>

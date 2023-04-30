@@ -91,4 +91,18 @@ class Trace
             echo "Error: " . $sql . "<br>" . $this->conection->error;
         }
     }
+
+    public function empleadoTipo($correo)
+    {
+        $this->getConection();
+        $sql = "SELECT TIPO_EMPLEADO FROM empleado WHERE EMAIL = '$correo'";
+        $resultado = $this->conection->query($sql);
+
+        if ($resultado->num_rows == 1) {
+            $tipoEmpleado = $resultado->fetch_assoc()['TIPO_EMPLEADO'];
+            return $tipoEmpleado;
+        } else {
+            return false;
+        }
+    }
 }
