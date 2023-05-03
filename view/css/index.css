@@ -123,6 +123,12 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #f5f5f5;
+  padding: 20px;
+  margin: 0 auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  max-width: 1200px;
 }
 
 ul {
@@ -182,6 +188,8 @@ ul li:not(:last-child) {
 
 /* tabla usuarios vista lista_usuarios.php */
 .tabla-empleados {
+  border-top: 10px;
+  border-bottom: 50px;
   width: 100%;
   border-collapse: collapse;
 }
@@ -205,4 +213,152 @@ ul li:not(:last-child) {
 
 .tabla-empleados tr:hover {
   background-color: #ddd;
+}
+
+.empleados-lista {
+  margin-bottom: 50px;
+}
+
+/* botón volver atrás */
+.volver {
+  background-color: #4caf50; /* Color de fondo */
+  border: none; /* Sin borde */
+  color: black; /* Color del texto */
+  font-weight: bold;
+  padding: 15px 32px; /* Espaciado interno */
+  text-align: center; /* Alineación del texto */
+  text-decoration: none; /* Sin subrayado */
+  font-size: 16px; /* Tamaño de fuente */
+  margin: 20px 0; /* Margen superior e inferior */
+  cursor: pointer; /* Cursor al pasar por encima */
+  float: right; /* Alineación a la derecha */
+}
+
+/* botón editar */
+.editar {
+  background-color: #007bff; /* Color de fondo */
+  border: none; /* Sin borde */
+  color: black; /* Color del texto */
+  font-weight: bold;
+  padding: 15px 32px; /* Espaciado interno */
+  text-align: center; /* Alineación del texto */
+  text-decoration: none; /* Sin subrayado */
+  font-size: 16px; /* Tamaño de fuente */
+  margin: 20px 0; /* Margen superior e inferior */
+  cursor: pointer; /* Cursor al pasar por encima */
+  float: right; /* Alineación a la derecha */
+}
+
+/* editar perfil de usuario */
+
+form {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+form label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+form input[type='text'],
+form input[type='email'] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+form input[type='submit'] {
+  background-color: #0066cc;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+form input[type='submit']:hover {
+  background-color: #0055aa;
+}
+
+.volver-editar-perfil {
+  background-color: #0066cc;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.volver-editar-perfil:hover {
+  background-color: #0055aa;
+}
+
+/* botón de cerrar sesión del perfil */
+.cerrar {
+  background-color: #f5f5f5;
+  padding: initial;
+  border-radius: 0px;
+  box-shadow: none;
+}
+
+/* botón de editar del pefil */
+.editar {
+  background-color: #f5f5f5;
+  padding: initial;
+  border-radius: 0px;
+  box-shadow: none;
+}
+
+/* lista del perfil */
+.opciones {
+  background-color: #f2f2f2;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  width: 200px;
+  float: left;
+}
+
+.opciones ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.opciones li {
+  margin: 0;
+  padding: 0;
+}
+
+.opciones li a {
+  display: block;
+  padding: 10px;
+  color: #333;
+  text-decoration: none;
+  border-bottom: 1px solid #ccc;
+  transition: background-color 0.3s;
+}
+
+.opciones li a:hover {
+  background-color: #ccc;
+}
+
+.opciones li:last-child a {
+  border-bottom: none;
+}
+
+/* perfil grid para separar la lista de los datos */
+.perfil-usuario {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }

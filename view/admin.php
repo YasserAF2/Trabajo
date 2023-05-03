@@ -7,14 +7,9 @@
                 <li><a href="index.php?action=ver_productos" class="opciones-lista">Gestionar Productos</a></li>
             </ul>
         </div>
-        <div class="main">
-            <div id="vista-dinamica">
-                <h2>Zona de administración:</h2>
-            </div>
-            <a href="#top" class="btn-volver-arriba">Volver arriba</a>
-        </div>
+        <a href="#top" class="btn-volver-arriba">Volver arriba</a>
     </div>
-    <form method="post" action="index.php?action=logout">
+    <form class="cerrar" method="post" action="index.php?action=logout">
         <input type="submit" value="Cerrar sesión">
     </form>
 </main>

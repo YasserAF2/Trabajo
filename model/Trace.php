@@ -85,12 +85,6 @@ class Trace
         PAIS = '$PAIS' 
         WHERE DNI = '$DNI';
         ";
-
-        if ($this->conection->query($sql) === TRUE) {
-            echo "Record updated successfully";
-        } else {
-            echo "Error: " . $sql . "<br>" . $this->conection->error;
-        }
     }
 
     public function empleadoTipo($correo)
@@ -134,7 +128,7 @@ class Trace
                     $row['PROVINCIA'],
                     $row['CP'],
                     $row['TELF_CASA'],
-                    $row['TELF_MOVIL'],
+                    $row['TLF_MOVIL'],
                     $row['FAMILIA_NUM'],
                     $row['DOCUMENTO_FAM_NUM'],
                     $row['ULTMO_RECONOC_MED'],
