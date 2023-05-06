@@ -10,8 +10,8 @@ $empleado = $trace->getEmpleadoCorreo($correo);
     <div class="perfil-usuario">
         <nav class="opciones">
             <ul>
-                <li><a href="#">Opción 1</a></li>
-                <li><a href="#">Opción 2</a></li>
+                <li><a href="#">Cambios vacaciones</a></li>
+                <li><a href="#">Pedir días libres</a></li>
                 <li><a href="#">Opción 3</a></li>
             </ul>
         </nav>

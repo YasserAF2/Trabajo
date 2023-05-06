@@ -265,7 +265,8 @@ form label {
 }
 
 form input[type='text'],
-form input[type='email'] {
+form input[type='email'],
+form input[type='number'] {
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
@@ -317,6 +318,17 @@ form input[type='submit']:hover {
   padding: initial;
   border-radius: 0px;
   box-shadow: none;
+}
+
+.editar2 {
+  padding: initial;
+  border-radius: 0px;
+  box-shadow: none;
+  width: 0px;
+}
+
+.tabla-empleados tr:hover > td > form.editar2 {
+  background-color: #ddd;
 }
 
 /* lista del perfil */
