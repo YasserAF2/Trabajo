@@ -1,9 +1,9 @@
 <?php
 echo $_SESSION['usuario'];
 ?>
-<main>
-    <div class="cont">
-        <div class="list">
+<main class="admin">
+    <div>
+        <div>
             <h2>Lista de opciones:</h2>
             <ul>
                 <li><a href="index.php?action=lista_usuarios" class="opciones-lista">Lista de Usuarios</a></li>

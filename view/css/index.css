@@ -374,3 +374,8 @@ form input[type='submit']:hover {
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
+
+/* principal admin */
+main.admin {
+  height: calc(100vh - 318px);
+}
