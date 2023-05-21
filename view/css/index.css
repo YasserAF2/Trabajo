@@ -16,6 +16,11 @@ body {
   min-height: calc(100vh - 350px);
 }
 
+.logo {
+  height: 100px;
+  width: auto;
+}
+
 .pie {
   height: 226px;
   position: relative;

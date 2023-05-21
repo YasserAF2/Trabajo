@@ -24,7 +24,9 @@
 
 <div class="cabecera d-flex">
     <div class="bg-primary w-50">TRACE</div>
-    <div class="bg-success w-50"><img src="view/template/imagenes/logo1.jpg" alt="LOGOTIPO TRACE"></div>
+    <div class="bg-success w-50">
+        <img class="logo" src="view/template/imagenes/trace4.png" alt="LOGOTIPO TRACE">
+    </div>
 </div>
 
 <body>

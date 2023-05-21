@@ -157,4 +157,14 @@ class controlador
 
         return $datos;
     }
+
+    public function solicitud_licencias()
+    {
+        $this->view = 'licencias';
+    }
+
+    public function solicitud_asuntos()
+    {
+        $this->view = 'asuntos';
+    }
 }
