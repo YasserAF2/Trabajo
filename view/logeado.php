@@ -12,7 +12,7 @@ $empleado = $trace->getEmpleadoCorreo($correo);
             <ul>
                 <li><a href="index.php?action=solicitud_licencias">Solicitud de licencias</a></li>
                 <li><a href="index.php?action=solicitud_asuntos">Solicitud de asuntos propios</a></li>
-                <li><a href="#">Opción 3</a></li>
+                <li><a href="#">Estado de las solicitudes</a></li>
             </ul>
         </nav>
         <div class="container">

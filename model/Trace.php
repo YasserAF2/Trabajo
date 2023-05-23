@@ -143,6 +143,20 @@ class Trace
         }
     }
 
+    public function empleadoDni($correo)
+    {
+        $this->getConection();
+        $sql = "SELECT DNI FROM empleado WHERE EMAIL = '$correo'";
+        $resultado = $this->conection->query($sql);
+
+        if ($resultado->num_rows == 1) {
+            $dni = $resultado->fetch_assoc()['DNI'];
+            return $dni;
+        } else {
+            return false;
+        }
+    }
+
     public function getEmpleados()
     {
         $sql = "SELECT * FROM empleado";
@@ -183,5 +197,20 @@ class Trace
             }
         }
         return $this->empleados;
+    }
+
+    public function guardarSolicitud($tipo, $rutaArchivo, $dni)
+    {
+        $tipo = $this->conection->real_escape_string($tipo);
+        $rutaArchivo = $this->conection->real_escape_string($rutaArchivo);
+        $estado = 'En proceso';
+
+        $query = "INSERT INTO solicitudes (tipo, documento, estado, dni_usuario) VALUES ('$tipo', '$rutaArchivo', '$estado', '$dni')";
+
+        if ($this->conection->query($query) === TRUE) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

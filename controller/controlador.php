@@ -167,11 +167,41 @@ class controlador
     {
     }
 
-    public function solicitud_asuntos()
+    public function procesar_formulario()
     {
-        $this->view = 'asuntos';
-    }
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Obtener los datos del formulario
+            $tipo = $_POST['tipo_licencia'];
+            $archivo = $_FILES['documentacion'];
+            $correo = $_POST['correo'];
 
+            $dni = $this->trace->empleadoDni($correo);
+
+            // Realizar validaciones necesarias
+
+            // Mover el archivo a una ubicación permanente
+            $nombreArchivo = $archivo['name'];
+            $rutaArchivo = $archivo['tmp_name'];
+            $destino = 's_licencias/' . $nombreArchivo;
+
+            var_dump($_POST);
+            var_dump($_FILES);
+
+            if (move_uploaded_file($rutaArchivo, $destino)) {
+                // Guardar la solicitud en el modelo
+                if ($this->trace->guardarSolicitud($tipo, $destino, $dni)) {
+                    header('licencias.php');
+                } else {
+                    // Mostrar un mensaje de error
+                    header('licencias.php');
+                }
+            } else {
+                // Ocurrió un error al mover el archivo
+                // Mostrar un mensaje de error
+                echo "Error al subir el archivo.";
+            }
+        }
+    }
     public function procesar_asuntos()
     {
     }
