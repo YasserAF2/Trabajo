@@ -163,8 +163,16 @@ class controlador
         $this->view = 'licencias';
     }
 
+    public function procesar_licencias()
+    {
+    }
+
     public function solicitud_asuntos()
     {
         $this->view = 'asuntos';
+    }
+
+    public function procesar_asuntos()
+    {
     }
 }
