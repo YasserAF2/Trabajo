@@ -8,6 +8,7 @@ require_once 'model/Cuartillo.php';
 require_once 'model/Horario.php';
 require_once 'model/Turno.php';
 require_once 'model/Trace.php';
+require_once 'model/Solicitud.php';
 require_once 'controller/controlador.php';
 
 if (!isset($_GET["action"])) $_GET["action"] = constant("DEFAULT_ACTION");

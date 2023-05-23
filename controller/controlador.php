@@ -172,37 +172,84 @@ class controlador
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Obtener los datos del formulario
             $tipo = $_POST['tipo_licencia'];
-            $archivo = $_FILES['documentacion'];
             $correo = $_POST['correo'];
 
-            $dni = $this->trace->empleadoDni($correo);
+            // Verificar si se ha enviado el archivo
+            if (isset($_FILES['documentacion']) && $_FILES['documentacion']['error'] === UPLOAD_ERR_OK) {
+                $archivo = $_FILES['documentacion'];
+                $nombreArchivo = $archivo['name'];
+                $rutaArchivo = $archivo['tmp_name'];
+                $destino = 'view/s_licencias/' . $nombreArchivo;
 
-            // Realizar validaciones necesarias
+                // Verificar si se ha movido el archivo correctamente
+                if (move_uploaded_file($rutaArchivo, $destino)) {
+                    $dni = $this->trace->empleadoDni($correo);
 
-            // Mover el archivo a una ubicación permanente
-            $nombreArchivo = $archivo['name'];
-            $rutaArchivo = $archivo['tmp_name'];
-            $destino = 's_licencias/' . $nombreArchivo;
+                    // Guardar la solicitud en el modelo
+                    if ($this->trace->guardarSolicitud($tipo, $destino, $dni)) {
+                        // Enviar aviso al administrador
+                        $administradorEmail = 'yas.123af@gmail.com';
+                        $this->enviarAvisoCorreo($administradorEmail, $tipo);
 
-            var_dump($_POST);
-            var_dump($_FILES);
-
-            if (move_uploaded_file($rutaArchivo, $destino)) {
-                // Guardar la solicitud en el modelo
-                if ($this->trace->guardarSolicitud($tipo, $destino, $dni)) {
-                    header('licencias.php');
+                        header('Location: index.php');
+                        exit;
+                    } else {
+                        // Mostrar un mensaje de error
+                        echo "Error al guardar la solicitud.";
+                    }
                 } else {
-                    // Mostrar un mensaje de error
-                    header('licencias.php');
+                    // Ocurrió un error al mover el archivo
+                    echo "Error al subir el archivo.";
                 }
             } else {
-                // Ocurrió un error al mover el archivo
-                // Mostrar un mensaje de error
-                echo "Error al subir el archivo.";
+                // No se ha enviado ningún archivo o se produjo un error
+                echo "No se ha seleccionado ningún archivo o se produjo un error al subirlo.";
             }
         }
     }
+
+    public function enviarAvisoCorreo($administradorEmail, $tipoLicencia)
+    {
+        // Dirección de correo del remitente
+        $remitente = 'yas.123af@gmail.com';
+
+        // Asunto del correo
+        $asunto = 'Nueva solicitud de licencia';
+
+        // Cuerpo del correo
+        $mensaje = 'Se ha realizado una nueva solicitud de licencia del tipo: ' . $tipoLicencia;
+
+        // Cabeceras del correo
+        $cabeceras = 'From: ' . $remitente . "\r\n" .
+            'Reply-To: ' . $remitente . "\r\n" .
+            'X-Mailer: PHP/' . phpversion();
+
+        // Envío del correo
+        $enviado = mail($administradorEmail, $asunto, $mensaje, $cabeceras);
+
+        // Verificar si el correo se ha enviado correctamente
+        if ($enviado) {
+            echo "Se ha enviado un aviso al administrador.";
+        } else {
+            echo "Error al enviar el aviso al administrador.";
+        }
+    }
+
+
     public function procesar_asuntos()
     {
+    }
+
+    public function lista_solicitudes()
+    {
+        session_start();
+        $this->view = 'solicitudes';
+        $dni_empleado = $this->trace->empleadoDni($_SESSION['usuario']);
+        $solicitudes = $this->trace->getSolicitudesDni($dni_empleado);
+        $datos = array(
+            'solicitudes' => $solicitudes,
+        );
+
+        return $datos;
     }
 }

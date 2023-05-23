@@ -4,6 +4,7 @@ class Trace
 {
     private $conection;
     private array $empleados = array();
+    private array $solicitudes = array();
 
     function __construct()
     {
@@ -205,12 +206,27 @@ class Trace
         $rutaArchivo = $this->conection->real_escape_string($rutaArchivo);
         $estado = 'En proceso';
 
-        $query = "INSERT INTO solicitudes (tipo, documento, estado, dni_usuario) VALUES ('$tipo', '$rutaArchivo', '$estado', '$dni')";
+        $query = "INSERT INTO solicitud (tipo, documento, estado, dni_empleado) VALUES ('$tipo', '$rutaArchivo', '$estado', '$dni')";
 
         if ($this->conection->query($query) === TRUE) {
             return true;
         } else {
             return false;
         }
+    }
+
+    public function getSolicitudesDni($dni)
+    {
+        $sql = "SELECT * FROM solicitud WHERE dni_empleado = '$dni'";
+        $result = $this->conection->query($sql);
+
+        if ($result->num_rows > 0) {
+            $i = 0;
+            while ($row = $result->fetch_assoc()) {
+                $this->solicitudes[$i] = new Solicitud($row['id_solicitud'], $row['tipo'], $row['documento'], $row['estado'], $row['dni_empleado']);
+                $i++;
+            }
+        }
+        return $this->solicitudes;
     }
 }

@@ -6,7 +6,7 @@ echo $_SESSION['usuario'];
     <section>
         <article>
             <h2>Solicitud de licencias</h2>
-            <form action="index.php?action=procesar_formulario" method="POST">
+            <form enctype="multipart/form-data" action="index.php?action=procesar_formulario" method="POST">
                 <div class="form-group">
                     <label for="tipo_licencia">Tipo de licencia:</label>
                     <input type="text" class="form-control" id="tipo_licencia" name="tipo_licencia" required>

@@ -5,13 +5,15 @@ class Solicitud
     private $id_solicitud;
     private $tipo;
     private $documento;
+    private $estado;
     private $dni_empleado;
 
-    public function __construct($id_solicitud, $tipo, $documento, $dni_empleado)
+    public function __construct($id_solicitud, $tipo, $documento, $estado, $dni_empleado)
     {
         $this->id_solicitud = $id_solicitud;
         $this->tipo = $tipo;
         $this->documento = $documento;
+        $this->estado = $estado;
         $this->dni_empleado = $dni_empleado;
     }
 
@@ -19,13 +21,17 @@ class Solicitud
     {
         return $this->id_solicitud;
     }
-    public function getTipo()
+    public function getTipoSolicitud()
     {
         return $this->tipo;
     }
-    public function getDocumento()
+    public function getDocumentoSolicitud()
     {
         return $this->documento;
+    }
+    public function getEstadoSolicitud()
+    {
+        return $this->estado;
     }
     public function getDniEmpleado()
     {
