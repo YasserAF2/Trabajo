@@ -5,7 +5,6 @@ $solicitudes = $dataToView['solicitudes'];
     <section>
         <article>
             <h2>Lista de solicitudes realizadas</h2>
-            <a class="btn btn-primary" href="index.php">Volver atrás</a>
 
             <table class="table table-striped">
                 <thead>
@@ -20,7 +19,7 @@ $solicitudes = $dataToView['solicitudes'];
                     foreach ($solicitudes as $solicitud) {
                         echo "<tr>";
                         echo "<td>" . $solicitud->getTipoSolicitud() . "</td>";
-                        echo "<td>" . $solicitud->getDocumentoSolicitud() . "</td>";
+                        echo '<td><a href="' . $solicitud->getDocumentoSolicitud() . '">Abrir PDF</a></td>';
                         echo "<td>";
                         $estado = $solicitud->getEstadoSolicitud();
                         $color = '';
@@ -45,6 +44,8 @@ $solicitudes = $dataToView['solicitudes'];
                     ?>
                 </tbody>
             </table>
+            <a class="btn btn-primary" href="index.php">Volver atrás</a>
+
         </article>
     </section>
 </main>

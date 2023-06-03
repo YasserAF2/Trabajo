@@ -27,6 +27,10 @@ body {
   bottom: 0;
 }
 
+.pie div.container {
+  padding-top: 20px;
+}
+
 /* cabecera */
 .cabecera {
   display: flex;
@@ -133,6 +137,7 @@ main {
   margin: 0 auto;
   margin-top: 10px;
   margin-bottom: 10px;
+  min-height: 60vh;
   max-width: 1200px;
 }
 
@@ -342,8 +347,7 @@ form input[type='submit']:hover {
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   padding: 10px;
-  width: 200px;
-  float: left;
+  width: 400px;
 }
 
 .opciones ul {
@@ -378,6 +382,12 @@ form input[type='submit']:hover {
 .perfil-usuario {
   display: grid;
   grid-template-columns: 1fr 1fr;
+}
+
+.perfil-titulo {
+  width: 100%;
+  height: 50px;
+  text-align: center;
 }
 
 /* principal admin */
