@@ -18,11 +18,7 @@ class controlador
 
         // Si el usuario ya ha iniciado sesión, mostrar la página de inicio de sesión
         if (isset($_SESSION['usuario'])) {
-            if ($_SESSION['tipo'] == 'Administrador') {
-                $this->view = 'admin';
-            } else {
-                $this->view = 'logeado';
-            }
+            $this->view = 'logeado';
             return;
         }
 
@@ -41,11 +37,7 @@ class controlador
                     setcookie('usuario', $usuario, $expire, '/');
                 }
 
-                if ($_SESSION['tipo'] == 'Administrador') {
-                    $this->view = 'admin';
-                } else {
-                    $this->view = 'logeado';
-                }
+                $this->view = 'logeado';
             } else {
                 $_SESSION['mensaje_error'] = 'Usuario o contraseña incorrectos';
                 $this->view = 'inicio';
@@ -55,19 +47,11 @@ class controlador
             if (isset($_COOKIE['usuario'])) {
                 $_SESSION['usuario'] = $_COOKIE['usuario'];
                 $_SESSION['tipo'] = $this->trace->empleadoTipo($_COOKIE['usuario']);
-
-                if ($_SESSION['tipo'] == 'Administrador') {
-                    $this->view = 'admin';
-                } else {
-                    $this->view = 'logeado';
-                }
-            } else {
-                $this->view = 'inicio';
             }
+
+            $this->view = 'inicio';
         }
     }
-
-
 
     public function logout()
     {
@@ -75,6 +59,12 @@ class controlador
         session_destroy();
         setcookie('usuario', '', time() - 3600, '/');
         header('Location: index.php');
+    }
+
+    public function admin()
+    {
+        session_start();
+        $this->view = 'admin';
     }
 
     public function editar_perfil()
@@ -235,6 +225,10 @@ class controlador
         }
     }
 
+    public function solicitud_asuntos()
+    {
+        $this->view = 'asuntos';
+    }
 
     public function procesar_asuntos()
     {

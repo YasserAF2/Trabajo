@@ -1,6 +1,6 @@
 <?php
 $correo  = $_SESSION['usuario'];
-echo $correo;
+$tipo = $_SESSION['tipo'];
 $trace = new Trace();
 $empleado = $trace->getEmpleadoCorreo($correo);
 ?>
@@ -9,6 +9,22 @@ $empleado = $trace->getEmpleadoCorreo($correo);
     <div>
         <div class="perfil-titulo">
             <h2>Perfil del Empleado</h2>
+        </div>
+        <div>
+            <div class="float-right">
+                <form class="editar" method="post" action="index.php?action=editar_perfil">
+                    <input type="hidden" name="correo" value="<?php echo $correo; ?>">
+                    <input type="submit" value="Editar perfil">
+                </form>
+                <br>
+                <div>
+                    <?php
+                    if ($tipo == 'Administrador') {
+                        echo '<a href="index.php?action=admin" class="btn btn-primary">Administrar empleados</a>';
+                    }
+                    ?>
+                </div>
+            </div>
         </div>
         <div class="perfil-usuario">
             <nav class="opciones">
@@ -20,25 +36,27 @@ $empleado = $trace->getEmpleadoCorreo($correo);
             </nav>
             <div class="container">
                 <div>
-                    <div class="float-right">
-                        <form class="editar" method="post" action="index.php?action=editar_perfil">
-                            <input type="hidden" name="correo" value="<?php echo $correo; ?>">
-                            <input type="submit" value="Editar perfil">
-                        </form>
-                    </div>
-                    <ul>
-                        <li><strong>Nombre:</strong> <?php echo $empleado->getNOMBRE(); ?></li>
-                        <li><strong>Apellidos:</strong> <?php echo $empleado->getAPELLIDO_1(); ?>
+
+                    <ul class="list-group">
+                        <li class="list-group-item"><strong>Nombre:</strong> <?php echo $empleado->getNOMBRE(); ?></li>
+                        <li class="list-group-item"><strong>Apellidos:</strong>
+                            <?php echo $empleado->getAPELLIDO_1(); ?>
                             <?php echo $empleado->getAPELLIDO_2(); ?></li>
-                        <li><strong>Email:</strong> <?php echo $empleado->getEMAIL(); ?></li>
-                        <li><strong>Dirección:</strong> <?php echo $empleado->getDireccion(); ?></li>
-                        <li><strong>Ciudad:</strong> <?php echo $empleado->getCiudad(); ?></li>
-                        <li><strong>Provincia:</strong> <?php echo $empleado->getProvincia(); ?></li>
-                        <li><strong>Código Postal:</strong> <?php echo $empleado->getCp(); ?></li>
-                        <li><strong>Teléfono Fijo:</strong> <?php echo $empleado->getTelfCasa(); ?></li>
-                        <li><strong>Teléfono Móvil:</strong> <?php echo $empleado->getTlfMovil(); ?></li>
-                        <li><strong>País:</strong> <?php echo $empleado->getPais(); ?></li>
+                        <li class="list-group-item"><strong>Email:</strong> <?php echo $empleado->getEMAIL(); ?></li>
+                        <li class="list-group-item"><strong>Dirección:</strong> <?php echo $empleado->getDireccion(); ?>
+                        </li>
+                        <li class="list-group-item"><strong>Ciudad:</strong> <?php echo $empleado->getCiudad(); ?></li>
+                        <li class="list-group-item"><strong>Provincia:</strong> <?php echo $empleado->getProvincia(); ?>
+                        </li>
+                        <li class="list-group-item"><strong>Código Postal:</strong> <?php echo $empleado->getCp(); ?>
+                        </li>
+                        <li class="list-group-item"><strong>Teléfono Fijo:</strong>
+                            <?php echo $empleado->getTelfCasa(); ?></li>
+                        <li class="list-group-item"><strong>Teléfono Móvil:</strong>
+                            <?php echo $empleado->getTlfMovil(); ?></li>
+                        <li class="list-group-item"><strong>País:</strong> <?php echo $empleado->getPais(); ?></li>
                     </ul>
+
                 </div>
             </div>
             <form class="cerrar" method="post" action="index.php?action=logout">

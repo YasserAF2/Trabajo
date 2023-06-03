@@ -4,7 +4,8 @@ $empleados = $dataToView['empleados'];
 
 <div class="empleados-lista">
     <h2>Lista y administración de los empleados.</h2>
-    <button class="volver" onclick="window.location.href='index.php'"><i class="fas fa-arrow-left"></i> Volver a la
+    <button class="volver" onclick="window.location.href='index.php?action=admin'"><i class="fas fa-arrow-left"></i>
+        Volver a la
         página principal</button>
 
     <table class="tabla-empleados">
