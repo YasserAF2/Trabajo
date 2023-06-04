@@ -141,6 +141,10 @@ main {
   max-width: 1200px;
 }
 
+main.emp {
+  max-width: 1500px;
+}
+
 ul {
   list-style: none;
   margin: 0;
