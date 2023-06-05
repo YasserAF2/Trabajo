@@ -153,10 +153,6 @@ class controlador
         $this->view = 'licencias';
     }
 
-    public function procesar_licencias()
-    {
-    }
-
     public function procesar_formulario()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -225,6 +221,33 @@ class controlador
         }
     }
 
+    public function enviarAvisoCorreoAsuntos($administradorEmail)
+    {
+        // Dirección de correo del remitente
+        $remitente = 'yas.123af@gmail.com';
+
+        // Asunto del correo
+        $asunto = 'Nueva solicitud de días de asuntos propios';
+
+        // Cuerpo del correo
+        $mensaje = 'Se ha realizado una nueva solicitud de días de asuntos propios.';
+
+        // Cabeceras del correo
+        $cabeceras = 'From: ' . $remitente . "\r\n" .
+            'Reply-To: ' . $remitente . "\r\n" .
+            'X-Mailer: PHP/' . phpversion();
+
+        // Envío del correo
+        $enviado = mail($administradorEmail, $asunto, $mensaje, $cabeceras);
+
+        // Verificar si el correo se ha enviado correctamente
+        if ($enviado) {
+            echo "Se ha enviado un aviso al administrador.";
+        } else {
+            echo "Error al enviar el aviso al administrador.";
+        }
+    }
+
     public function solicitud_asuntos()
     {
         $this->view = 'asuntos';
@@ -238,6 +261,26 @@ class controlador
             $fecha = $_POST['fecha'];
             $motivo = $_POST['motivo'];
             $correo = $_POST['correo'];
+
+            // Obtener el DNI del empleado
+            $dni = $this->trace->empleadoDni($correo);
+
+            // Guardar la solicitud de días de asuntos propios
+            $resultado = $this->trace->guardarAsuntos($fecha, $motivo, $dni);
+
+            if ($resultado) {
+                // Solicitud guardada correctamente
+                // Enviar aviso al administrador
+                $administradorEmail = 'yas.123af@gmail.com';
+                $this->enviarAvisoCorreoAsuntos($administradorEmail);
+
+                header('Location: index.php?action=lista_solicitudes');
+                exit();
+            } else {
+                // Error al guardar la solicitud
+                header('Location: index.php');
+                exit();
+            }
         }
     }
 

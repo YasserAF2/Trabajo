@@ -222,8 +222,17 @@ class Trace
         }
     }
 
-    public function guardarAsuntos()
+    //Guardar solicitudes de dias de asuntos propios
+    public function guardarAsuntos($fecha, $motivo, $dni)
     {
+        $estado = 'En proceso';
+        $query = "INSERT INTO solicitud_asuntos (fecha, motivo, estado, dni_empleado) VALUES ('$fecha', '$motivo', '$estado', '$dni')";
+
+        if ($this->conection->query($query) === TRUE) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function getSolicitudesDni($dni)
