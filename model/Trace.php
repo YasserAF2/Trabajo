@@ -31,6 +31,7 @@ class Trace
         }
     }
 
+    //Obtener empleado por su correo
     public function getEmpleadoCorreo($correo)
     {
         $sql = "SELECT * FROM empleado WHERE EMAIL = '$correo'";
@@ -70,6 +71,7 @@ class Trace
         }
     }
 
+    //Obtener el empleado por su DNI
     public function getEmpleadoDni($dni)
     {
         $sql = "SELECT * FROM empleado WHERE DNI = '$dni'";
@@ -109,6 +111,7 @@ class Trace
         }
     }
 
+    //Actualizar datos del empleado en la base de datos
     public function guardar_empleado($DNI, $NOMBRE, $APELLIDO_1, $APELLIDO_2, $EMAIL, $DIRECCION, $CIUDAD, $PROVINCIA, $CP, $TELF_CASA, $TLF_MOVIL, $PAIS)
     {
         $sql = "UPDATE empleado SET 
@@ -130,6 +133,7 @@ class Trace
         $stmt->execute();
     }
 
+    //Obtener el tipo de empleado (Admin/Empleado)
     public function empleadoTipo($correo)
     {
         $this->getConection();
@@ -144,6 +148,7 @@ class Trace
         }
     }
 
+    //Obtener el dni del empleado
     public function empleadoDni($correo)
     {
         $this->getConection();
@@ -158,6 +163,7 @@ class Trace
         }
     }
 
+    //Obtener empleados
     public function getEmpleados()
     {
         $sql = "SELECT * FROM empleado";
@@ -200,13 +206,14 @@ class Trace
         return $this->empleados;
     }
 
+    //Guardar solicitud de licencias en la base de datos (INSERT)
     public function guardarSolicitud($tipo, $rutaArchivo, $dni)
     {
         $tipo = $this->conection->real_escape_string($tipo);
         $rutaArchivo = $this->conection->real_escape_string($rutaArchivo);
         $estado = 'En proceso';
 
-        $query = "INSERT INTO solicitud (tipo, documento, estado, dni_empleado) VALUES ('$tipo', '$rutaArchivo', '$estado', '$dni')";
+        $query = "INSERT INTO solicitud_licencias (tipo, documento, estado, dni_empleado) VALUES ('$tipo', '$rutaArchivo', '$estado', '$dni')";
 
         if ($this->conection->query($query) === TRUE) {
             return true;
@@ -215,9 +222,13 @@ class Trace
         }
     }
 
+    public function guardarAsuntos()
+    {
+    }
+
     public function getSolicitudesDni($dni)
     {
-        $sql = "SELECT * FROM solicitud WHERE dni_empleado = '$dni'";
+        $sql = "SELECT * FROM solicitud_licencias WHERE dni_empleado = '$dni'";
         $result = $this->conection->query($sql);
 
         if ($result->num_rows > 0) {

@@ -3,9 +3,6 @@ $solicitudes = $dataToView['solicitudes'];
 ?>
 <main>
     <section>
-
-    </section>
-    <section>
         <article>
             <?php if (empty($solicitudes)) : ?>
                 <h2>No hay solicitudes realizadas</h2>

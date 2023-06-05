@@ -13,8 +13,7 @@ echo $_SESSION['usuario'];
                 </div>
                 <div class="form-group">
                     <label for="documentacion">Documentación necesaria:</label>
-                    <input type="file" class="form-control-file" id="documentacion" name="documentacion"
-                        accept=".pdf,.doc,.docx" required>
+                    <input type="file" class="form-control-file" id="documentacion" name="documentacion" accept=".pdf,.doc,.docx" required>
                 </div>
                 <div>
                     <input type="hidden" name="correo" value="<?php echo $_SESSION['usuario']; ?>" />

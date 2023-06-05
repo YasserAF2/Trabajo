@@ -36,7 +36,6 @@ $empleado = $trace->getEmpleadoCorreo($correo);
             </nav>
             <div class="container">
                 <div>
-
                     <ul class="list-group">
                         <li class="list-group-item"><strong>Nombre:</strong> <?php echo $empleado->getNOMBRE(); ?></li>
                         <li class="list-group-item"><strong>Apellidos:</strong>
@@ -56,7 +55,6 @@ $empleado = $trace->getEmpleadoCorreo($correo);
                             <?php echo $empleado->getTlfMovil(); ?></li>
                         <li class="list-group-item"><strong>País:</strong> <?php echo $empleado->getPais(); ?></li>
                     </ul>
-
                 </div>
             </div>
             <form class="cerrar" method="post" action="index.php?action=logout">

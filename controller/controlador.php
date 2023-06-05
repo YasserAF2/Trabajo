@@ -232,6 +232,13 @@ class controlador
 
     public function procesar_asuntos()
     {
+        // Verificar si se ha enviado el formulario
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Obtener los datos del formulario
+            $fecha = $_POST['fecha'];
+            $motivo = $_POST['motivo'];
+            $correo = $_POST['correo'];
+        }
     }
 
     public function lista_solicitudes()

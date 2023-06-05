@@ -1,20 +1,24 @@
+<?php
+session_start();
+echo $_SESSION['usuario'];
+?>
 <main>
     <section>
         <article>
-            <h2>Solicitud de asuntos</h2>
-            <form enctype="multipart/form-data" action="index.php?action=procesar_formulario" method="POST">
+            <h2>Solicitud de días de asuntos propios</h2>
+            <form enctype="multipart/form-data" action="index.php?action=procesar_asuntos" method="POST">
                 <div class="form-group">
-                    <label for="tipo_licencia">Tipo de licencia:</label>
-                    <input type="text" class="form-control" id="tipo_licencia" name="tipo_licencia" required>
+                    <label for="fecha">Fecha(s) de asuntos propios:</label>
+                    <input type="date" class="form-control" id="fecha" name="fecha" required>
                 </div>
                 <div class="form-group">
-                    <label for="documentacion">Documentación necesaria:</label>
-                    <input type="file" class="form-control-file" id="documentacion" name="documentacion" accept=".pdf,.doc,.docx" required>
+                    <label for="motivo">Motivo:</label>
+                    <textarea class="form-control" id="motivo" name="motivo" rows="3" required></textarea>
                 </div>
                 <div>
-                    <input type="hidden" name="correo" value="<?php echo $_SESSION['usuario']; ?>" />
+                    <input type="hidden" name="correo" value="<?php echo $_SESSION['usuario']; ?>">
                 </div>
-                <div>
+                <div class="mb-3">
                     <input type="submit" class="btn btn-primary" value="Enviar solicitud">
                     <a class="btn btn-primary" href="index.php">Volver atrás</a>
                 </div>
