@@ -1,6 +1,3 @@
-<?php
-echo $_SESSION['usuario'];
-?>
 <main class="admin">
     <div class="container">
         <div class="row">
