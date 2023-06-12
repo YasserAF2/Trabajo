@@ -1,6 +1,6 @@
 <?php
 
-class Solicitud
+class Licencia
 {
     private $id_solicitud;
     private $tipo;

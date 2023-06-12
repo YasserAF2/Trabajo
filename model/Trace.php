@@ -243,7 +243,21 @@ class Trace
         if ($result->num_rows > 0) {
             $i = 0;
             while ($row = $result->fetch_assoc()) {
-                $this->solicitudes[$i] = new Solicitud($row['id_solicitud'], $row['tipo'], $row['documento'], $row['estado'], $row['dni_empleado']);
+                $this->solicitudes[$i] = new Licencia($row['id_solicitud'], $row['tipo'], $row['documento'], $row['estado'], $row['dni_empleado']);
+                $i++;
+            }
+        }
+        return $this->solicitudes;
+    }
+    public function getAsuntosDni($dni)
+    {
+        $sql = "SELECT * FROM solicitud_asuntos WHERE dni_empleado = '$dni'";
+        $result = $this->conection->query($sql);
+
+        if ($result->num_rows > 0) {
+            $i = 0;
+            while ($row = $result->fetch_assoc()) {
+                $this->solicitudes[$i] = new Asuntos($row['id_solicitud_asuntos'], $row['fecha'], $row['motivo'], $row['estado'], $row['dni_empleado']);
                 $i++;
             }
         }
