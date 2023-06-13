@@ -15,6 +15,7 @@ $solicitudes = $dataToView['solicitudes'];
                     <thead>
                         <tr>
                             <th>Solicitud</th>
+                            <th>Fecha</th>
                             <th>Documentación</th>
                             <th>Estado de la Solicitud</th>
                         </tr>
@@ -23,7 +24,8 @@ $solicitudes = $dataToView['solicitudes'];
                         <?php foreach ($solicitudes as $solicitud) : ?>
                             <tr>
                                 <td><?= $solicitud->getTipoSolicitud() ?></td>
-                                <td><a href="<?= $solicitud->getDocumentoSolicitud() ?>">Abrir PDF</a></td>
+                                <td><?= $solicitud->getFecha(); ?> </td>
+                                <td><a href="<?= $solicitud->getDocumentoSolicitud() ?>">Abrir documentación</a></td>
                                 <td>
                                     <?php
                                     $estado = $solicitud->getEstadoSolicitud();

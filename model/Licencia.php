@@ -6,14 +6,16 @@ class Licencia
     private $tipo;
     private $documento;
     private $estado;
+    private $fecha;
     private $dni_empleado;
 
-    public function __construct($id_solicitud, $tipo, $documento, $estado, $dni_empleado)
+    public function __construct($id_solicitud, $tipo, $documento, $estado, $fecha, $dni_empleado)
     {
         $this->id_solicitud = $id_solicitud;
         $this->tipo = $tipo;
         $this->documento = $documento;
         $this->estado = $estado;
+        $this->fecha = $fecha;
         $this->dni_empleado = $dni_empleado;
     }
 
@@ -32,6 +34,10 @@ class Licencia
     public function getEstadoSolicitud()
     {
         return $this->estado;
+    }
+    public function getFecha()
+    {
+        return $this->fecha;
     }
     public function getDniEmpleado()
     {

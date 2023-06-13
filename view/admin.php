@@ -9,8 +9,12 @@
                             Usuarios</a>
                     </li>
                     <li class="list-group-item">
-                        <a href="index.php?action=ver_peticiones" class="opciones-lista">Gestionar
-                            Peticiones</a>
+                        <a href="index.php?action=ver_peticiones_licencias" class="opciones-lista">Gestionar
+                            Peticiones de Licencias</a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="index.php?action=ver_peticiones_licencias" class="opciones-lista">Gestionar
+                            Peticiones de Asuntos</a>
                     </li>
                 </ul>
             </div>

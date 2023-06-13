@@ -8,11 +8,8 @@ session_start();
             <form enctype="multipart/form-data" action="index.php?action=procesar_asuntos" method="POST">
                 <div class="form-group">
                     <label for="fecha">Fecha(s) de asuntos propios:</label>
-                    <input type="date" class="form-control" id="fecha" name="fecha" required>
-                </div>
-                <div class="form-group">
-                    <label for="motivo">Motivo:</label>
-                    <textarea class="form-control" id="motivo" name="motivo" rows="3" required></textarea>
+                    <input type="date" class="form-control" id="fecha" name="fecha" required
+                        min="<?php echo date('Y-m-d'); ?>">
                 </div>
                 <div>
                     <input type="hidden" name="correo" value="<?php echo $_SESSION['usuario']; ?>">

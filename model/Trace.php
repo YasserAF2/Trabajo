@@ -5,6 +5,9 @@ class Trace
     private $conection;
     private array $empleados = array();
     private array $solicitudes = array();
+    private array $licencias = array();
+    private array $asuntos = array();
+
 
     function __construct()
     {
@@ -206,14 +209,32 @@ class Trace
         return $this->empleados;
     }
 
+    //Obtener todas las peticiones de las licencias
+    public function getPeticionesLicencias()
+    {
+        $sql = "SELECT id_solicitud, tipo, documento, estado, DATE_FORMAT(fecha_solicitud, '%d-%m-%Y') AS fecha_solicitud, dni_empleado FROM solicitud_licencias";
+        $result = $this->conection->query($sql);
+
+        if ($result->num_rows > 0) {
+            $i = 0;
+            while ($row = $result->fetch_assoc()) {
+                $this->licencias[$i] = new Licencia($row['id_solicitud'], $row['tipo'], $row['documento'], $row['estado'], $row['fecha_solicitud'], $row['dni_empleado']);
+                $i++;
+            }
+        }
+        return $this->licencias;
+    }
+
+
     //Guardar solicitud de licencias en la base de datos (INSERT)
     public function guardarSolicitud($tipo, $rutaArchivo, $dni)
     {
         $tipo = $this->conection->real_escape_string($tipo);
         $rutaArchivo = $this->conection->real_escape_string($rutaArchivo);
         $estado = 'En proceso';
+        $fechaSolicitud = date('Y-m-d'); // Obtener la fecha actual en formato YYYY-MM-DD
 
-        $query = "INSERT INTO solicitud_licencias (tipo, documento, estado, dni_empleado) VALUES ('$tipo', '$rutaArchivo', '$estado', '$dni')";
+        $query = "INSERT INTO solicitud_licencias (tipo, documento, estado, fecha_solicitud, dni_empleado) VALUES ('$tipo', '$rutaArchivo', '$estado', '$fechaSolicitud', '$dni')";
 
         if ($this->conection->query($query) === TRUE) {
             return true;
@@ -223,10 +244,10 @@ class Trace
     }
 
     //Guardar solicitudes de dias de asuntos propios
-    public function guardarAsuntos($fecha, $motivo, $dni)
+    public function guardarAsuntos($fecha, $dni)
     {
         $estado = 'En proceso';
-        $query = "INSERT INTO solicitud_asuntos (fecha, motivo, estado, dni_empleado) VALUES ('$fecha', '$motivo', '$estado', '$dni')";
+        $query = "INSERT INTO solicitud_asuntos (fecha, estado, dni_empleado) VALUES ('$fecha', '$estado', '$dni')";
 
         if ($this->conection->query($query) === TRUE) {
             return true;
@@ -237,13 +258,13 @@ class Trace
 
     public function getSolicitudesDni($dni)
     {
-        $sql = "SELECT * FROM solicitud_licencias WHERE dni_empleado = '$dni'";
+        $sql = "SELECT id_solicitud, tipo, documento, estado, DATE_FORMAT(fecha_solicitud, '%d-%m-%Y') AS fecha_formateada, dni_empleado FROM solicitud_licencias WHERE dni_empleado = '$dni'";
         $result = $this->conection->query($sql);
 
         if ($result->num_rows > 0) {
             $i = 0;
             while ($row = $result->fetch_assoc()) {
-                $this->solicitudes[$i] = new Licencia($row['id_solicitud'], $row['tipo'], $row['documento'], $row['estado'], $row['dni_empleado']);
+                $this->solicitudes[$i] = new Licencia($row['id_solicitud'], $row['tipo'], $row['documento'], $row['estado'], $row['fecha_formateada'], $row['dni_empleado']);
                 $i++;
             }
         }
@@ -251,13 +272,13 @@ class Trace
     }
     public function getAsuntosDni($dni)
     {
-        $sql = "SELECT * FROM solicitud_asuntos WHERE dni_empleado = '$dni'";
+        $sql = "SELECT id_solicitud_asuntos, DATE_FORMAT(fecha, '%d-%m-%Y') AS fecha_formateada, motivo, estado, dni_empleado FROM solicitud_asuntos WHERE dni_empleado = '$dni'";
         $result = $this->conection->query($sql);
 
         if ($result->num_rows > 0) {
             $i = 0;
             while ($row = $result->fetch_assoc()) {
-                $this->solicitudes[$i] = new Asuntos($row['id_solicitud_asuntos'], $row['fecha'], $row['motivo'], $row['estado'], $row['dni_empleado']);
+                $this->solicitudes[$i] = new Asuntos($row['id_solicitud_asuntos'], $row['fecha_formateada'], $row['motivo'], $row['estado'], $row['dni_empleado']);
                 $i++;
             }
         }

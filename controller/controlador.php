@@ -232,19 +232,18 @@ class controlador
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Obtener los datos del formulario
             $fecha = $_POST['fecha'];
-            $motivo = $_POST['motivo'];
             $correo = $_POST['correo'];
 
             // Obtener el DNI del empleado
             $dni = $this->trace->empleadoDni($correo);
 
             // Guardar la solicitud de días de asuntos propios
-            $resultado = $this->trace->guardarAsuntos($fecha, $motivo, $dni);
+            $resultado = $this->trace->guardarAsuntos($fecha, $dni);
 
             if ($resultado) {
                 // Solicitud guardada correctamente
                 // Enviar aviso al administrador
-                $this->enviarAvisoCorreoAsuntos($motivo);
+                $this->enviarAvisoCorreoAsuntos($fecha);
 
                 header('Location: index.php?action=lista_asuntos');
                 exit();
@@ -277,6 +276,18 @@ class controlador
         $solicitudes = $this->trace->getAsuntosDni($dni_empleado);
         $datos = array(
             'solicitudes' => $solicitudes,
+        );
+
+        return $datos;
+    }
+
+    public function ver_peticiones_licencias()
+    {
+        $this->view = 'lista_peticiones_licencias';
+
+        $licencias = $this->trace->getPeticionesLicencias();
+        $datos = array(
+            'licencias' => $licencias,
         );
 
         return $datos;

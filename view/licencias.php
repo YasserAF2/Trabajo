@@ -1,6 +1,5 @@
 <?php
 session_start();
-echo $_SESSION['usuario'];
 ?>
 <main>
     <section>
@@ -9,8 +8,32 @@ echo $_SESSION['usuario'];
             <form enctype="multipart/form-data" action="index.php?action=procesar_formulario" method="POST">
                 <div class="form-group">
                     <label for="tipo_licencia">Tipo de licencia:</label>
-                    <input type="text" class="form-control" id="tipo_licencia" name="tipo_licencia" required>
+                    <select class="form-control" id="tipo_licencia" name="tipo_licencia" required>
+                        <?php
+                        $tiposLicencia = array(
+                            'BAJA ACCTE',
+                            'ASTOS.PROP.',
+                            'AS.PROP.NO R',
+                            'LACTANCIA',
+                            'DESCANSO',
+                            'BAJA ENFERM.',
+                            'FALTA/SANC',
+                            'HOR.SINDICAL',
+                            'DESC.JORNADA',
+                            'LICENCIA',
+                            'MATERNIDAD',
+                            'PATERNIDAD',
+                            'VACACIONES',
+                            'EXCEDENCIA'
+                        );
+
+                        foreach ($tiposLicencia as $tipo) {
+                            echo "<option value='$tipo'>$tipo</option>";
+                        }
+                        ?>
+                    </select>
                 </div>
+
                 <div class="form-group">
                     <label for="documentacion">Documentación necesaria:</label>
                     <input type="file" class="form-control-file" id="documentacion" name="documentacion" accept=".pdf,.doc,.docx" required>
