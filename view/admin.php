@@ -13,7 +13,7 @@
                             Peticiones de Licencias</a>
                     </li>
                     <li class="list-group-item">
-                        <a href="index.php?action=ver_peticiones_licencias" class="opciones-lista">Gestionar
+                        <a href="index.php?action=ver_peticiones_asuntos" class="opciones-lista">Gestionar
                             Peticiones de Asuntos</a>
                     </li>
                 </ul>

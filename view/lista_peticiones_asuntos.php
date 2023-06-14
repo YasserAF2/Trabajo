@@ -1,32 +1,28 @@
 <?php
-$licencias = $dataToView['licencias'];
+$asuntos = $dataToView['asuntos'];
 ?>
 <main class="emp">
     <div class="empleados-lista">
-        <h2>Lista de Licencias</h2>
+        <h2>Lista de Asuntos</h2>
         <button class="volver" onclick="window.location.href='index.php?action=admin'"><i class="fas fa-arrow-left"></i>
             Volver a la página principal</button>
 
         <table class="tabla-empleados">
             <thead>
                 <tr>
-                    <th>Tipo</th>
-                    <th>Documento</th>
                     <th>Estado</th>
                     <th>Fecha</th>
                     <th>DNI del Empleado</th>
                     <th>Aceptar</th>
-                    <th>Denegar</th>
+                    <th>Rechazar</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($licencias as $licencia) : ?>
+                <?php foreach ($asuntos as $asunto) : ?>
                     <tr>
-                        <td><?php echo $licencia->getTipoSolicitud(); ?></td>
-                        <td><a href="<?= $licencia->getDocumentoSolicitud() ?>">Abrir documentación</a></td>
                         <td>
                             <?php
-                            $estado = $licencia->getEstadoSolicitud();
+                            $estado = $asunto->getEstado();
                             $color = '';
                             switch ($estado) {
                                 case 'Aceptada':
@@ -45,13 +41,13 @@ $licencias = $dataToView['licencias'];
                             echo "<span class='$color'>" . $estado . "</span>";
                             ?>
                         </td>
-                        <td><?php echo $licencia->getFecha(); ?></td>
-                        <td><?php echo $licencia->getDniEmpleado(); ?></td>
+                        <td><?php echo $asunto->getFecha(); ?></td>
+                        <td><?php echo $asunto->getDniEmpleado(); ?></td>
                         <td>
-                            <a href="#" onclick="confirmarAccionLicencia('aprobarLicencia', '<?php echo $licencia->getIdSolicitud(); ?>')" class="btn btn-success">Aceptar</a>
+                            <a href="#" onclick="confirmarAccion('aceptar', '<?php echo $asunto->getIdSolicitudAsuntos(); ?>')" class="btn btn-success">Aceptar</a>
                         </td>
                         <td>
-                            <a href="#" onclick="confirmarAccionLicencia('rechazarLicencia', '<?php echo $licencia->getIdSolicitud(); ?>')" class="btn btn-danger">Rechazar</a>
+                            <a href="#" onclick="confirmarAccion('rechazar', '<?php echo $asunto->getIdSolicitudAsuntos(); ?>')" class="btn btn-danger">Rechazar</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

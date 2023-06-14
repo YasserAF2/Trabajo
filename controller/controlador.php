@@ -292,4 +292,104 @@ class controlador
 
         return $datos;
     }
+
+    public function ver_peticiones_asuntos()
+    {
+        $this->view = 'lista_peticiones_asuntos';
+
+        $asuntos = $this->trace->getPeticionesAsuntos();
+        $datos = array(
+            'asuntos' => $asuntos,
+        );
+
+        return $datos;
+    }
+
+
+    //ACEPTAR Y RECHAZAR ASUNTOS
+    public function aceptar()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
+            $id = $_GET['id'];
+
+            if ($this->trace->cambiarEstadoAsunto($id, 'Aceptada')) {
+                //redirigir
+                $this->view = 'lista_peticiones_asuntos';
+            } else {
+                // Mostrar un mensaje de error
+                echo "Error al aceptar el asunto.";
+            }
+        }
+
+        $asuntos = $this->trace->getPeticionesAsuntos();
+        $datos = array(
+            'asuntos' => $asuntos,
+        );
+
+        return $datos;
+    }
+
+    public function rechazar()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
+            $id = $_GET['id'];
+
+            if ($this->trace->cambiarEstadoAsunto($id, 'Rechazada')) {
+                $this->view = 'lista_peticiones_asuntos';
+            } else {
+                // Mostrar un mensaje de error
+                echo "Error al rechazar el asunto.";
+            }
+        }
+
+        $asuntos = $this->trace->getPeticionesAsuntos();
+        $datos = array(
+            'asuntos' => $asuntos,
+        );
+
+        return $datos;
+    }
+
+    //APROBAR Y RECHAZAR LICENCIAS
+    public function aprobarLicencia()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
+            $id = $_GET['id'];
+
+            if ($this->trace->cambiarEstadoLicencia($id, 'Aceptada')) {
+                $this->view = 'lista_peticiones_licencias';
+            } else {
+                // Mostrar un mensaje de error
+                echo "Error al aprobar la licencia.";
+            }
+        }
+
+        $licencias = $this->trace->getPeticionesLicencias();
+        $datos = array(
+            'licencias' => $licencias,
+        );
+
+        return $datos;
+    }
+
+    public function rechazarLicencia()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
+            $id = $_GET['id'];
+
+            if ($this->trace->cambiarEstadoLicencia($id, 'Rechazada')) {
+                $this->view = 'lista_peticiones_licencias';
+            } else {
+                // Mostrar un mensaje de error
+                echo "Error al rechazar la licencia.";
+            }
+        }
+
+        $licencias = $this->trace->getPeticionesLicencias();
+        $datos = array(
+            'licencias' => $licencias,
+        );
+
+        return $datos;
+    }
 }

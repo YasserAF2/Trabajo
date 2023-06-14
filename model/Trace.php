@@ -225,6 +225,23 @@ class Trace
         return $this->licencias;
     }
 
+    //Obtener todas las peticiones de los asuntos
+    public function getPeticionesAsuntos()
+    {
+        $sql = "SELECT id_solicitud_asuntos, DATE_FORMAT(fecha, '%d-%m-%Y') AS fecha_formateada, estado, dni_empleado FROM solicitud_asuntos";
+        $result = $this->conection->query($sql);
+
+        if ($result->num_rows > 0) {
+            $i = 0;
+            while ($row = $result->fetch_assoc()) {
+                $this->asuntos[$i] = new Asuntos($row['id_solicitud_asuntos'], $row['fecha_formateada'], $row['estado'], $row['dni_empleado']);
+                $i++;
+            }
+        }
+        return $this->asuntos;
+    }
+
+
 
     //Guardar solicitud de licencias en la base de datos (INSERT)
     public function guardarSolicitud($tipo, $rutaArchivo, $dni)
@@ -272,16 +289,40 @@ class Trace
     }
     public function getAsuntosDni($dni)
     {
-        $sql = "SELECT id_solicitud_asuntos, DATE_FORMAT(fecha, '%d-%m-%Y') AS fecha_formateada, motivo, estado, dni_empleado FROM solicitud_asuntos WHERE dni_empleado = '$dni'";
+        $sql = "SELECT id_solicitud_asuntos, DATE_FORMAT(fecha, '%d-%m-%Y') AS fecha_formateada, estado, dni_empleado FROM solicitud_asuntos WHERE dni_empleado = '$dni'";
         $result = $this->conection->query($sql);
 
         if ($result->num_rows > 0) {
             $i = 0;
             while ($row = $result->fetch_assoc()) {
-                $this->solicitudes[$i] = new Asuntos($row['id_solicitud_asuntos'], $row['fecha_formateada'], $row['motivo'], $row['estado'], $row['dni_empleado']);
+                $this->solicitudes[$i] = new Asuntos($row['id_solicitud_asuntos'], $row['fecha_formateada'], $row['estado'], $row['dni_empleado']);
                 $i++;
             }
         }
         return $this->solicitudes;
+    }
+
+    public function cambiarEstadoAsunto($id, $estado)
+    {
+        $estado = $this->conection->real_escape_string($estado);
+        $query = "UPDATE solicitud_asuntos SET estado = '$estado' WHERE id_solicitud_asuntos = '$id'";
+
+        if ($this->conection->query($query) === TRUE) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function cambiarEstadoLicencia($id, $estado)
+    {
+        $estado = $this->conection->real_escape_string($estado);
+        $query = "UPDATE solicitud_licencias SET estado = '$estado' WHERE id_solicitud = '$id'";
+
+        if ($this->conection->query($query) === TRUE) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

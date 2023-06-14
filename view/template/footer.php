@@ -27,7 +27,7 @@
         </div>
     </div>
 </footer>
-
+<script src="js/archivo.js"></script>
 </body>
 
 </html>
