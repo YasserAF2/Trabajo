@@ -11,7 +11,7 @@ $empleado = $trace->getEmpleadoCorreo($correo);
             <h2>Perfil del Empleado</h2>
         </div>
         <div>
-            <div class="float-right">
+            <div class="botones">
                 <form class="editar" method="post" action="index.php?action=editar_perfil">
                     <input type="hidden" name="correo" value="<?php echo $correo; ?>">
                     <input type="submit" value="Editar perfil">

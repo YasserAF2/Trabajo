@@ -75,7 +75,6 @@ body {
   height: 100%;
   width: 50%;
   position: relative;
-  z-index: 2;
 }
 
 /* vista inicio con el login */
@@ -401,4 +400,44 @@ form input[type='submit']:hover {
 /* principal admin */
 main.admin {
   height: calc(100vh - 318px);
+}
+
+.botones {
+  float: right;
+}
+
+@media screen and (max-width: 480px) {
+  .cabecera div img {
+    z-index: 99;
+  }
+
+  .cabecera:last-child {
+    width: 90% !important;
+    z-index: auto;
+  }
+
+  .formulario form button {
+    width: auto !important;
+  }
+
+  .pie {
+    height: 38vh;
+  }
+
+  .perfil-usuario {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .botones {
+    float: initial;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .opciones {
+    width: auto;
+  }
 }
