@@ -184,14 +184,29 @@ class Trace
         // Preparar la consulta con un marcador de posición para el valor del DNI
         $sql = "SELECT * FROM T_PETICIONES WHERE PET_DNI = ?";
         $stmt = $this->conection->prepare($sql);
+    
+        // Verificar la preparación de la consulta
+        if (!$stmt) {
+            die('Error al preparar la consulta: ' . $this->conection->error);
+        }
+    
+        // Vincular el parámetro DNI y ejecutar la consulta
         $stmt->bind_param("s", $dni);
         $stmt->execute();
+    
+        // Verificar la ejecución de la consulta
+        if (!$stmt) {
+            die('Error al ejecutar la consulta: ' . $stmt->error);
+        }
+    
+        // Obtener el resultado y cerrar la sentencia
         $resultado = $stmt->get_result();
         $peticiones = $resultado->fetch_all(MYSQLI_ASSOC);
         $stmt->close();
-
+    
         return $peticiones;
     }
+    
 
     public function obtenerDiasAsuntosPropios($correo)
     {
