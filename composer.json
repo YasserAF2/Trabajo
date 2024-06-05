@@ -1,0 +1,13 @@
+{
+    "name": "yass/trabajo",
+    "description": "trace",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Yass\\Trabajo\\": "src/"
+        }
+    },
+    "require": {
+        "phpmailer/phpmailer": "^6.0"
+    }
+}
