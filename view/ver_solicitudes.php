@@ -1,7 +1,4 @@
 <?php 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
 if (!isset($_SESSION['correo'])) {
     header("Location: index.php");
@@ -9,8 +6,8 @@ if (!isset($_SESSION['correo'])) {
 }
 
 $correo = $_SESSION['correo'];
-echo $correo;
 $peticiones = $dataToView['peticiones'];
+
 ?>
 
 <div class="container">

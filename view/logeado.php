@@ -32,16 +32,15 @@ $perteneceSindicato = $trace->pertenece_sindicato();
                 <ul>
                     <li><a href="index.php?action=ver_solicitudes">VER SOLICITUDES</a></li>
                     <li><a href="index.php?action=solicitud_asuntos_propios">SOLICITUD ASUNTOS PROPIOS</a></li>
-                    <li><a href="index.php?action=documentacion_baja_accidente">DOCUMENTACION BAJA ACCIDENTE</a></li>
-                    <li><a href="index.php?action=solicitud_asuntos_propios_no_remunerados">SOLICITUD ASUNTOS PROPIOS NO
-                            REMUNERADOS</a></li>
-                    <li><a href="index.php?action=solicitud_licencia_lactancia_maternidad_paternidad">SOLICITUD LICENCIA
-                            POR LACTANCIA/MATERNIDAD/PATERNIDAD</a></li>
-                    <li><a href="index.php?action=documentacion_baja_enfermedad">DOCUMENTACIÓN BAJA ENFERMEDAD</a></li>
+                    <li><a href="index.php?action=solicitud_asuntos_propios_no_remunerados">SOLICITUD ASUNTOS PROPIOS NO REMUNERADOS</a></li>
+                    <li><a href="index.php?action=solicitud_licencia_lactancia_maternidad_paternidad">SOLICITUD LICENCIA POR LACTANCIA/MATERNIDAD/PATERNIDAD</a></li>
                     <?php if ($perteneceSindicato): ?>
                         <li><a href="index.php?action=solicitud_hora_sindical">SOLICITUD HORA SINDICAL</a></li>
                     <?php endif; ?>                    
                     <li><a href="index.php?action=solicitud_licencia">SOLICITUD LICENCIA</a></li>
+                    <li><a href="index.php?action=documentacion_baja_accidente">DOCUMENTACION BAJA ACCIDENTE</a></li>
+                    <li><a href="index.php?action=documentacion_baja_enfermedad">DOCUMENTACIÓN BAJA ENFERMEDAD</a></li>
+
                     <br />
                     <li><a href="index.php?action=mensaje_direccion">MENSAJE A DIRECCIÓN</a></li>
                     <li><a href="index.php?action=mensaje_encargado_general">MENSAJE A ENCARGADO GENERAL</a></li>
