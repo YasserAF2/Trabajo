@@ -12,6 +12,9 @@ $_SESSION['correo'] = $correo;
 // Verificar si el usuario pertenece al sindicato
 $perteneceSindicato = $trace->pertenece_sindicato();
 
+//verifica el tipo de usuario
+$tipo = $trace->tipo_empleado();
+
 ?>
 
 <main>
@@ -51,6 +54,9 @@ $perteneceSindicato = $trace->pertenece_sindicato();
             </nav>
             <div class="container pl-0">
                 <div>
+                    <?php if ($tipo !== 'BASICO'): ?>
+                        <a href="index.php?action=admin" class="btn btn-primary mb-2">VISTA ADMINISTRADOR</a>
+                    <?php endif; ?>
                     <ul class="list-group">
                         <li class="list-group-item"><strong>Fecha de Nacimiento:</strong>
                             <?php echo $empleado['EMP_FEC_NAC']; ?>

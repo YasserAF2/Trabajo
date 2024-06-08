@@ -1,7 +1,5 @@
 <?php
-include_once 'vendor/autoload.php';
-error_reporting(E_ALL); 
-ini_set('display_errors', 1);
+
 class Trace
 {
     private $conection;
@@ -412,5 +410,70 @@ class Trace
         }
     }
     
+    public function tipo_empleado()
+    {
+        $dni = $_SESSION['dni'];
+        $sql = "SELECT EMP_TIPO FROM empleados WHERE EMP_NIF = ?";
+        $stmt = $this->conection->prepare($sql);
+        $stmt->bind_param("s", $dni);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        $tipo = null; // Inicializar la variable $tipo como nula
+        
+        // Verificar si se encontró un resultado
+        if ($resultado->num_rows > 0) {
+            // Obtener el valor del campo EMP_TIPO
+            $row = $resultado->fetch_assoc();
+            $tipo = $row['EMP_TIPO'];
+        }
+        
+        $stmt->close();
+        return $tipo;
+    }
+
+    public function ver_solitudes_ap() {
+        $tipo = "AP";
+        $sql = "SELECT * FROM t_peticiones WHERE PET_TIPO = ?";
+        $stmt = $this->conection->prepare($sql);
+        $stmt->bind_param("s", $tipo);
+        $stmt->execute();
+
+        // Obtener el resultado y cerrar la sentencia
+        $resultado = $stmt->get_result();
+        $peticiones = $resultado->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+
+        return $peticiones;
+    }
+
+    public function ver_solitudes_as() {
+        $tipo = "AS";
+        $sql = "SELECT * FROM t_peticiones WHERE PET_TIPO = ?";
+        $stmt = $this->conection->prepare($sql);
+        $stmt->bind_param("s", $tipo);
+        $stmt->execute();
+
+        // Obtener el resultado y cerrar la sentencia
+        $resultado = $stmt->get_result();
+        $peticiones = $resultado->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+
+        return $peticiones;
+    }
+
+    //obtener los datos del empleado por el dni
+    public function datos_empleado($dni){
+        $sql = "SELECT * FROM empleados WHERE EMP_NIF = ?";
+        $stmt = $this->conection->prepare($sql);
+        $stmt->bind_param("s", $dni);
+        $stmt->execute();
+
+        // Obtener el resultado y cerrar la sentencia
+        $resultado = $stmt->get_result();
+        $empleado = $resultado->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+
+        return $empleado;
+    }
 
 }

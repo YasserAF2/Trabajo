@@ -66,7 +66,7 @@ class controlador
     }
     
 
-    //ASUNTOS PROPIOS VISTA
+    //ASUNTOS PROPIOS VISTA usuario
     public function solicitud_asuntos_propios() {
         session_start();
         if (isset($_SESSION['correo'])) {
@@ -76,6 +76,36 @@ class controlador
                 'dias' => $dias,
             );
             $this->view = 'solicitud_asuntos_propios';
+            return $datos;
+        } else {
+            $this->view = "login";
+        }
+    }
+
+    public function ver_solicitudes_ap() {
+        session_start();
+        if (isset($_SESSION['correo'])) {
+            $peticiones = $this->trace->ver_solitudes_ap();
+            $empleado = $this->trace->datos_empleado($_SESSION['dni']);
+            $datos = array(
+                'peticiones' => $peticiones,
+                'empleado' => $empleado,
+            );
+            $this->view = 'ver_solicitudes_ap';
+            return $datos;
+        } else {
+            $this->view = "login";
+        }
+    }
+
+    public function ver_solicitudes_as() {
+        session_start();
+        if (isset($_SESSION['correo'])) {
+            $as = $this->trace->ver_solitudes_as();
+            $datos = array(
+                'as' => $as,
+            );
+            $this->view = 'ver_solicitudes_as';
             return $datos;
         } else {
             $this->view = "login";
@@ -132,6 +162,11 @@ class controlador
     public function mensaje_direccion()
     {
         $this->view = 'mensaje_direccion';
+    }
+
+    public function admin()
+    {
+        $this->view = 'admin';
     }
 
     //Funciones enviar_mensaje y correo para enviar correos electronicos
@@ -210,29 +245,6 @@ class controlador
         $this->view = 'registro_fecha';
     }
 
-    public function registro()
-    {
-        session_start();
-        $dni = $_SESSION['dni'];
-        $this->view = 'procesar_registro';
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $email = $_POST['email'];
-            $password = $_POST['password'];
-
-            $token = $this->trace->procesar_registro();
-
-            if ($token) {
-                $this->enviar_correo_confirmacion($email, $token);
-                echo "Revise su correo para confirmar el registro.";
-            } else {
-                echo "Hubo un error en el registro. Por favor, intente nuevamente.";
-            }
-        } else {
-            echo "Solicitud no válida.";
-        }
-    }
-
-
     public function procesar_dni()
     {
         session_start();
@@ -268,7 +280,7 @@ class controlador
     {
         // Configuración del correo
         $mail = new PHPMailer(true); // Establece el modo de excepciones en true para que PHPMailer arroje excepciones en caso de error
-
+    
         try {
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com'; // Servidor SMTP
@@ -277,20 +289,43 @@ class controlador
             $mail->Password = 'cfgs zaum nfkn rsaj'; // Tu contraseña de correo electrónico
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
-
+    
             $mail->setFrom('ceutaportalempleados@gmail.com', 'Trace');
             $mail->addAddress($email);
-
+    
             $mail->isHTML(true);
             $mail->Subject = 'Confirmación de registro';
             $mail->Body = "Haga clic en el siguiente enlace para confirmar su registro: <a href='http://localhost/php/Trabajo/index.php?action=confirmar_registro&token=$token'>Confirmar Registro</a>";
-
+    
             // Envío del correo
             $mail->send();
-            echo 'El mensaje ha sido enviado.';
+            $_SESSION['mensaje_correo'] = 'El mensaje ha sido enviado.';
         } catch (Exception $e) {
-            echo "El mensaje no pudo ser enviado. Mailer Error: {$mail->ErrorInfo}";
+            $_SESSION['mensaje_correo'] = "El mensaje no pudo ser enviado. Mailer Error: {$mail->ErrorInfo}";
         }
+    }
+    
+    public function registro()
+    {
+        session_start();
+        $dni = $_SESSION['dni'];
+        $this->view = 'procesar_registro';
+    
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $email = $_POST['email'];
+            $password = $_POST['password'];
+            $token = $this->trace->procesar_registro();
+    
+            if ($token) {
+                $this->enviar_correo_confirmacion($email, $token);
+            } else {
+                $_SESSION['mensaje_correo'] = "Hubo un error en el registro. Por favor, intente nuevamente.";
+            }
+        } else {
+            $_SESSION['mensaje_correo'] = "Solicitud no válida.";
+        }
+    
+        return;
     }
 
     public function confirmar_registro()
