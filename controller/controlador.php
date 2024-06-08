@@ -65,6 +65,9 @@ class controlador
         return $datos;
     }
     
+    public function ver_calendario(){
+        $this->view = 'ver_calendario';
+    }
 
     //ASUNTOS PROPIOS VISTA usuario
     public function solicitud_asuntos_propios() {
@@ -85,11 +88,9 @@ class controlador
     public function ver_solicitudes_ap() {
         session_start();
         if (isset($_SESSION['correo'])) {
-            $peticiones = $this->trace->ver_solitudes_ap();
-            $empleado = $this->trace->datos_empleado($_SESSION['dni']);
+            $peticiones = $this->trace->ver_solicitudes_ap();
             $datos = array(
                 'peticiones' => $peticiones,
-                'empleado' => $empleado,
             );
             $this->view = 'ver_solicitudes_ap';
             return $datos;
@@ -97,13 +98,14 @@ class controlador
             $this->view = "login";
         }
     }
+    
 
     public function ver_solicitudes_as() {
         session_start();
         if (isset($_SESSION['correo'])) {
-            $as = $this->trace->ver_solitudes_as();
+            $peticiones = $this->trace->ver_solicitudes_as();
             $datos = array(
-                'as' => $as,
+                'peticiones' => $peticiones,
             );
             $this->view = 'ver_solicitudes_as';
             return $datos;

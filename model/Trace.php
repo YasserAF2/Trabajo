@@ -431,33 +431,39 @@ class Trace
         return $tipo;
     }
 
-    public function ver_solitudes_ap() {
-        $tipo = "AP";
-        $sql = "SELECT * FROM t_peticiones WHERE PET_TIPO = ?";
+    public function ver_solicitudes_ap() {
+        $tipo = "AP";  // Tipo de petición que queremos filtrar
+        $sql = "SELECT p.*, e.EMP_NOMBRE, e.EMP_APE_1, e.EMP_APE_2 
+                FROM t_peticiones p
+                JOIN empleados e ON e.EMP_NIF = p.PET_DNI
+                WHERE p.PET_TIPO = ?";
         $stmt = $this->conection->prepare($sql);
         $stmt->bind_param("s", $tipo);
         $stmt->execute();
-
+    
         // Obtener el resultado y cerrar la sentencia
         $resultado = $stmt->get_result();
         $peticiones = $resultado->fetch_all(MYSQLI_ASSOC);
         $stmt->close();
-
+    
         return $peticiones;
     }
 
-    public function ver_solitudes_as() {
+    public function ver_solicitudes_as() {
         $tipo = "AS";
-        $sql = "SELECT * FROM t_peticiones WHERE PET_TIPO = ?";
+        $sql = "SELECT p.*, e.EMP_NOMBRE, e.EMP_APE_1, e.EMP_APE_2 
+                FROM t_peticiones p
+                JOIN empleados e ON e.EMP_NIF = p.PET_DNI
+                WHERE p.PET_TIPO = ?";
         $stmt = $this->conection->prepare($sql);
         $stmt->bind_param("s", $tipo);
         $stmt->execute();
-
+    
         // Obtener el resultado y cerrar la sentencia
         $resultado = $stmt->get_result();
         $peticiones = $resultado->fetch_all(MYSQLI_ASSOC);
         $stmt->close();
-
+    
         return $peticiones;
     }
 
