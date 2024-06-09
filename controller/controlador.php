@@ -73,14 +73,19 @@ class controlador
 
     public function aceptar()
     {
-        $this->view = 'admin';
+        if (isset($_GET['peticion_id'])) {
+            $this->trace->aceptar();
+            header("Location: index.php?action=ver_solicitudes_ap");
+            exit();
+        } else {
+            echo "No se ha proporcionado un ID de petición en la URL.";
+        }
     }
 
     public function rechazar()
     {
         if (isset($_GET['peticion_id'])) {
-            $trace = new Trace();
-            $trace->rechazar();
+            $this->trace->rechazar();
             header("Location: index.php?action=ver_solicitudes_ap");
             exit();
         } else {

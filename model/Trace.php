@@ -489,12 +489,18 @@ class Trace
     }
 
     //parte admin aceptar y rechazar solicitudes
+
     function aceptar()
     {
-        $peticion_id = $_GET['PET_ID'];
+        // Verificar si el parámetro 'peticion_id' está presente en $_GET
+        if (!isset($_GET['peticion_id'])) {
+            throw new Exception("El parámetro 'peticion_id' no está definido en la URL.");
+        }
 
-        // Obtener la petición
-        $query = $this->conection->prepare("SELECT * FROM T_PETICIONES WHERE PET_ID = ?");
+        $peticion_id = $_GET['peticion_id'];
+
+        // Obtener la petición y el turno del empleado
+        $query = $this->conection->prepare("SELECT PET_FECHA, TURNO FROM T_PETICIONES JOIN empleados ON T_PETICIONES.PET_DNI = EMPLEADOS.EMP_NIF WHERE PET_ID = ?");
         $query->bind_param("i", $peticion_id);
         $query->execute();
         $peticion_result = $query->get_result();
@@ -507,7 +513,7 @@ class Trace
         $query->close();
 
         $fecha = $peticion['PET_FECHA'];
-        $turno = $peticion['PET_TIPO'];
+        $turno = $peticion['TURNO'];
 
         // Verificar la ocupación actual
         $query = $this->conection->prepare("SELECT * FROM T_OCUPACION WHERE FECHA = ?");
@@ -516,33 +522,28 @@ class Trace
         $ocupacion_result = $query->get_result();
         $ocupacion = $ocupacion_result->fetch_assoc();
 
-        if (!$ocupacion) {
-            // Si no hay registro de ocupación para esa fecha, inicializarlo
-            $ocupacion = [
-                'MAÑANA' => 0,
-                'TARDE' => 0,
-                'NOCHE' => 0
-            ];
-        }
-
-        // Límites de ocupación
-        $limites = [
-            'MAÑANA' => 20,
-            'TARDE' => 15,
-            'NOCHE' => 10
+        // Límites de ocupación para AP
+        $limites_ap = [
+            'AP_MAÑANA' => 20,
+            'AP_TARDE' => 15,
+            'AP_NOCHE' => 10
         ];
 
-        // Verificar si se puede aceptar la petición
-        if ($turno == 'AP') {
-            if ($ocupacion[$turno] >= $limites[$turno]) {
-                throw new Exception("No se puede aceptar la petición. El turno de $turno ya está completo.");
-            }
-        }
+// Verificar si se puede aceptar la petición de AP
+if (strpos($turno, 'T_') !== false) {
+    $turno_ocupacion = str_replace('T_', 'AP_', $turno);
+    if ($ocupacion[$turno_ocupacion] >= $limites_ap[$turno_ocupacion]) {
+        throw new Exception("No se puede aceptar la petición. El turno de $turno ya está completo.");
+    }
+}
+
+
+        // Incrementar la ocupación para AP
+        $ocupacion[$turno_ocupacion] += 1;
 
         // Actualizar la tabla T_OCUPACION
-        $ocupacion[$turno] += 1;
-        $query = $this->conection->prepare("INSERT INTO T_OCUPACION (FECHA, MAÑANA, TARDE, NOCHE) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE MAÑANA = ?, TARDE = ?, NOCHE = ?");
-        $query->bind_param("siiiiii", $fecha, $ocupacion['MAÑANA'], $ocupacion['TARDE'], $ocupacion['NOCHE'], $ocupacion['MAÑANA'], $ocupacion['TARDE'], $ocupacion['NOCHE']);
+        $query = $this->conection->prepare("UPDATE T_OCUPACION SET AP_MAÑANA = ?, AP_TARDE = ?, AP_NOCHE = ? WHERE FECHA = ?");
+        $query->bind_param("iiis", $ocupacion['AP_MAÑANA'], $ocupacion['AP_TARDE'], $ocupacion['AP_NOCHE'], $fecha);
         $query->execute();
 
         // Actualizar el estado de la petición a aceptada
@@ -550,8 +551,12 @@ class Trace
         $query->bind_param("i", $peticion_id);
         $query->execute();
 
-        echo "Petición aceptada exitosamente.";
+        // Agregar variables de sesión
+        $_SESSION['mensaje'] = "Petición aceptada exitosamente.";
+        $_SESSION['peticion_id_aceptada'] = $peticion_id;
     }
+
+
 
 
     function rechazar()
