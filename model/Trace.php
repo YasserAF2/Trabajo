@@ -147,12 +147,12 @@ class Trace
     public function logeado()
     {
         session_start();
-    
+
         // Verificar si ya hay una sesión iniciada
         if (isset($_SESSION['user_id']) && isset($_SESSION['contraseña'])) {
             return true; // El usuario ya está autenticado
         }
-    
+
         // Si no hay una sesión iniciada, intentar iniciar sesión con las credenciales proporcionadas
         $correo = $_POST['correo'];
         $contraseña = $_POST['contraseña'];
@@ -161,11 +161,11 @@ class Trace
         $query->execute();
         $result = $query->get_result()->fetch_assoc();
         $_SESSION['result'] = $result;
-    
+
         if (!$result) {
             return '¡La combinación de nombre de usuario y contraseña es incorrecta!';
         }
-    
+
         if (isset($result['EMP_CONTRASEÑA']) && password_verify($contraseña, $result['EMP_CONTRASEÑA'])) {
             $_SESSION['user_id'] = $result['EMP_CORREO'];
             $_SESSION['contraseña'] = $result['EMP_CONTRASEÑA'];
@@ -182,29 +182,29 @@ class Trace
         // Preparar la consulta con un marcador de posición para el valor del DNI
         $sql = "SELECT * FROM T_PETICIONES WHERE PET_DNI = ?";
         $stmt = $this->conection->prepare($sql);
-    
+
         // Verificar la preparación de la consulta
         if (!$stmt) {
             die('Error al preparar la consulta: ' . $this->conection->error);
         }
-    
+
         // Vincular el parámetro DNI y ejecutar la consulta
         $stmt->bind_param("s", $dni);
         $stmt->execute();
-    
+
         // Verificar la ejecución de la consulta
         if (!$stmt) {
             die('Error al ejecutar la consulta: ' . $stmt->error);
         }
-    
+
         // Obtener el resultado y cerrar la sentencia
         $resultado = $stmt->get_result();
         $peticiones = $resultado->fetch_all(MYSQLI_ASSOC);
         $stmt->close();
-    
+
         return $peticiones;
     }
-    
+
 
     public function obtenerDiasAsuntosPropios($correo)
     {
@@ -215,34 +215,35 @@ class Trace
         $stmt->execute();
         $resultado = $stmt->get_result();
         $dias_ap = null;
-        
+
         // Verificar si se encontró un resultado
         if ($row = $resultado->fetch_assoc()) {
             $dias_ap = $row['NUM_TOTAL_DIAS_AP'];
         }
-    
+
         $stmt->close();
         return $dias_ap;
     }
-    
 
-    function asuntos_propios() {
-    // Recoger la fecha y hora del POST
-    $fechaHora = $_POST['selected_date'];
 
-    // Separar la fecha y la hora
-    list($fecha, $hora) = explode(' ', $fechaHora);
+    function asuntos_propios()
+    {
+        // Recoger la fecha y hora del POST
+        $fechaHora = $_POST['selected_date'];
 
-    // Convertir la fecha al formato YYYY-MM-DD
-    $fechaPartes = explode('-', $fecha);
-    if (count($fechaPartes) == 3) {
-        // Si el array tiene tres elementos (día, mes, año), el formato es correcto
-        $fechaFormateada = sprintf('%04d-%02d-%02d', $fechaPartes[2], $fechaPartes[1], $fechaPartes[0]);
-    } else {
-        // Manejar el caso en el que el formato de fecha no sea el esperado
-        // Por ejemplo, mostrar un mensaje de error o establecer $fechaFormateada en un valor predeterminado
-    }
-    
+        // Separar la fecha y la hora
+        list($fecha, $hora) = explode(' ', $fechaHora);
+
+        // Convertir la fecha al formato YYYY-MM-DD
+        $fechaPartes = explode('-', $fecha);
+        if (count($fechaPartes) == 3) {
+            // Si el array tiene tres elementos (día, mes, año), el formato es correcto
+            $fechaFormateada = sprintf('%04d-%02d-%02d', $fechaPartes[2], $fechaPartes[1], $fechaPartes[0]);
+        } else {
+            // Manejar el caso en el que el formato de fecha no sea el esperado
+            // Por ejemplo, mostrar un mensaje de error o establecer $fechaFormateada en un valor predeterminado
+        }
+
         $num_dias_ap = 0;
         $num_total_dias_ap = 0;
 
@@ -253,93 +254,94 @@ class Trace
         $stmt_ap->store_result();
         $stmt_ap->bind_result($num_dias_ap, $num_total_dias_ap);
         $stmt_ap->fetch();
-    
+
         // Verificar si el número de días AP no supera el total
         if ($num_dias_ap < $num_total_dias_ap) {
             // Incrementar el número de días AP
             $num_dias_ap++;
-    
+
             // Actualizar el número de días AP en la base de datos
             $stmt_update_ap = $this->conection->prepare("UPDATE empleados SET NUM_DIAS_AP = ? WHERE EMP_NIF = ?");
             $stmt_update_ap->bind_param("is", $num_dias_ap, $_SESSION['dni']);
             $stmt_update_ap->execute();
             $stmt_update_ap->close();
-    
+
             // Preparar la consulta para insertar la solicitud
             $stmt_insert = $this->conection->prepare("INSERT INTO t_peticiones (PET_DNI, PET_FECHA, PET_TIPO, PET_FECHA_HORA_SOLICITUD, PET_ACEPTADO, PET_SUPERVISOR, PET_DOC) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    
+
             // Definir valores
             $dni = $_SESSION['dni'];
             $tipo = 'AP';
             $aceptado = 'En espera';
             $supervisor = NULL;
             $doc = NULL;
-    
+
             // Crear la fecha y hora completa en formato compatible
             $fechaHoraSolicitud = $fechaFormateada . ' ' . $hora;
-    
+
             // Vincular parámetros
             $stmt_insert->bind_param("sssssss", $dni, $fechaFormateada, $tipo, $fechaHoraSolicitud, $aceptado, $supervisor, $doc);
-    
+
             // Ejecutar la consulta
             if ($stmt_insert->execute()) {
                 $resultado = "Solicitud enviada correctamente.";
             } else {
                 $resultado = "Error al enviar la solicitud: " . $stmt_insert->error;
             }
-    
+
             // Cerrar la declaración y la conexión
             $stmt_insert->close();
         } else {
             $resultado = "No puede solicitar más días de asuntos propios, ha alcanzado el límite.";
         }
-    
+
         $stmt_ap->close();
         $this->conection->close();
         return $resultado;
     }
-    
 
-    function solicitud_asuntos_propios_norm() {
+
+    function solicitud_asuntos_propios_norm()
+    {
         // Recoger la fecha y hora del POST
         $fechaHora = $_POST['selected_date'];
-    
+
         // Separar la fecha y la hora
         list($fecha, $hora) = explode(' ', $fechaHora);
-    
+
         // Convertir la fecha al formato YYYY-MM-DD
         $fechaPartes = explode('-', $fecha);
         $fechaFormateada = sprintf('%04d-%02d-%02d', $fechaPartes[2], $fechaPartes[1], $fechaPartes[0]);
-    
+
         // Preparar la consulta
         $stmt = $this->conection->prepare("INSERT INTO t_peticiones (PET_DNI, PET_FECHA, PET_TIPO, PET_FECHA_HORA_SOLICITUD, PET_ACEPTADO, PET_SUPERVISOR, PET_DOC) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    
+
         // Definir valores
         $dni = $_SESSION['dni'];
         $tipo = 'AS';
         $aceptado = 'En espera';
         $supervisor = NULL;
         $doc = NULL;
-    
+
         // Crear la fecha y hora completa en formato compatible
         $fechaHoraSolicitud = $fechaFormateada . ' ' . $hora;
-    
+
         // Vincular parámetros
         $stmt->bind_param("sssssss", $dni, $fechaFormateada, $tipo, $fechaHoraSolicitud, $aceptado, $supervisor, $doc);
-    
+
         // Ejecutar la consulta
         if ($stmt->execute()) {
             $resultado = "Solicitud enviada correctamente.";
         } else {
             $resultado = "Error al enviar la solicitud: " . $stmt->error;
         }
-    
+
         // Cerrar la declaración y la conexión
         $stmt->close();
         $this->conection->close();
         return $resultado;
     }
-    
+
     public function pertenece_sindicato()
     {
         $dni = $_SESSION['dni'];
@@ -350,54 +352,55 @@ class Trace
         $stmt->execute();
         $resultado = $stmt->get_result();
         $pertenece = false;
-        
+
         // Verificar si se encontró un resultado
         if ($resultado->num_rows > 0) {
             $pertenece = true;
         }
-        
+
         $stmt->close();
         return $pertenece;
     }
-    
+
 
     //INSERT PETICIÓN BAJA POR ACCIDENTE
-    public function submit_baja_accidente() {
+    public function submit_baja_accidente()
+    {
         $fecha = $_POST['fecha'];
         $hora = $_POST['hora'];
-    
+
         // Verificar si el archivo fue subido sin errores
         if (isset($_FILES['archivo']) && $_FILES['archivo']['error'] === UPLOAD_ERR_OK) {
             // Ruta de almacenamiento del archivo
             $nombreArchivo = $_FILES['archivo']['name'];
             $rutaTemporal = $_FILES['archivo']['tmp_name'];
             $rutaDestino = 'view/documentos/' . $nombreArchivo;
-    
+
             // Mover el archivo subido al directorio de destino
             if (move_uploaded_file($rutaTemporal, $rutaDestino)) {
                 // Preparar la consulta
                 $stmt = $this->conection->prepare("INSERT INTO t_peticiones (PET_DNI, PET_FECHA, PET_TIPO, PET_FECHA_HORA_SOLICITUD, PET_ACEPTADO, PET_SUPERVISOR, PET_DOC) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    
+
                 // Definir valores
                 $dni = $_SESSION['dni'];
                 $tipo = 'A';
                 $aceptado = 'En espera';
                 $supervisor = NULL;
                 $doc = $nombreArchivo;
-    
+
                 // Crear la fecha y hora completa en formato compatible
                 $fechaHoraSolicitud = $fecha . ' ' . $hora;
-    
+
                 // Vincular parámetros
                 $stmt->bind_param("sssssss", $dni, $fecha, $tipo, $fechaHoraSolicitud, $aceptado, $supervisor, $doc);
-    
+
                 // Ejecutar la consulta
                 if ($stmt->execute()) {
                     $resultado = "Solicitud enviada correctamente.";
                 } else {
                     $resultado = "Error al enviar la solicitud: " . $stmt->error;
                 }
-    
+
                 // Cerrar la declaración y la conexión
                 $stmt->close();
                 $this->conection->close();
@@ -409,7 +412,7 @@ class Trace
             return "Error al subir el archivo: " . $_FILES['archivo']['error'];
         }
     }
-    
+
     public function tipo_empleado()
     {
         $dni = $_SESSION['dni'];
@@ -419,19 +422,20 @@ class Trace
         $stmt->execute();
         $resultado = $stmt->get_result();
         $tipo = null; // Inicializar la variable $tipo como nula
-        
+
         // Verificar si se encontró un resultado
         if ($resultado->num_rows > 0) {
             // Obtener el valor del campo EMP_TIPO
             $row = $resultado->fetch_assoc();
             $tipo = $row['EMP_TIPO'];
         }
-        
+
         $stmt->close();
         return $tipo;
     }
 
-    public function ver_solicitudes_ap() {
+    public function ver_solicitudes_ap()
+    {
         $tipo = "AP";  // Tipo de petición que queremos filtrar
         $sql = "SELECT p.*, e.EMP_NOMBRE, e.EMP_APE_1, e.EMP_APE_2 
                 FROM t_peticiones p
@@ -440,16 +444,17 @@ class Trace
         $stmt = $this->conection->prepare($sql);
         $stmt->bind_param("s", $tipo);
         $stmt->execute();
-    
+
         // Obtener el resultado y cerrar la sentencia
         $resultado = $stmt->get_result();
         $peticiones = $resultado->fetch_all(MYSQLI_ASSOC);
         $stmt->close();
-    
+
         return $peticiones;
     }
 
-    public function ver_solicitudes_as() {
+    public function ver_solicitudes_as()
+    {
         $tipo = "AS";
         $sql = "SELECT p.*, e.EMP_NOMBRE, e.EMP_APE_1, e.EMP_APE_2 
                 FROM t_peticiones p
@@ -458,17 +463,18 @@ class Trace
         $stmt = $this->conection->prepare($sql);
         $stmt->bind_param("s", $tipo);
         $stmt->execute();
-    
+
         // Obtener el resultado y cerrar la sentencia
         $resultado = $stmt->get_result();
         $peticiones = $resultado->fetch_all(MYSQLI_ASSOC);
         $stmt->close();
-    
+
         return $peticiones;
     }
 
     //obtener los datos del empleado por el dni
-    public function datos_empleado($dni){
+    public function datos_empleado($dni)
+    {
         $sql = "SELECT * FROM empleados WHERE EMP_NIF = ?";
         $stmt = $this->conection->prepare($sql);
         $stmt->bind_param("s", $dni);
@@ -482,4 +488,81 @@ class Trace
         return $empleado;
     }
 
+    //parte admin aceptar y rechazar solicitudes
+    function aceptar()
+    {
+        $peticion_id = $_GET['PET_ID'];
+
+        // Obtener la petición
+        $query = $this->conection->prepare("SELECT * FROM T_PETICIONES WHERE PET_ID = ?");
+        $query->bind_param("i", $peticion_id);
+        $query->execute();
+        $peticion_result = $query->get_result();
+
+        if ($peticion_result->num_rows === 0) {
+            throw new Exception("Petición no encontrada.");
+        }
+
+        $peticion = $peticion_result->fetch_assoc();
+        $query->close();
+
+        $fecha = $peticion['PET_FECHA'];
+        $turno = $peticion['PET_TIPO'];
+
+        // Verificar la ocupación actual
+        $query = $this->conection->prepare("SELECT * FROM T_OCUPACION WHERE FECHA = ?");
+        $query->bind_param("s", $fecha);
+        $query->execute();
+        $ocupacion_result = $query->get_result();
+        $ocupacion = $ocupacion_result->fetch_assoc();
+
+        if (!$ocupacion) {
+            // Si no hay registro de ocupación para esa fecha, inicializarlo
+            $ocupacion = [
+                'MAÑANA' => 0,
+                'TARDE' => 0,
+                'NOCHE' => 0
+            ];
+        }
+
+        // Límites de ocupación
+        $limites = [
+            'MAÑANA' => 20,
+            'TARDE' => 15,
+            'NOCHE' => 10
+        ];
+
+        // Verificar si se puede aceptar la petición
+        if ($turno == 'AP') {
+            if ($ocupacion[$turno] >= $limites[$turno]) {
+                throw new Exception("No se puede aceptar la petición. El turno de $turno ya está completo.");
+            }
+        }
+
+        // Actualizar la tabla T_OCUPACION
+        $ocupacion[$turno] += 1;
+        $query = $this->conection->prepare("INSERT INTO T_OCUPACION (FECHA, MAÑANA, TARDE, NOCHE) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE MAÑANA = ?, TARDE = ?, NOCHE = ?");
+        $query->bind_param("siiiiii", $fecha, $ocupacion['MAÑANA'], $ocupacion['TARDE'], $ocupacion['NOCHE'], $ocupacion['MAÑANA'], $ocupacion['TARDE'], $ocupacion['NOCHE']);
+        $query->execute();
+
+        // Actualizar el estado de la petición a aceptada
+        $query = $this->conection->prepare("UPDATE T_PETICIONES SET PET_ACEPTADO = 'SI' WHERE PET_ID = ?");
+        $query->bind_param("i", $peticion_id);
+        $query->execute();
+
+        echo "Petición aceptada exitosamente.";
+    }
+
+
+    function rechazar()
+    {
+        $peticion_id = $_GET['peticion_id'];
+        $query = $this->conection->prepare("UPDATE T_PETICIONES SET PET_ACEPTADO = 'NO' WHERE PET_ID = ?");
+        $query->bind_param("i", $peticion_id);
+        if ($query->execute()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

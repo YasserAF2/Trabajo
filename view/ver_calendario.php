@@ -37,7 +37,7 @@ if (!isset($_SESSION['correo'])) {
             </div>
         </div>
         <div class="card-footer text-end">
-            <a href="index.php?action=logeado" class="btn btn-secondary">Volver atrás</a>
+            <a href="index.php?action=admin" class="btn btn-secondary">Volver atrás</a>
         </div>
     </div>
 </div>

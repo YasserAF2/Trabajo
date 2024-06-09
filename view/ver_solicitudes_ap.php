@@ -1,4 +1,4 @@
-<?php 
+<?php
 if (!isset($_SESSION['correo'])) {
     header("Location: index.php");
     exit();
@@ -6,6 +6,9 @@ if (!isset($_SESSION['correo'])) {
 
 $correo = $_SESSION['correo'];
 $peticiones = $dataToView['peticiones'];
+// verifica el tipo de usuario
+$trace = new Trace();
+$tipo = $trace->tipo_empleado();
 
 ?>
 
@@ -18,7 +21,7 @@ $peticiones = $dataToView['peticiones'];
             </div>
         </div>
 
-        <?php if (!empty($peticiones)): ?>
+        <?php if (!empty($peticiones)) : ?>
             <div class="mt-4">
                 <table class="table table-striped">
                     <thead>
@@ -27,12 +30,13 @@ $peticiones = $dataToView['peticiones'];
                             <th>Nombre y Apellidos</th>
                             <th>Tipo</th>
                             <th>Fecha y hora de solicitud</th>
-                            <th>Aceptado</th>
+                            <th>Estado</th>
                             <th>Supervisor</th>
+                            <th>Acciones</th> <!-- Nueva columna para los botones -->
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($peticiones as $peticion): ?>
+                        <?php foreach ($peticiones as $peticion) : ?>
                             <tr>
                                 <td><?= $peticion['PET_DNI'] ?></td>
                                 <td><?= $peticion['EMP_NOMBRE'] . ' ' . $peticion['EMP_APE_1'] . ' ' . $peticion['EMP_APE_2'] ?></td>
@@ -40,17 +44,26 @@ $peticiones = $dataToView['peticiones'];
                                 <td><?= $peticion['PET_FECHA_HORA_SOLICITUD'] ?></td>
                                 <td><?= $peticion['PET_ACEPTADO'] ?></td>
                                 <td><?= $peticion['PET_SUPERVISOR'] ?></td>
+                                <td>
+                                    <?php if ($tipo == 'ADMINISTRADOR' || $tipo == 'SUPERUSUARIO') : ?>
+                                        <a href="index.php?action=aceptar&peticion_id=<?= $peticion['PET_ID'] ?>" class="btn btn-success" onclick="return confirm('¿Estás seguro de que quieres aceptar esta petición?')">Aceptar</a>
+                                        <a href="index.php?action=rechazar&peticion_id=<?= $peticion['PET_ID'] ?>" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que quieres rechazar esta petición?')">Rechazar</a>
+                                    <?php else : ?>
+                                        <button class="btn btn-success" disabled>Aceptar</button>
+                                        <button class="btn btn-danger" disabled>Rechazar</button>
+                                    <?php endif; ?>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
-        <?php else: ?>
+        <?php else : ?>
             <p>No hay peticiones disponibles.</p>
         <?php endif; ?>
 
-        <div class="mt-4 text-end">
-            <a href="index.php?action=logeado" class="btn btn-secondary">Volver atrás</a>
+        <div class="mt-2 mb-2 text-end">
+            <a href="index.php?action=admin" class="btn btn-secondary">Volver atrás</a>
         </div>
     </div>
 </div>

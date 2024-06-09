@@ -6,6 +6,9 @@ if (!isset($_SESSION['correo'])) {
 
 $correo = $_SESSION['correo'];
 $peticiones = $dataToView['peticiones'];
+// verifica el tipo de usuario
+$trace = new Trace();
+$tipo = $trace->tipo_empleado();
 
 ?>
 
@@ -27,8 +30,9 @@ $peticiones = $dataToView['peticiones'];
                             <th>Nombre y Apellidos</th>
                             <th>Tipo</th>
                             <th>Fecha y hora de solicitud</th>
-                            <th>Aceptado</th>
+                            <th>Estado</th>
                             <th>Supervisor</th>
+                            <th>Acciones</th> <!-- Nueva columna para los botones -->
                         </tr>
                     </thead>
                     <tbody>
@@ -40,6 +44,15 @@ $peticiones = $dataToView['peticiones'];
                                 <td><?= $peticion['PET_FECHA_HORA_SOLICITUD'] ?></td>
                                 <td><?= $peticion['PET_ACEPTADO'] ?></td>
                                 <td><?= $peticion['PET_SUPERVISOR'] ?></td>
+                                <td>
+                                    <?php if ($tipo == 'ADMINISTRADOR' || $tipo == 'SUPERUSUARIO'): ?>
+                                        <a href="index.php?action=aceptar&peticion_id=<?= $peticion['PET_ID'] ?>" class="btn btn-success">Aceptar</a>
+                                        <a href="index.php?action=rechazar&peticion_id=<?= $peticion['PET_ID'] ?>" class="btn btn-danger">Rechazar</a>
+                                    <?php else: ?>
+                                        <button class="btn btn-success" disabled>Aceptar</button>
+                                        <button class="btn btn-danger" disabled>Rechazar</button>
+                                    <?php endif; ?>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -50,7 +63,7 @@ $peticiones = $dataToView['peticiones'];
         <?php endif; ?>
 
         <div class="mt-4 text-end">
-            <a href="index.php?action=logeado" class="btn btn-secondary">Volver atrás</a>
+            <a href="index.php?action=admin" class="btn btn-secondary">Volver atrás</a>
         </div>
     </div>
 </div>

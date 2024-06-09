@@ -4,7 +4,8 @@ include_once 'vendor/autoload.php';
 // Importación de clases PHPMailer
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-error_reporting(E_ALL); 
+
+error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 class controlador
@@ -52,25 +53,44 @@ class controlador
             header("Location: index.php?accion=login");
             exit();
         }
-    
+
         $dni = $_SESSION['dni'];
         $correo = $_SESSION['correo'];
-    
+
         $peticiones = $this->trace->peticiones_dni($dni);
         $datos = array(
             'peticiones' => $peticiones,
         );
-    
+
         $this->view = 'ver_solicitudes'; // Esto indica cuál vista cargar
         return $datos;
     }
-    
-    public function ver_calendario(){
+
+    public function ver_calendario()
+    {
         $this->view = 'ver_calendario';
     }
 
+    public function aceptar()
+    {
+        $this->view = 'admin';
+    }
+
+    public function rechazar()
+    {
+        if (isset($_GET['peticion_id'])) {
+            $trace = new Trace();
+            $trace->rechazar();
+            header("Location: index.php?action=ver_solicitudes_ap");
+            exit();
+        } else {
+            echo "No se ha proporcionado un ID de petición en la URL.";
+        }
+    }
+
     //ASUNTOS PROPIOS VISTA usuario
-    public function solicitud_asuntos_propios() {
+    public function solicitud_asuntos_propios()
+    {
         session_start();
         if (isset($_SESSION['correo'])) {
             $correo = $_SESSION['correo'];
@@ -85,7 +105,8 @@ class controlador
         }
     }
 
-    public function ver_solicitudes_ap() {
+    public function ver_solicitudes_ap()
+    {
         session_start();
         if (isset($_SESSION['correo'])) {
             $peticiones = $this->trace->ver_solicitudes_ap();
@@ -98,9 +119,10 @@ class controlador
             $this->view = "login";
         }
     }
-    
 
-    public function ver_solicitudes_as() {
+
+    public function ver_solicitudes_as()
+    {
         session_start();
         if (isset($_SESSION['correo'])) {
             $peticiones = $this->trace->ver_solicitudes_as();
@@ -115,20 +137,22 @@ class controlador
     }
 
     // Función para procesar la solicitud de días de asuntos propios
-    public function asuntos_propios(){
+    public function asuntos_propios()
+    {
         session_start();
         $mensaje = $this->trace->asuntos_propios();
         $_SESSION['resultado_solicitud'] = $mensaje;
 
         $this->view = "resultado_asuntos_propios";
     }
-    
+
     public function documentacion_baja_accidente()
     {
         $this->view = 'documentacion_baja_accidente';
     }
 
-    public function submit_baja_accidente(){
+    public function submit_baja_accidente()
+    {
         session_start();
         $mensaje = $this->trace->submit_baja_accidente();
         $_SESSION['resultado_solicitud'] = $mensaje;
@@ -181,26 +205,26 @@ class controlador
             $destinatario = $_POST['destinatario'];
             // Instanciar el objeto de PHPMailer
             $mail = new PHPMailer(true);
-            
+
             try {
                 // Configurar el servidor SMTP
                 $mail->isSMTP();
                 $mail->Host = 'smtp.gmail.com';
                 $mail->SMTPAuth = true;
-                $mail->Username = "ceutaportalempleados@gmail.com"; 
-                $mail->Password = 'cfgs zaum nfkn rsaj'; 
+                $mail->Username = "ceutaportalempleados@gmail.com";
+                $mail->Password = 'cfgs zaum nfkn rsaj';
                 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                 $mail->Port = 587;
-    
+
                 // Configurar el correo
                 $mail->setFrom('ceutaportalempleados@gmail.com', 'Trace');
                 $mail->addAddress($destinatario);
                 $mail->Subject = "Mensaje desde la aplicación";
                 $mail->Body = "Has recibido un nuevo mensaje:\n\n" . $mensaje;
-    
+
                 // Enviar el correo
                 $mail->send();
-    
+
                 // Guardar el mensaje de éxito en la sesión
                 $_SESSION['success_mensaje'] = "Correo enviado correctamente.";
                 // Redireccionar a la vista resultado_envio.php
@@ -213,8 +237,8 @@ class controlador
             }
         }
     }
-    
-    
+
+
     public function mensaje_encargado_general()
     {
         $this->view = 'mensaje_encargado_general';
@@ -282,7 +306,7 @@ class controlador
     {
         // Configuración del correo
         $mail = new PHPMailer(true); // Establece el modo de excepciones en true para que PHPMailer arroje excepciones en caso de error
-    
+
         try {
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com'; // Servidor SMTP
@@ -291,14 +315,14 @@ class controlador
             $mail->Password = 'cfgs zaum nfkn rsaj'; // Tu contraseña de correo electrónico
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
-    
+
             $mail->setFrom('ceutaportalempleados@gmail.com', 'Trace');
             $mail->addAddress($email);
-    
+
             $mail->isHTML(true);
             $mail->Subject = 'Confirmación de registro';
             $mail->Body = "Haga clic en el siguiente enlace para confirmar su registro: <a href='http://localhost/php/Trabajo/index.php?action=confirmar_registro&token=$token'>Confirmar Registro</a>";
-    
+
             // Envío del correo
             $mail->send();
             $_SESSION['mensaje_correo'] = 'El mensaje ha sido enviado.';
@@ -306,18 +330,18 @@ class controlador
             $_SESSION['mensaje_correo'] = "El mensaje no pudo ser enviado. Mailer Error: {$mail->ErrorInfo}";
         }
     }
-    
+
     public function registro()
     {
         session_start();
         $dni = $_SESSION['dni'];
         $this->view = 'procesar_registro';
-    
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'];
             $password = $_POST['password'];
             $token = $this->trace->procesar_registro();
-    
+
             if ($token) {
                 $this->enviar_correo_confirmacion($email, $token);
             } else {
@@ -326,7 +350,7 @@ class controlador
         } else {
             $_SESSION['mensaje_correo'] = "Solicitud no válida.";
         }
-    
+
         return;
     }
 
@@ -342,7 +366,8 @@ class controlador
         }
     }
 
-    public function solicitud_asuntos_propios_norm(){
+    public function solicitud_asuntos_propios_norm()
+    {
         session_start();
         if (isset($_GET['action']) && $_GET['action'] === 'solicitud_asuntos_propios_norm') {
             $resultado = $this->trace->solicitud_asuntos_propios_norm();
