@@ -488,14 +488,11 @@ class Trace
         return $empleado;
     }
 
-    //parte admin aceptar y rechazar solicitudes
 
-    function aceptar()
+    //parte admin aceptar y rechazar solicitudes
+    function aceptar_ap()
     {
-        // Verificar si el parámetro 'peticion_id' está presente en $_GET
-        if (!isset($_GET['peticion_id'])) {
-            throw new Exception("El parámetro 'peticion_id' no está definido en la URL.");
-        }
+        session_start(); // Iniciar sesión
 
         $peticion_id = $_GET['peticion_id'];
 
@@ -504,11 +501,6 @@ class Trace
         $query->bind_param("i", $peticion_id);
         $query->execute();
         $peticion_result = $query->get_result();
-
-        if ($peticion_result->num_rows === 0) {
-            throw new Exception("Petición no encontrada.");
-        }
-
         $peticion = $peticion_result->fetch_assoc();
         $query->close();
 
@@ -529,14 +521,13 @@ class Trace
             'AP_NOCHE' => 10
         ];
 
-// Verificar si se puede aceptar la petición de AP
-if (strpos($turno, 'T_') !== false) {
-    $turno_ocupacion = str_replace('T_', 'AP_', $turno);
-    if ($ocupacion[$turno_ocupacion] >= $limites_ap[$turno_ocupacion]) {
-        throw new Exception("No se puede aceptar la petición. El turno de $turno ya está completo.");
-    }
-}
-
+        // Verificar si se puede aceptar la petición de AP
+        if (strpos($turno, 'T_') !== false) {
+            $turno_ocupacion = str_replace('T_', 'AP_', $turno);
+            if ($ocupacion[$turno_ocupacion] >= $limites_ap[$turno_ocupacion]) {
+                throw new Exception("No se puede aceptar la petición. El turno de $turno ya está completo.");
+            }
+        }
 
         // Incrementar la ocupación para AP
         $ocupacion[$turno_ocupacion] += 1;
@@ -546,9 +537,96 @@ if (strpos($turno, 'T_') !== false) {
         $query->bind_param("iiis", $ocupacion['AP_MAÑANA'], $ocupacion['AP_TARDE'], $ocupacion['AP_NOCHE'], $fecha);
         $query->execute();
 
-        // Actualizar el estado de la petición a aceptada
-        $query = $this->conection->prepare("UPDATE T_PETICIONES SET PET_ACEPTADO = 'SI' WHERE PET_ID = ?");
+        // Obtener el nombre y apellidos del supervisor a partir del correo
+        $supervisor_correo = $_SESSION['correo'];
+        $supervisor = $this->getEmpleadoCorreo($supervisor_correo);
+        $supervisor_nombre = $supervisor['EMP_NOMBRE'] . ' ' . $supervisor['EMP_APE_1'] . ' ' . $supervisor['EMP_APE_2'];
+
+        // Actualizar el estado de la petición a aceptada y asignar supervisor
+        $query = $this->conection->prepare("UPDATE T_PETICIONES SET PET_ACEPTADO = 'SI', PET_SUPERVISOR = ? WHERE PET_ID = ?");
+        $query->bind_param("si", $supervisor_nombre, $peticion_id);
+        $query->execute();
+
+        // Agregar variables de sesión
+        $_SESSION['mensaje'] = "Petición aceptada exitosamente.";
+        $_SESSION['peticion_id_aceptada'] = $peticion_id;
+    }
+
+    public function rechazar_ap()
+    {
+        session_start();
+        $peticion_id = $_GET['peticion_id'];
+
+        // Obtener el nombre y apellidos del supervisor a partir del correo
+        $supervisor_correo = $_SESSION['correo'];
+        $supervisor = $this->getEmpleadoCorreo($supervisor_correo);
+        $supervisor_nombre = $supervisor['EMP_NOMBRE'] . ' ' . $supervisor['EMP_APE_1'] . ' ' . $supervisor['EMP_APE_2'];
+
+        // Actualizar la petición para marcarla como rechazada y asignar supervisor
+        $query = $this->conection->prepare("UPDATE T_PETICIONES SET PET_ACEPTADO = 'NO', PET_SUPERVISOR = ? WHERE PET_ID = ?");
+        $query->bind_param("si", $supervisor_nombre, $peticion_id);
+
+        if ($query->execute()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function aceptar_as()
+    {
+        session_start();
+        $peticion_id = $_GET['peticion_id'];
+
+        // Obtener la petición y el turno del empleado
+        $query = $this->conection->prepare("SELECT PET_FECHA, TURNO FROM T_PETICIONES JOIN empleados ON T_PETICIONES.PET_DNI = EMPLEADOS.EMP_NIF WHERE PET_ID = ?");
         $query->bind_param("i", $peticion_id);
+        $query->execute();
+        $peticion_result = $query->get_result();
+        $peticion = $peticion_result->fetch_assoc();
+        $query->close();
+
+        $fecha = $peticion['PET_FECHA'];
+        $turno = $peticion['TURNO'];
+
+        // Verificar la ocupación actual
+        $query = $this->conection->prepare("SELECT * FROM T_OCUPACION WHERE FECHA = ?");
+        $query->bind_param("s", $fecha);
+        $query->execute();
+        $ocupacion_result = $query->get_result();
+        $ocupacion = $ocupacion_result->fetch_assoc();
+
+        // Límites de ocupación para AS
+        $limites_as = [
+            'AS_MAÑANA' => 20,
+            'AS_TARDE' => 15,
+            'AS_NOCHE' => 10
+        ];
+
+        // Verificar si se puede aceptar la petición de AS
+        if (strpos($turno, 'T_') !== false) {
+            $turno_ocupacion = str_replace('T_', 'AS_', $turno);
+            if ($ocupacion[$turno_ocupacion] >= $limites_as[$turno_ocupacion]) {
+                throw new Exception("No se puede aceptar la petición. El turno de $turno ya está completo.");
+            }
+        }
+
+        // Incrementar la ocupación para AS
+        $ocupacion[$turno_ocupacion] += 1;
+
+        // Actualizar la tabla T_OCUPACION
+        $query = $this->conection->prepare("UPDATE T_OCUPACION SET AS_MAÑANA = ?, AS_TARDE = ?, AS_NOCHE = ? WHERE FECHA = ?");
+        $query->bind_param("iiis", $ocupacion['AS_MAÑANA'], $ocupacion['AS_TARDE'], $ocupacion['AS_NOCHE'], $fecha);
+        $query->execute();
+
+        // Obtener el nombre y apellidos del supervisor a partir del correo
+        $supervisor_correo = $_SESSION['correo'];
+        $supervisor = $this->getEmpleadoCorreo($supervisor_correo);
+        $supervisor_nombre = $supervisor['EMP_NOMBRE'] . ' ' . $supervisor['EMP_APE_1'] . ' ' . $supervisor['EMP_APE_2'];
+
+        // Actualizar el estado de la petición a aceptada y asignar supervisor
+        $query = $this->conection->prepare("UPDATE T_PETICIONES SET PET_ACEPTADO = 'SI', PET_SUPERVISOR = ? WHERE PET_ID = ?");
+        $query->bind_param("si", $supervisor_nombre, $peticion_id);
         $query->execute();
 
         // Agregar variables de sesión
@@ -557,13 +635,20 @@ if (strpos($turno, 'T_') !== false) {
     }
 
 
-
-
-    function rechazar()
+    public function rechazar_as()
     {
+        session_start();
         $peticion_id = $_GET['peticion_id'];
-        $query = $this->conection->prepare("UPDATE T_PETICIONES SET PET_ACEPTADO = 'NO' WHERE PET_ID = ?");
-        $query->bind_param("i", $peticion_id);
+
+        // Obtener el nombre y apellidos del supervisor a partir del correo
+        $supervisor_correo = $_SESSION['correo'];
+        $supervisor = $this->getEmpleadoCorreo($supervisor_correo);
+        $supervisor_nombre = $supervisor['EMP_NOMBRE'] . ' ' . $supervisor['EMP_APE_1'] . ' ' . $supervisor['EMP_APE_2'];
+
+        // Actualizar la petición para marcarla como rechazada y asignar supervisor
+        $query = $this->conection->prepare("UPDATE T_PETICIONES SET PET_ACEPTADO = 'NO', PET_SUPERVISOR = ? WHERE PET_ID = ?");
+        $query->bind_param("si", $supervisor_nombre, $peticion_id);
+
         if ($query->execute()) {
             return true;
         } else {

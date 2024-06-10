@@ -62,7 +62,7 @@ class controlador
             'peticiones' => $peticiones,
         );
 
-        $this->view = 'ver_solicitudes'; // Esto indica cuál vista cargar
+        $this->view = 'ver_solicitudes';
         return $datos;
     }
 
@@ -71,10 +71,10 @@ class controlador
         $this->view = 'ver_calendario';
     }
 
-    public function aceptar()
+    public function aceptar_ap()
     {
         if (isset($_GET['peticion_id'])) {
-            $this->trace->aceptar();
+            $this->trace->aceptar_ap();
             header("Location: index.php?action=ver_solicitudes_ap");
             exit();
         } else {
@@ -82,11 +82,33 @@ class controlador
         }
     }
 
-    public function rechazar()
+    public function aceptar_as()
     {
         if (isset($_GET['peticion_id'])) {
-            $this->trace->rechazar();
+            $this->trace->aceptar_as();
+            header("Location: index.php?action=ver_solicitudes_as");
+            exit();
+        } else {
+            echo "No se ha proporcionado un ID de petición en la URL.";
+        }
+    }
+
+    public function rechazar_ap()
+    {
+        if (isset($_GET['peticion_id'])) {
+            $this->trace->rechazar_ap();
             header("Location: index.php?action=ver_solicitudes_ap");
+            exit();
+        } else {
+            echo "No se ha proporcionado un ID de petición en la URL.";
+        }
+    }
+
+    public function rechazar_as()
+    {
+        if (isset($_GET['peticion_id'])) {
+            $this->trace->rechazar_as();
+            header("Location: index.php?action=ver_solicitudes_as");
             exit();
         } else {
             echo "No se ha proporcionado un ID de petición en la URL.";

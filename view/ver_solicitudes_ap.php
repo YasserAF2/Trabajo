@@ -17,7 +17,7 @@ $tipo = $trace->tipo_empleado();
         <div class="d-flex justify-content-between align-items-center px-5 ms-xl-4 mb-2 mt-2">
             <img class="logo" src="view/template/imagenes/trace4-sin-fondo.png" alt="LOGOTIPO TRACE">
             <div class="perfil-titulo text-end">
-                <h1 class="mb-0">Lista de Peticiones</h1>
+                <h1 class="mb-0">Lista de Peticiones Asuntos Propios</h1>
             </div>
         </div>
 
@@ -29,7 +29,7 @@ $tipo = $trace->tipo_empleado();
                             <th>DNI</th>
                             <th>Nombre y Apellidos</th>
                             <th>Tipo</th>
-                            <th>Fecha y hora de solicitud</th>
+                            <th>Fecha</th>
                             <th>Estado</th>
                             <th>Supervisor</th>
                             <th>Acciones</th> <!-- Nueva columna para los botones -->
@@ -46,11 +46,17 @@ $tipo = $trace->tipo_empleado();
                                 <td><?= $peticion['PET_SUPERVISOR'] ?></td>
                                 <td>
                                     <?php if ($tipo == 'ADMINISTRADOR' || $tipo == 'SUPERUSUARIO') : ?>
-                                        <a href="index.php?action=aceptar&peticion_id=<?= $peticion['PET_ID'] ?>" class="btn btn-success" onclick="return confirm('¿Estás seguro de que quieres aceptar esta petición?')">Aceptar</a>
-                                        <a href="index.php?action=rechazar&peticion_id=<?= $peticion['PET_ID'] ?>" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que quieres rechazar esta petición?')">Rechazar</a>
+                                        <a href="index.php?action=aceptar_ap&peticion_id=<?= $peticion['PET_ID'] ?>" class="btn btn-success" onclick="return confirm('¿Estás seguro de que quieres aceptar esta petición?')">Aceptar</a>
+                                        <a href="index.php?action=rechazar_ap&peticion_id=<?= $peticion['PET_ID'] ?>" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que quieres rechazar esta petición?')">Rechazar</a>
                                     <?php else : ?>
-                                        <button class="btn btn-success" disabled>Aceptar</button>
-                                        <button class="btn btn-danger" disabled>Rechazar</button>
+                                        <div class="row">
+                                            <div class="col-auto">
+                                                <button class="btn btn-success btn-custom mb-2" disabled>Aceptar</button>
+                                            </div>
+                                            <div class="col-auto">
+                                                <button class="btn btn-danger btn-custom mb-2" disabled>Rechazar</button>
+                                            </div>
+                                        </div>
                                     <?php endif; ?>
                                 </td>
                             </tr>
