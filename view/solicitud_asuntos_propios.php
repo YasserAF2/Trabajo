@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $dias = $dataToView['dias'];
 $dni = $_SESSION['dni'];
@@ -6,11 +6,11 @@ $dni = $_SESSION['dni'];
 ?>
 
 <div class="container mt-5">
-    <form action="index.php?action=asuntos_propios" method="post" class="needs-validation" novalidate>
+    <form id="asuntos-form" action="index.php?action=asuntos_propios" method="post" class="needs-validation" novalidate>
         <div class="d-flex justify-content-between align-items-center px-5 ms-xl-4 mb-2" style="height: 100px;">
             <img class="logo" src="view/template/imagenes/trace4-sin-fondo.png" alt="LOGOTIPO TRACE">
             <div class="perfil-titulo">
-            <h1>Elegir Días de Asuntos Propios</h1>
+                <h1>Elegir Días de Asuntos Propios</h1>
             </div>
         </div>
         <input type="hidden" id="selected-date" name="selected_date">
@@ -47,14 +47,15 @@ $dni = $_SESSION['dni'];
 </div>
 
 <script>
-    let monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 
-    'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    let monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio',
+        'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ];
 
     let currentDate = new Date();
     let currentDay = currentDate.getDate();
     let monthNumber = currentDate.getMonth();
     let currentYear = currentDate.getFullYear();
-    let currentMonth =monthNames[monthNumber];
+    let currentMonth = monthNames[monthNumber];
 
 
     let dates = document.getElementById('dates');
@@ -72,7 +73,6 @@ $dni = $_SESSION['dni'];
 
     writeMonth(monthNumber);
 
-
     function writeMonth(month) {
         const minDate = getMinDate();
         const maxDate = getMaxDate();
@@ -85,44 +85,47 @@ $dni = $_SESSION['dni'];
             let date = new Date(currentYear, month, i);
             let isSelectable = date >= minDate && date <= maxDate;
 
-            if (i === currentDay && monthNumber === month) {
-                dates.innerHTML += `<div class="calendar__date calendar__item calendar__today selectable">${i}</div>`;
+            // Modificación para verificar si es el día actual
+            if (i === currentDay && month === currentDate.getMonth() && currentYear === currentDate.getFullYear()) {
+                console.log("Día actual:", i, currentDay, "Mes actual:", month, currentDate.getMonth(), "Año actual:", currentYear, currentDate.getFullYear());
+                dates.innerHTML += `<div class="calendar__date calendar__item calendar__today">${i}</div>`;
             } else if (isSelectable) {
                 dates.innerHTML += `<div class="calendar__date calendar__item selectable">${i}</div>`;
             } else {
-                dates.innerHTML += `<div class="calendar__date calendar__item">${i}</div>`;
+                dates.innerHTML += `<div class="calendar__date calendar__item non-selectable">${i}</div>`;
             }
         }
 
         addDateClickEvent();
     }
 
-    function getTotalDays(month){
-        if(month === -1) month = 11;
 
-        if(month == 0 || month == 2 || month == 4 || month == 6 || month == 7 || month == 9 || month == 11){
+    function getTotalDays(month) {
+        if (month === -1) month = 11;
+
+        if (month == 0 || month == 2 || month == 4 || month == 6 || month == 7 || month == 9 || month == 11) {
             return 31;
-        } else if(month == 3 || month == 5 || month == 8 || month == 10){
-            return 30; 
+        } else if (month == 3 || month == 5 || month == 8 || month == 10) {
+            return 30;
         } else {
-            return isLeap() ? 29:28;
+            return isLeap() ? 29 : 28;
         }
     }
 
     /* año bisiesto */
-    function isLeap(){
-        return ((currentYear % 100 !==0) && (currentYear % 4 === 0) || (currentYear % 400 === 0));
+    function isLeap() {
+        return ((currentYear % 100 !== 0) && (currentYear % 4 === 0) || (currentYear % 400 === 0));
     }
 
-    function startDay(){
+    function startDay() {
         let start = new Date(currentYear, monthNumber, 1);
-        return ((start.getDay()-1) === -1) ? 6 : start.getDay()-1;
+        return ((start.getDay() - 1) === -1) ? 6 : start.getDay() - 1;
     }
 
-    function lastMonth(){
-        if(monthNumber !==0){
+    function lastMonth() {
+        if (monthNumber !== 0) {
             monthNumber--;
-        }else{
+        } else {
             monthNumber = 11;
             currentYear--;
         }
@@ -130,10 +133,10 @@ $dni = $_SESSION['dni'];
         setNewDate();
     }
 
-    function nextMonth(){
-        if(monthNumber !==11){
+    function nextMonth() {
+        if (monthNumber !== 11) {
             monthNumber++;
-        }else{
+        } else {
             monthNumber = 0;
             currentYear++;
         }
@@ -141,7 +144,7 @@ $dni = $_SESSION['dni'];
         setNewDate();
     }
 
-    function setNewDate(){
+    function setNewDate() {
         currentDate.setFullYear(currentYear, monthNumber, currentDay);
         month.textContent = monthNames[monthNumber];
         year.textContent = currentYear.toString();
@@ -149,7 +152,6 @@ $dni = $_SESSION['dni'];
         dates.textContent = "";
         writeMonth(monthNumber);
     }
-
 
     function getMinDate() {
         let minDate = new Date();
@@ -163,31 +165,40 @@ $dni = $_SESSION['dni'];
         return maxDate;
     }
 
-
-
     function addDateClickEvent() {
-    const dateElements = document.querySelectorAll('.selectable');
-    dateElements.forEach(dateElement => {
-        dateElement.addEventListener('click', function () {
-            // Desmarca otros días seleccionados
-            dateElements.forEach(de => de.classList.remove('selected'));
-            // Marca el día seleccionado
-            this.classList.add('selected');
+        const dateElements = document.querySelectorAll('.selectable');
+        dateElements.forEach(dateElement => {
+            dateElement.addEventListener('click', function() {
+                // Desmarca otros días seleccionados
+                dateElements.forEach(de => de.classList.remove('selected'));
+                // Marca el día seleccionado
+                this.classList.add('selected');
 
-            // Obtiene la hora actual
-            let now = new Date();
-            let hours = now.getHours().toString().padStart(2, '0');
-            let minutes = now.getMinutes().toString().padStart(2, '0');
-            let seconds = now.getSeconds().toString().padStart(2, '0');
+                // Obtiene la hora actual
+                let now = new Date();
+                let hours = now.getHours().toString().padStart(2, '0');
+                let minutes = now.getMinutes().toString().padStart(2, '0');
+                let seconds = now.getSeconds().toString().padStart(2, '0');
 
-            // Actualiza el campo oculto con la fecha y hora seleccionada
-            document.getElementById('selected-date').value = `${this.textContent}-${monthNumber + 1}-${currentYear} ${hours}:${minutes}:${seconds}`;
+                // Actualiza el campo oculto con la fecha y hora seleccionada
+                document.getElementById('selected-date').value = `${this.textContent}-${monthNumber + 1}-${currentYear} ${hours}:${minutes}:${seconds}`;
+            });
         });
+    }
+
+    document.getElementById('asuntos-form').addEventListener('submit', function(event) {
+        let selectedDate = document.getElementById('selected-date').value;
+        if (selectedDate) {
+            let [day, month, yearWithTime] = selectedDate.split('-');
+            let year = yearWithTime.split(' ')[0];
+            let formattedDate = `${day} de ${monthNames[month - 1]} de ${year}`;
+            let confirmMessage = `¿Estás seguro de que deseas seleccionar el ${formattedDate} como día de asuntos propios?`;
+            if (!window.confirm(confirmMessage)) {
+                event.preventDefault(); // Cancela el envío del formulario
+            }
+        } else {
+            alert('Por favor, selecciona una fecha antes de enviar el formulario.');
+            event.preventDefault(); // Cancela el envío del formulario si no se ha seleccionado una fecha
+        }
     });
-}
-
-
-
-
-
 </script>

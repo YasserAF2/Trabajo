@@ -26,6 +26,7 @@ body {
 }
 
 .calendar{
+  user-select: none;
   border-radius: 7%;
   background: beige;
   width: 80%;
@@ -89,6 +90,14 @@ body {
   color: white;
 }
 
+.selectable{
+  cursor: pointer;
+}
+
+.non-selectable {
+  color: #999; 
+  pointer-events: none; 
+}
 
 .pie {
   height: 226px;
