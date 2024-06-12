@@ -655,4 +655,42 @@ class Trace
             return false;
         }
     }
+
+
+    //peticiones aceptadas
+    function obtenerPeticionesAceptadas()
+    {
+        $query = $this->conection->prepare("
+        SELECT T_PETICIONES.PET_FECHA, empleados.TURNO, T_PETICIONES.PET_SUPERVISOR, empleados.EMP_NOMBRE, empleados.EMP_APE_1, empleados.EMP_APE_2
+        FROM T_PETICIONES 
+        JOIN empleados ON T_PETICIONES.PET_DNI = empleados.EMP_NIF 
+        WHERE T_PETICIONES.PET_ACEPTADO = 'SI'
+        ");
+        $query->execute();
+        $result = $query->get_result();
+        $peticiones = [];
+    
+        while ($row = $result->fetch_assoc()) {
+            $fecha = $row['PET_FECHA'];
+            $turno = $row['TURNO'];
+            $supervisor = $row['PET_SUPERVISOR'];
+            $nombre = $row['EMP_NOMBRE'];
+            $apellido1 = $row['EMP_APE_1'];
+            $apellido2 = $row['EMP_APE_2'];
+    
+            if (!isset($peticiones[$fecha])) {
+                $peticiones[$fecha] = [];
+            }
+            $peticiones[$fecha][] = [
+                'turno' => $turno,
+                'supervisor' => $supervisor,
+                'nombre' => $nombre,
+                'apellido1' => $apellido1,
+                'apellido2' => $apellido2
+            ];
+        }
+    
+        $query->close();
+        return $peticiones;
+    }
 }
