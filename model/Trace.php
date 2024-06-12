@@ -669,7 +669,7 @@ class Trace
         $query->execute();
         $result = $query->get_result();
         $peticiones = [];
-    
+
         while ($row = $result->fetch_assoc()) {
             $fecha = $row['PET_FECHA'];
             $turno = $row['TURNO'];
@@ -677,7 +677,7 @@ class Trace
             $nombre = $row['EMP_NOMBRE'];
             $apellido1 = $row['EMP_APE_1'];
             $apellido2 = $row['EMP_APE_2'];
-    
+
             if (!isset($peticiones[$fecha])) {
                 $peticiones[$fecha] = [];
             }
@@ -689,7 +689,7 @@ class Trace
                 'apellido2' => $apellido2
             ];
         }
-    
+
         $query->close();
         return $peticiones;
     }

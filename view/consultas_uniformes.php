@@ -13,40 +13,45 @@ if (!isset($_SESSION['correo'])) {
 }
 
 ?>
-    <div class="formulario">
-        <form action="index.php?action=enviar_mensaje" method="post" class="needs-validation d-flex flex-column justify-content-center align-items-center" novalidate>
-            <div class="px-5 ms-xl-4">
-                <img class="logo" src="view/template/imagenes/trace4-sin-fondo.png" alt="LOGOTIPO TRACE">
-            </div>
-            <h3 class="mt-4">Mensaje consulta de uniformes y calzado</h3>
-            <div class="form-group w-50">
-                <label for="mensaje">Mensaje:</label>
-                <textarea class="form-control" id="mensaje" name="mensaje" rows="4" required></textarea>
-                <div class="invalid-feedback">Por favor, introduzca su mensaje.</div>
-                <input type="hidden" name="destinatario" value="yass_Af@hotmail.es">
-            </div>
-            <button type="submit" class="btn btn-primary w-25">Enviar</button>
-            <div class="mt-4 text-end">
-                <a href="index.php?action=logeado" class="btn btn-secondary">Volver atrás</a>
-            </div>
-        </form>
-    </div>
+<div class="formulario">
+    <form action="index.php?action=enviar_mensaje" method="post" class="needs-validation d-flex flex-column justify-content-center align-items-center" novalidate>
+        <div class="px-5 ms-xl-4">
+            <img class="logo" src="view/template/imagenes/trace4-sin-fondo.png" alt="LOGOTIPO TRACE">
+        </div>
+        <h3 class="mt-4">Mensaje consulta de uniformes y calzado</h3>
+        <div class="form-group w-50">
+            <label for="mensaje">Mensaje:</label>
+            <textarea class="form-control" id="mensaje" name="mensaje" rows="4" required></textarea>
+            <div class="invalid-feedback">Por favor, introduzca su mensaje.</div>
+            <input type="hidden" name="destinatario" value="yass_Af@hotmail.es">
+        </div>
+        <button type="submit" class="btn btn-primary w-25">Enviar</button>
+        <div class="mt-4 text-end">
+            <a href="index.php?action=logeado" class="btn btn-secondary">Volver atrás</a>
+        </div>
+    </form>
+</div>
 
-    <script>
-        // Ejemplo de JavaScript para la validación de formularios Bootstrap
-        (function() {
-            'use strict';
-            window.addEventListener('load', function() {
-                var forms = document.getElementsByClassName('needs-validation');
-                Array.prototype.filter.call(forms, function(form) {
-                    form.addEventListener('submit', function(event) {
-                        if (form.checkValidity() === false) {
+<script>
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    } else {
+                        // Mostrar cuadro de diálogo de confirmación
+                        var confirmation = confirm("¿Estás seguro de enviar este mensaje?");
+                        if (!confirmation) {
                             event.preventDefault();
-                            event.stopPropagation();
                         }
-                        form.classList.add('was-validated');
-                    }, false);
-                });
-            }, false);
-        })();
-    </script>
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>

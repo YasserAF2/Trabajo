@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 if (!isset($_SESSION['correo'])) {
     header("Location: index.php");
@@ -15,17 +15,17 @@ $peticiones = $trace->obtenerPeticionesAceptadas();
         </div>
         <div class="card-body">
             <div class="row">
-                <?php foreach ($peticiones as $fecha => $eventos): ?>
+                <?php foreach ($peticiones as $fecha => $eventos) : ?>
                     <div class="col-md-4">
                         <div class="list-group">
                             <div class="list-group-item list-group-item-action active">
                                 Solicitud Aceptada <?php echo $fecha; ?>
                             </div>
-                            <?php foreach ($eventos as $evento): ?>
+                            <?php foreach ($eventos as $evento) : ?>
                                 <div class="list-group-item list-group-item-action">
                                     Turno: <?php echo $evento['turno']; ?> <br>
                                     Empleado: <?php echo $evento['nombre'] . ' ' . $evento['apellido1'] . ' ' . $evento['apellido2']; ?> <br>
-                                    Supervisor: <?php echo $evento['supervisor']; ?> 
+                                    Supervisor: <?php echo $evento['supervisor']; ?>
                                 </div>
                             <?php endforeach; ?>
                         </div>
@@ -38,4 +38,3 @@ $peticiones = $trace->obtenerPeticionesAceptadas();
         </div>
     </div>
 </div>
-

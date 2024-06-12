@@ -41,6 +41,12 @@ if (!isset($_SESSION['correo'])) {
                     if (form.checkValidity() === false) {
                         event.preventDefault();
                         event.stopPropagation();
+                    } else {
+                        // Mostrar cuadro de diálogo de confirmación
+                        var confirmation = confirm("¿Estás seguro de enviar este mensaje?");
+                        if (!confirmation) {
+                            event.preventDefault();
+                        }
                     }
                     form.classList.add('was-validated');
                 }, false);
