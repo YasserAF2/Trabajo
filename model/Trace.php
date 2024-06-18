@@ -27,7 +27,7 @@ class Trace
             $dni = $this->conection->real_escape_string($dni);
 
             // Consulta SQL utilizando una consulta preparada
-            $sql = "SELECT * FROM empleados WHERE EMP_NIF = ?";
+            $sql = "SELECT * FROM t_empleados WHERE EMP_NIF = ?";
             $stmt = $this->conection->prepare($sql);
             $stmt->bind_param("s", $dni);
             $stmt->execute();
@@ -56,7 +56,7 @@ class Trace
             $fecha_formateada = date('Y-m-d', strtotime($fecha));
 
             // Consulta SQL utilizando una consulta preparada
-            $sql = "SELECT * FROM empleados WHERE EMP_FEC_NAC = ?";
+            $sql = "SELECT * FROM t_empleados WHERE EMP_FEC_NAC = ?";
             $stmt = $this->conection->prepare($sql);
             $stmt->bind_param("s", $fecha_formateada); // Usamos la fecha formateada
             $stmt->execute();
@@ -90,7 +90,7 @@ class Trace
         $token = bin2hex(random_bytes(16));
 
         // Preparación de la consulta SQL
-        $stmt = $this->conection->prepare("UPDATE empleados SET EMP_CORREO = ?, EMP_CONTRASEÑA = ?, TOKEN = ? WHERE EMP_NIF = ?");
+        $stmt = $this->conection->prepare("UPDATE t_empleados SET EMP_CORREO = ?, EMP_CONTRASEÑA = ?, TOKEN = ? WHERE EMP_NIF = ?");
         $stmt->bind_param("ssss", $email, $password, $token, $nif);
 
         // Ejecución de la consulta SQL
@@ -106,14 +106,14 @@ class Trace
     public function confirmar_registro($token)
     {
         // Verificar si el token es válido
-        $stmt = $this->conection->prepare("SELECT * FROM empleados WHERE TOKEN = ?");
+        $stmt = $this->conection->prepare("SELECT * FROM t_empleados WHERE TOKEN = ?");
         $stmt->bind_param("s", $token);
         $stmt->execute();
         $result = $stmt->get_result();
 
         if ($result->num_rows == 1) {
             // Token válido, proceder con la actualización
-            $stmt = $this->conection->prepare("UPDATE empleados SET CONFIRMADO = 1 WHERE TOKEN = ?");
+            $stmt = $this->conection->prepare("UPDATE t_empleados SET CONFIRMADO = 1 WHERE TOKEN = ?");
             $stmt->bind_param("s", $token);
             $resultado = $stmt->execute();
             $stmt->close();
@@ -126,7 +126,7 @@ class Trace
 
     public function getEmpleadoCorreo($correo)
     {
-        $stmt = $this->conection->prepare("SELECT * FROM empleados WHERE EMP_CORREO = ?");
+        $stmt = $this->conection->prepare("SELECT * FROM t_empleados WHERE EMP_CORREO = ?");
         if (!$stmt) {
             throw new Exception("Error en la preparación de la consulta: " . $this->conection->error);
         }
@@ -156,7 +156,7 @@ class Trace
         // Si no hay una sesión iniciada, intentar iniciar sesión con las credenciales proporcionadas
         $correo = $_POST['correo'];
         $contraseña = $_POST['contraseña'];
-        $query = $this->conection->prepare("SELECT * FROM empleados WHERE EMP_CORREO = ?");
+        $query = $this->conection->prepare("SELECT * FROM t_empleados WHERE EMP_CORREO = ?");
         $query->bind_param("s", $correo);
         $query->execute();
         $result = $query->get_result()->fetch_assoc();
@@ -209,7 +209,7 @@ class Trace
     public function obtenerDiasAsuntosPropios($correo)
     {
         // Preparar la consulta con un marcador de posición para el valor del correo
-        $sql = "SELECT NUM_TOTAL_DIAS_AP FROM empleados WHERE EMP_CORREO = ?";
+        $sql = "SELECT NUM_TOTAL_DIAS_AP FROM t_empleados WHERE EMP_CORREO = ?";
         $stmt = $this->conection->prepare($sql);
         $stmt->bind_param("s", $correo);
         $stmt->execute();
@@ -248,7 +248,7 @@ class Trace
         $num_total_dias_ap = 0;
 
         // Preparar la consulta para obtener los días AP del empleado
-        $stmt_ap = $this->conection->prepare("SELECT NUM_DIAS_AP, NUM_TOTAL_DIAS_AP FROM empleados WHERE EMP_NIF = ?");
+        $stmt_ap = $this->conection->prepare("SELECT NUM_DIAS_AP, NUM_TOTAL_DIAS_AP FROM t_empleados WHERE EMP_NIF = ?");
         $stmt_ap->bind_param("s", $_SESSION['dni']);
         $stmt_ap->execute();
         $stmt_ap->store_result();
@@ -261,7 +261,7 @@ class Trace
             $num_dias_ap++;
 
             // Actualizar el número de días AP en la base de datos
-            $stmt_update_ap = $this->conection->prepare("UPDATE empleados SET NUM_DIAS_AP = ? WHERE EMP_NIF = ?");
+            $stmt_update_ap = $this->conection->prepare("UPDATE t_empleados SET NUM_DIAS_AP = ? WHERE EMP_NIF = ?");
             $stmt_update_ap->bind_param("is", $num_dias_ap, $_SESSION['dni']);
             $stmt_update_ap->execute();
             $stmt_update_ap->close();
@@ -416,7 +416,7 @@ class Trace
     public function tipo_empleado()
     {
         $dni = $_SESSION['dni'];
-        $sql = "SELECT EMP_TIPO FROM empleados WHERE EMP_NIF = ?";
+        $sql = "SELECT EMP_TIPO FROM t_empleados WHERE EMP_NIF = ?";
         $stmt = $this->conection->prepare($sql);
         $stmt->bind_param("s", $dni);
         $stmt->execute();
@@ -439,7 +439,7 @@ class Trace
         $tipo = "AP";  // Tipo de petición que queremos filtrar
         $sql = "SELECT p.*, e.EMP_NOMBRE, e.EMP_APE_1, e.EMP_APE_2 
                 FROM t_peticiones p
-                JOIN empleados e ON e.EMP_NIF = p.PET_DNI
+                JOIN t_empleados e ON e.EMP_NIF = p.PET_DNI
                 WHERE p.PET_TIPO = ?";
         $stmt = $this->conection->prepare($sql);
         $stmt->bind_param("s", $tipo);
@@ -458,7 +458,7 @@ class Trace
         $tipo = "AS";
         $sql = "SELECT p.*, e.EMP_NOMBRE, e.EMP_APE_1, e.EMP_APE_2 
                 FROM t_peticiones p
-                JOIN empleados e ON e.EMP_NIF = p.PET_DNI
+                JOIN t_empleados e ON e.EMP_NIF = p.PET_DNI
                 WHERE p.PET_TIPO = ?";
         $stmt = $this->conection->prepare($sql);
         $stmt->bind_param("s", $tipo);
@@ -475,7 +475,7 @@ class Trace
     //obtener los datos del empleado por el dni
     public function datos_empleado($dni)
     {
-        $sql = "SELECT * FROM empleados WHERE EMP_NIF = ?";
+        $sql = "SELECT * FROM t_empleados WHERE EMP_NIF = ?";
         $stmt = $this->conection->prepare($sql);
         $stmt->bind_param("s", $dni);
         $stmt->execute();
@@ -497,7 +497,7 @@ class Trace
         $peticion_id = $_GET['peticion_id'];
 
         // Obtener la petición y el turno del empleado
-        $query = $this->conection->prepare("SELECT PET_FECHA, TURNO FROM T_PETICIONES JOIN empleados ON T_PETICIONES.PET_DNI = EMPLEADOS.EMP_NIF WHERE PET_ID = ?");
+        $query = $this->conection->prepare("SELECT PET_FECHA, TURNO FROM T_PETICIONES JOIN t_empleados ON T_PETICIONES.PET_DNI = EMPLEADOS.EMP_NIF WHERE PET_ID = ?");
         $query->bind_param("i", $peticion_id);
         $query->execute();
         $peticion_result = $query->get_result();
@@ -579,7 +579,7 @@ class Trace
         $peticion_id = $_GET['peticion_id'];
 
         // Obtener la petición y el turno del empleado
-        $query = $this->conection->prepare("SELECT PET_FECHA, TURNO FROM T_PETICIONES JOIN empleados ON T_PETICIONES.PET_DNI = EMPLEADOS.EMP_NIF WHERE PET_ID = ?");
+        $query = $this->conection->prepare("SELECT PET_FECHA, TURNO FROM T_PETICIONES JOIN t_empleados ON T_PETICIONES.PET_DNI = EMPLEADOS.EMP_NIF WHERE PET_ID = ?");
         $query->bind_param("i", $peticion_id);
         $query->execute();
         $peticion_result = $query->get_result();
@@ -661,9 +661,9 @@ class Trace
     public function obtenerPeticionesAceptadas()
     {
         $query = $this->conection->prepare("
-        SELECT T_PETICIONES.PET_FECHA, empleados.TURNO, T_PETICIONES.PET_SUPERVISOR, empleados.EMP_NOMBRE, empleados.EMP_APE_1, empleados.EMP_APE_2
+        SELECT T_PETICIONES.PET_FECHA, t_empleados.TURNO, T_PETICIONES.PET_SUPERVISOR, t_empleados.EMP_NOMBRE, t_empleados.EMP_APE_1, t_empleados.EMP_APE_2
         FROM T_PETICIONES 
-        JOIN empleados ON T_PETICIONES.PET_DNI = empleados.EMP_NIF 
+        JOIN t_empleados ON T_PETICIONES.PET_DNI = t_empleados.EMP_NIF 
         WHERE T_PETICIONES.PET_ACEPTADO = 'SI'
         ");
         $query->execute();
