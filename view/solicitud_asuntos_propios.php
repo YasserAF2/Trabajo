@@ -1,7 +1,22 @@
 <?php
 
+// Asigna la variable de sesión si no está definida
+if (!isset($_SESSION['correo'])) {
+    $_SESSION['correo'] = $correo;
+}
+
+// Verifica si la variable de sesión está definida
+if (!isset($_SESSION['correo'])) {
+    header("Location: index.php");
+    exit();
+}
+
 $dias = $dataToView['dias'];
 $dni = $_SESSION['dni'];
+$trace = new Trace();
+$festivos = $trace->ver_festivos();
+$festivos_json = json_encode(array_column($festivos, 'FEST_FECHA'));
+
 
 ?>
 
@@ -71,6 +86,8 @@ $dni = $_SESSION['dni'];
     prevMonthDOM.addEventListener('click', () => lastMonth());
     nextMonthDOM.addEventListener('click', () => nextMonth());
 
+    let festivos = <?= $festivos_json; ?>;
+
     writeMonth(monthNumber);
 
     function writeMonth(month) {
@@ -83,12 +100,19 @@ $dni = $_SESSION['dni'];
 
         for (let i = 1; i <= getTotalDays(month); i++) {
             let date = new Date(currentYear, month, i);
+            let dateString = `${currentYear}-${(month + 1).toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
             let isSelectable = date >= minDate && date <= maxDate;
+            let isCurrentDay = (i === currentDay && month === currentDate.getMonth() && currentYear === currentDate.getFullYear());
+            let isHoliday = festivos.includes(dateString);
 
-            // Modificación para verificar si es el día actual
-            if (i === currentDay && month === currentDate.getMonth() && currentYear === currentDate.getFullYear()) {
-                console.log("Día actual:", i, currentDay, "Mes actual:", month, currentDate.getMonth(), "Año actual:", currentYear, currentDate.getFullYear());
+            console.log(dateString);
+
+            if (isCurrentDay && isHoliday) {
+                dates.innerHTML += `<div class="calendar__date calendar__item calendar__today calendar__date--holiday">${i}</div>`;
+            } else if (isCurrentDay) {
                 dates.innerHTML += `<div class="calendar__date calendar__item calendar__today">${i}</div>`;
+            } else if (isHoliday) {
+                dates.innerHTML += `<div class="calendar__date calendar__item calendar__date--holiday">${i}</div>`;
             } else if (isSelectable) {
                 dates.innerHTML += `<div class="calendar__date calendar__item selectable">${i}</div>`;
             } else {

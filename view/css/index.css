@@ -99,6 +99,10 @@ body {
   pointer-events: none; 
 }
 
+.calendar__date--holiday {
+  color: rgb(204, 0, 0);
+}
+
 .pie {
   height: 226px;
   position: relative;

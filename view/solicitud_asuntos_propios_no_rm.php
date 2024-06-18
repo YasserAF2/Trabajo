@@ -1,7 +1,24 @@
-<?php 
+<?php
 session_start();
+
+// Asigna la variable de sesión si no está definida
+if (!isset($_SESSION['correo'])) {
+    $_SESSION['correo'] = $correo;
+}
+
+// Verifica si la variable de sesión está definida
+if (!isset($_SESSION['correo'])) {
+    header("Location: index.php");
+    exit();
+}
+
 $correo = $_SESSION['correo'];
 $dni = $_SESSION['dni'];
+$trace = new Trace();
+$festivos = $trace->ver_festivos();
+$festivos_json = json_encode(array_column($festivos, 'FEST_FECHA'));
+
+
 ?>
 
 <div class="container mt-5">
@@ -45,8 +62,9 @@ $dni = $_SESSION['dni'];
 </div>
 
 <script>
-    let monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 
-    'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    let monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio',
+        'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ];
 
     let currentDate = new Date();
     let currentDay = currentDate.getDate();
@@ -68,6 +86,8 @@ $dni = $_SESSION['dni'];
     prevMonthDOM.addEventListener('click', () => lastMonth());
     nextMonthDOM.addEventListener('click', () => nextMonth());
 
+    let festivos = <?= $festivos_json; ?>;
+
     writeMonth(monthNumber);
 
     function writeMonth(month) {
@@ -80,10 +100,19 @@ $dni = $_SESSION['dni'];
 
         for (let i = 1; i <= getTotalDays(month); i++) {
             let date = new Date(currentYear, month, i);
+            let dateString = `${currentYear}-${(month + 1).toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
             let isSelectable = date >= minDate && date <= maxDate;
+            let isCurrentDay = (i === currentDay && month === currentDate.getMonth() && currentYear === currentDate.getFullYear());
+            let isHoliday = festivos.includes(dateString);
 
-            if (i === currentDay && monthNumber === month) {
+            console.log(dateString);
+
+            if (isCurrentDay && isHoliday) {
+                dates.innerHTML += `<div class="calendar__date calendar__item calendar__today calendar__date--holiday">${i}</div>`;
+            } else if (isCurrentDay) {
                 dates.innerHTML += `<div class="calendar__date calendar__item calendar__today">${i}</div>`;
+            } else if (isHoliday) {
+                dates.innerHTML += `<div class="calendar__date calendar__item calendar__date--holiday">${i}</div>`;
             } else if (isSelectable) {
                 dates.innerHTML += `<div class="calendar__date calendar__item selectable">${i}</div>`;
             } else {
@@ -94,32 +123,32 @@ $dni = $_SESSION['dni'];
         addDateClickEvent();
     }
 
-    function getTotalDays(month){
-        if(month === -1) month = 11;
+    function getTotalDays(month) {
+        if (month === -1) month = 11;
 
-        if(month == 0 || month == 2 || month == 4 || month == 6 || month == 7 || month == 9 || month == 11){
+        if (month == 0 || month == 2 || month == 4 || month == 6 || month == 7 || month == 9 || month == 11) {
             return 31;
-        } else if(month == 3 || month == 5 || month == 8 || month == 10){
-            return 30; 
+        } else if (month == 3 || month == 5 || month == 8 || month == 10) {
+            return 30;
         } else {
-            return isLeap() ? 29:28;
+            return isLeap() ? 29 : 28;
         }
     }
 
     /* año bisiesto */
-    function isLeap(){
-        return ((currentYear % 100 !==0) && (currentYear % 4 === 0) || (currentYear % 400 === 0));
+    function isLeap() {
+        return ((currentYear % 100 !== 0) && (currentYear % 4 === 0) || (currentYear % 400 === 0));
     }
 
-    function startDay(){
+    function startDay() {
         let start = new Date(currentYear, monthNumber, 1);
-        return ((start.getDay()-1) === -1) ? 6 : start.getDay()-1;
+        return ((start.getDay() - 1) === -1) ? 6 : start.getDay() - 1;
     }
 
-    function lastMonth(){
-        if(monthNumber !==0){
+    function lastMonth() {
+        if (monthNumber !== 0) {
             monthNumber--;
-        }else{
+        } else {
             monthNumber = 11;
             currentYear--;
         }
@@ -127,10 +156,10 @@ $dni = $_SESSION['dni'];
         setNewDate();
     }
 
-    function nextMonth(){
-        if(monthNumber !==11){
+    function nextMonth() {
+        if (monthNumber !== 11) {
             monthNumber++;
-        }else{
+        } else {
             monthNumber = 0;
             currentYear++;
         }
@@ -138,7 +167,7 @@ $dni = $_SESSION['dni'];
         setNewDate();
     }
 
-    function setNewDate(){
+    function setNewDate() {
         currentDate.setFullYear(currentYear, monthNumber, currentDay);
         month.textContent = monthNames[monthNumber];
         year.textContent = currentYear.toString();
@@ -162,7 +191,7 @@ $dni = $_SESSION['dni'];
     function addDateClickEvent() {
         const dateElements = document.querySelectorAll('.selectable');
         dateElements.forEach(dateElement => {
-            dateElement.addEventListener('click', function () {
+            dateElement.addEventListener('click', function() {
                 // Desmarca otros días seleccionados
                 dateElements.forEach(de => de.classList.remove('selected'));
                 // Marca el día seleccionado

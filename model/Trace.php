@@ -658,7 +658,7 @@ class Trace
 
 
     //peticiones aceptadas
-    function obtenerPeticionesAceptadas()
+    public function obtenerPeticionesAceptadas()
     {
         $query = $this->conection->prepare("
         SELECT T_PETICIONES.PET_FECHA, empleados.TURNO, T_PETICIONES.PET_SUPERVISOR, empleados.EMP_NOMBRE, empleados.EMP_APE_1, empleados.EMP_APE_2
@@ -692,5 +692,33 @@ class Trace
 
         $query->close();
         return $peticiones;
+    }
+
+
+    public function ver_festivos()
+    {
+        $sql = "SELECT FEST_FECHA, FEST_DESCRIPCION, FEST_JORNADA FROM T_FESTIVOS";
+        $stmt = $this->conection->prepare($sql);
+        $stmt->execute();
+    
+        // Inicializar las variables antes de vincularlas
+        $FEST_FECHA = '';
+        $FEST_DESCRIPCION = '';
+        $FEST_JORNADA = '';
+    
+        // Vinculamos las variables de resultado
+        $stmt->bind_result($FEST_FECHA, $FEST_DESCRIPCION, $FEST_JORNADA);
+    
+        $result = [];
+        while ($stmt->fetch()) {
+            $result[] = [
+                'FEST_FECHA' => $FEST_FECHA,
+                'FEST_DESCRIPCION' => $FEST_DESCRIPCION,
+                'FEST_JORNADA' => $FEST_JORNADA
+            ];
+        }
+    
+        $stmt->close();
+        return $result;
     }
 }

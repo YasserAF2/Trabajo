@@ -6,7 +6,7 @@
                 <p>Ctra. Benzú <br>
                     Ceuta, España<br>
                     51004<br>
-                    <i class="fa-solid fa-phone"></i></i></i> Teléfono: +34 956 52 02 51<br>
+                    <i class="fa-solid fa-phone"></i> Teléfono: +34 956 52 02 51<br>
                 </p>
             </div>
             <div class="col-md-6">

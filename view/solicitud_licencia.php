@@ -11,6 +11,7 @@ if (!isset($_SESSION['correo'])) {
     header("Location: index.php");
     exit();
 }
+
 ?>
 <div class="container mt-5">
     <h2>Solicitud de Licencia</h2>
