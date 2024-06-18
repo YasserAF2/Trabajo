@@ -697,28 +697,52 @@ class Trace
 
     public function ver_festivos()
     {
-        $sql = "SELECT FEST_FECHA, FEST_DESCRIPCION, FEST_JORNADA FROM T_FESTIVOS";
-        $stmt = $this->conection->prepare($sql);
-        $stmt->execute();
+        try {
+            // Verificar la conexión antes de preparar la consulta
+            if ($this->conection->connect_error) {
+                throw new Exception("Error de conexión a la base de datos: " . $this->conection->connect_error);
+            }
     
-        // Inicializar las variables antes de vincularlas
-        $FEST_FECHA = '';
-        $FEST_DESCRIPCION = '';
-        $FEST_JORNADA = '';
+            // Consulta SQL para obtener los festivos
+            $sql = "SELECT FEST_FECHA, FEST_DESCRIPCION, FEST_JORNADA FROM T_FESTIVOS";
     
-        // Vinculamos las variables de resultado
-        $stmt->bind_result($FEST_FECHA, $FEST_DESCRIPCION, $FEST_JORNADA);
+            // Preparar la consulta
+            $stmt = $this->conection->prepare($sql);
+            if (!$stmt) {
+                throw new Exception("Error en la preparación de la consulta: " . $this->conection->error);
+            }
     
-        $result = [];
-        while ($stmt->fetch()) {
-            $result[] = [
-                'FEST_FECHA' => $FEST_FECHA,
-                'FEST_DESCRIPCION' => $FEST_DESCRIPCION,
-                'FEST_JORNADA' => $FEST_JORNADA
-            ];
+            // Ejecutar la consulta
+            $executed = $stmt->execute();
+            if (!$executed) {
+                throw new Exception("Error al ejecutar la consulta: " . $stmt->error);
+            }
+    
+            // Inicializar las variables antes de vincularlas
+            $FEST_FECHA = '';
+            $FEST_DESCRIPCION = '';
+            $FEST_JORNADA = '';
+    
+            // Vinculamos las variables de resultado
+            $stmt->bind_result($FEST_FECHA, $FEST_DESCRIPCION, $FEST_JORNADA);
+    
+            $result = [];
+            while ($stmt->fetch()) {
+                $result[] = [
+                    'FEST_FECHA' => $FEST_FECHA,
+                    'FEST_DESCRIPCION' => $FEST_DESCRIPCION,
+                    'FEST_JORNADA' => $FEST_JORNADA
+                ];
+            }
+    
+            $stmt->close();
+            return $result;
+        } catch (Exception $e) {
+            // Manejar cualquier excepción que se haya lanzado
+            error_log("Error en ver_festivos(): " . $e->getMessage());
+            // Puedes devolver un valor por defecto o lanzar la excepción nuevamente según tus necesidades
+            return []; // Devuelve un array vacío en caso de error
         }
-    
-        $stmt->close();
-        return $result;
     }
+    
 }
