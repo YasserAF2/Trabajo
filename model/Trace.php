@@ -508,7 +508,7 @@ class Trace
         $turno = $peticion['TURNO'];
 
         // Verificar la ocupación actual
-        $query = $this->conection->prepare("SELECT * FROM T_OCUPACION WHERE FECHA = ?");
+        $query = $this->conection->prepare("SELECT * FROM t_ocupacion WHERE FECHA = ?");
         $query->bind_param("s", $fecha);
         $query->execute();
         $ocupacion_result = $query->get_result();
@@ -532,8 +532,8 @@ class Trace
         // Incrementar la ocupación para AP
         $ocupacion[$turno_ocupacion] += 1;
 
-        // Actualizar la tabla T_OCUPACION
-        $query = $this->conection->prepare("UPDATE T_OCUPACION SET AP_MAÑANA = ?, AP_TARDE = ?, AP_NOCHE = ? WHERE FECHA = ?");
+        // Actualizar la tabla t_ocupacion
+        $query = $this->conection->prepare("UPDATE t_ocupacion SET AP_MAÑANA = ?, AP_TARDE = ?, AP_NOCHE = ? WHERE FECHA = ?");
         $query->bind_param("iiis", $ocupacion['AP_MAÑANA'], $ocupacion['AP_TARDE'], $ocupacion['AP_NOCHE'], $fecha);
         $query->execute();
 
@@ -590,7 +590,7 @@ class Trace
         $turno = $peticion['TURNO'];
 
         // Verificar la ocupación actual
-        $query = $this->conection->prepare("SELECT * FROM T_OCUPACION WHERE FECHA = ?");
+        $query = $this->conection->prepare("SELECT * FROM t_ocupacion WHERE FECHA = ?");
         $query->bind_param("s", $fecha);
         $query->execute();
         $ocupacion_result = $query->get_result();
@@ -614,8 +614,8 @@ class Trace
         // Incrementar la ocupación para AS
         $ocupacion[$turno_ocupacion] += 1;
 
-        // Actualizar la tabla T_OCUPACION
-        $query = $this->conection->prepare("UPDATE T_OCUPACION SET AS_MAÑANA = ?, AS_TARDE = ?, AS_NOCHE = ? WHERE FECHA = ?");
+        // Actualizar la tabla t_ocupacion
+        $query = $this->conection->prepare("UPDATE t_ocupacion SET AS_MAÑANA = ?, AS_TARDE = ?, AS_NOCHE = ? WHERE FECHA = ?");
         $query->bind_param("iiis", $ocupacion['AS_MAÑANA'], $ocupacion['AS_TARDE'], $ocupacion['AS_NOCHE'], $fecha);
         $query->execute();
 
@@ -704,7 +704,7 @@ class Trace
             }
     
             // Consulta SQL para obtener los festivos
-            $sql = "SELECT FEST_FECHA, FEST_DESCRIPCION, FEST_JORNADA FROM T_FESTIVOS";
+            $sql = "SELECT FEST_FECHA, FEST_DESCRIPCION, FEST_JORNADA FROM t_festivos";
     
             // Preparar la consulta
             $stmt = $this->conection->prepare($sql);
