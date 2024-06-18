@@ -180,7 +180,7 @@ class Trace
     public function peticiones_dni($dni)
     {
         // Preparar la consulta con un marcador de posición para el valor del DNI
-        $sql = "SELECT * FROM T_PETICIONES WHERE PET_DNI = ?";
+        $sql = "SELECT * FROM t_peticiones WHERE PET_DNI = ?";
         $stmt = $this->conection->prepare($sql);
 
         // Verificar la preparación de la consulta
@@ -497,7 +497,7 @@ class Trace
         $peticion_id = $_GET['peticion_id'];
 
         // Obtener la petición y el turno del empleado
-        $query = $this->conection->prepare("SELECT PET_FECHA, TURNO FROM T_PETICIONES JOIN t_empleados ON T_PETICIONES.PET_DNI = EMPLEADOS.EMP_NIF WHERE PET_ID = ?");
+        $query = $this->conection->prepare("SELECT PET_FECHA, TURNO FROM t_peticiones JOIN t_empleados ON t_peticiones.PET_DNI = EMPLEADOS.EMP_NIF WHERE PET_ID = ?");
         $query->bind_param("i", $peticion_id);
         $query->execute();
         $peticion_result = $query->get_result();
@@ -543,7 +543,7 @@ class Trace
         $supervisor_nombre = $supervisor['EMP_NOMBRE'] . ' ' . $supervisor['EMP_APE_1'] . ' ' . $supervisor['EMP_APE_2'];
 
         // Actualizar el estado de la petición a aceptada y asignar supervisor
-        $query = $this->conection->prepare("UPDATE T_PETICIONES SET PET_ACEPTADO = 'SI', PET_SUPERVISOR = ? WHERE PET_ID = ?");
+        $query = $this->conection->prepare("UPDATE t_peticiones SET PET_ACEPTADO = 'SI', PET_SUPERVISOR = ? WHERE PET_ID = ?");
         $query->bind_param("si", $supervisor_nombre, $peticion_id);
         $query->execute();
 
@@ -563,7 +563,7 @@ class Trace
         $supervisor_nombre = $supervisor['EMP_NOMBRE'] . ' ' . $supervisor['EMP_APE_1'] . ' ' . $supervisor['EMP_APE_2'];
 
         // Actualizar la petición para marcarla como rechazada y asignar supervisor
-        $query = $this->conection->prepare("UPDATE T_PETICIONES SET PET_ACEPTADO = 'NO', PET_SUPERVISOR = ? WHERE PET_ID = ?");
+        $query = $this->conection->prepare("UPDATE t_peticiones SET PET_ACEPTADO = 'NO', PET_SUPERVISOR = ? WHERE PET_ID = ?");
         $query->bind_param("si", $supervisor_nombre, $peticion_id);
 
         if ($query->execute()) {
@@ -579,7 +579,7 @@ class Trace
         $peticion_id = $_GET['peticion_id'];
 
         // Obtener la petición y el turno del empleado
-        $query = $this->conection->prepare("SELECT PET_FECHA, TURNO FROM T_PETICIONES JOIN t_empleados ON T_PETICIONES.PET_DNI = EMPLEADOS.EMP_NIF WHERE PET_ID = ?");
+        $query = $this->conection->prepare("SELECT PET_FECHA, TURNO FROM t_peticiones JOIN t_empleados ON t_peticiones.PET_DNI = EMPLEADOS.EMP_NIF WHERE PET_ID = ?");
         $query->bind_param("i", $peticion_id);
         $query->execute();
         $peticion_result = $query->get_result();
@@ -625,7 +625,7 @@ class Trace
         $supervisor_nombre = $supervisor['EMP_NOMBRE'] . ' ' . $supervisor['EMP_APE_1'] . ' ' . $supervisor['EMP_APE_2'];
 
         // Actualizar el estado de la petición a aceptada y asignar supervisor
-        $query = $this->conection->prepare("UPDATE T_PETICIONES SET PET_ACEPTADO = 'SI', PET_SUPERVISOR = ? WHERE PET_ID = ?");
+        $query = $this->conection->prepare("UPDATE t_peticiones SET PET_ACEPTADO = 'SI', PET_SUPERVISOR = ? WHERE PET_ID = ?");
         $query->bind_param("si", $supervisor_nombre, $peticion_id);
         $query->execute();
 
@@ -646,7 +646,7 @@ class Trace
         $supervisor_nombre = $supervisor['EMP_NOMBRE'] . ' ' . $supervisor['EMP_APE_1'] . ' ' . $supervisor['EMP_APE_2'];
 
         // Actualizar la petición para marcarla como rechazada y asignar supervisor
-        $query = $this->conection->prepare("UPDATE T_PETICIONES SET PET_ACEPTADO = 'NO', PET_SUPERVISOR = ? WHERE PET_ID = ?");
+        $query = $this->conection->prepare("UPDATE t_peticiones SET PET_ACEPTADO = 'NO', PET_SUPERVISOR = ? WHERE PET_ID = ?");
         $query->bind_param("si", $supervisor_nombre, $peticion_id);
 
         if ($query->execute()) {
@@ -661,10 +661,10 @@ class Trace
     public function obtenerPeticionesAceptadas()
     {
         $query = $this->conection->prepare("
-        SELECT T_PETICIONES.PET_FECHA, t_empleados.TURNO, T_PETICIONES.PET_SUPERVISOR, t_empleados.EMP_NOMBRE, t_empleados.EMP_APE_1, t_empleados.EMP_APE_2
-        FROM T_PETICIONES 
-        JOIN t_empleados ON T_PETICIONES.PET_DNI = t_empleados.EMP_NIF 
-        WHERE T_PETICIONES.PET_ACEPTADO = 'SI'
+        SELECT t_peticiones.PET_FECHA, t_empleados.TURNO, t_peticiones.PET_SUPERVISOR, t_empleados.EMP_NOMBRE, t_empleados.EMP_APE_1, t_empleados.EMP_APE_2
+        FROM t_peticiones 
+        JOIN t_empleados ON t_peticiones.PET_DNI = t_empleados.EMP_NIF 
+        WHERE t_peticiones.PET_ACEPTADO = 'SI'
         ");
         $query->execute();
         $result = $query->get_result();
