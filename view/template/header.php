@@ -22,7 +22,7 @@
     </script>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="imagenes/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="view\template\imagenes\favicon.ico" />
 </head>
 
 <div class="cabecera d-flex">

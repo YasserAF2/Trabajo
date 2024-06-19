@@ -10,6 +10,9 @@
         header("Location: index.php");
         exit();
     }
+    $trace = new Trace();
+    $tipo = $trace->tipo_empleado();
+
     ?>
 
 
@@ -23,6 +26,9 @@
                     <a href="index.php?action=ver_solicitudes_ap" class="list-group-item list-group-item-action">Ver Solicitudes Pendientes AP</a>
                     <a href="index.php?action=ver_solicitudes_as" class="list-group-item list-group-item-action">Ver Solicitudes Pendientes AS</a>
                     <a href="index.php?action=ver_calendario" class="list-group-item list-group-item-action">Ver Calendario</a>
+                    <?php if ($tipo == "SUPERUSUARIO") : ?>
+                        <a href="index.php?action=cambiar_roles" class="list-group-item list-group-item-action">Cambiar Roles</a>
+                    <?php endif; ?>
                     <a href="index.php?action=logeado" class="list-group-item list-group-item-action btn btn-secondary">Volver atrás</a>
                 </div>
             </div>

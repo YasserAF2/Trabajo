@@ -71,6 +71,16 @@ class controlador
         $this->view = 'ver_calendario';
     }
 
+    public function cambiar_roles()
+    {
+        $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+        $empleados_por_pagina = 20;
+        $datos = $this->trace->lista_empleados($pagina, $empleados_por_pagina);
+        $this->view = 'cambiar_roles';
+        return $datos;
+    }
+    
+
     public function aceptar_ap()
     {
         if (isset($_GET['peticion_id'])) {

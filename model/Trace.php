@@ -702,30 +702,30 @@ class Trace
             if ($this->conection->connect_error) {
                 throw new Exception("Error de conexión a la base de datos: " . $this->conection->connect_error);
             }
-    
+
             // Consulta SQL para obtener los festivos
             $sql = "SELECT FEST_FECHA, FEST_DESCRIPCION, FEST_JORNADA FROM t_festivos";
-    
+
             // Preparar la consulta
             $stmt = $this->conection->prepare($sql);
             if (!$stmt) {
                 throw new Exception("Error en la preparación de la consulta: " . $this->conection->error);
             }
-    
+
             // Ejecutar la consulta
             $executed = $stmt->execute();
             if (!$executed) {
                 throw new Exception("Error al ejecutar la consulta: " . $stmt->error);
             }
-    
+
             // Inicializar las variables antes de vincularlas
             $FEST_FECHA = '';
             $FEST_DESCRIPCION = '';
             $FEST_JORNADA = '';
-    
+
             // Vinculamos las variables de resultado
             $stmt->bind_result($FEST_FECHA, $FEST_DESCRIPCION, $FEST_JORNADA);
-    
+
             $result = [];
             while ($stmt->fetch()) {
                 $result[] = [
@@ -734,7 +734,7 @@ class Trace
                     'FEST_JORNADA' => $FEST_JORNADA
                 ];
             }
-    
+
             $stmt->close();
             return $result;
         } catch (Exception $e) {
@@ -743,6 +743,87 @@ class Trace
             // Puedes devolver un valor por defecto o lanzar la excepción nuevamente según tus necesidades
             return []; // Devuelve un array vacío en caso de error
         }
+    }
+
+
+    public function lista_empleados($pagina = 1, $empleados_por_pagina = 20, $busqueda = null)
+    {
+        // Calcular el offset para la paginación
+        $offset = ($pagina - 1) * $empleados_por_pagina;
+    
+        // Preparar la consulta SQL base
+        $sql = "SELECT * FROM t_empleados";
+    
+        // Si hay término de búsqueda, agregar condición WHERE
+        if ($busqueda) {
+            $sql .= " WHERE EMP_NIF LIKE ? OR EMP_NOMBRE LIKE ?";
+        }
+    
+        // Agregar LIMIT y OFFSET para paginación
+        $sql .= " LIMIT ? OFFSET ?";
+    
+        // Preparar y ejecutar la consulta
+        $stmt = $this->conection->prepare($sql);
+    
+        // Bind de parámetros según presencia de búsqueda
+        if ($busqueda) {
+            $param = "%{$busqueda}%";
+            $stmt->bind_param("ssii", $param, $param, $empleados_por_pagina, $offset);
+        } else {
+            $stmt->bind_param("ii", $empleados_por_pagina, $offset);
+        }
+    
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        $empleados = [];
+    
+        // Recorrer resultados y guardar en array de empleados
+        while ($row = $resultado->fetch_assoc()) {
+            $empleados[] = $row;
+        }
+    
+        // Obtener el número total de empleados (sin límite de paginación)
+        $total_empleados = $this->obtener_total_empleados($busqueda);
+    
+        // Cerrar statement y retornar resultados
+        $stmt->close();
+    
+        return [
+            'empleados' => $empleados,
+            'total_empleados' => $total_empleados,
+            'empleados_por_pagina' => $empleados_por_pagina,
+            'pagina_actual' => $pagina,
+        ];
+    }
+    
+    private function obtener_total_empleados($busqueda = null)
+    {
+        // Preparar la consulta SQL para obtener el total de empleados
+        $sql = "SELECT COUNT(*) as total FROM t_empleados";
+    
+        // Si hay término de búsqueda, agregar condición WHERE
+        if ($busqueda) {
+            $sql .= " WHERE EMP_NIF LIKE ? OR EMP_NOMBRE LIKE ?";
+        }
+    
+        // Preparar y ejecutar la consulta
+        $stmt = $this->conection->prepare($sql);
+    
+        // Bind de parámetros según presencia de búsqueda
+        if ($busqueda) {
+            $param = "%{$busqueda}%";
+            $stmt->bind_param("ss", $param, $param);
+        }
+    
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        $row = $resultado->fetch_assoc();
+    
+        // Obtener el total y cerrar statement
+        $total = $row['total'];
+        $stmt->close();
+    
+        return $total;
     }
     
 }
