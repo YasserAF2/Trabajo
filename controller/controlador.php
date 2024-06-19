@@ -79,7 +79,14 @@ class controlador
         $this->view = 'cambiar_roles';
         return $datos;
     }
-    
+
+    public function cambiar_tipo()
+    {
+        $response = $this->trace->cambiar_tipo();
+        $this->view = 'cambiar_roles';
+        return $response;
+    }
+
 
     public function aceptar_ap()
     {

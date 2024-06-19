@@ -9,6 +9,10 @@ class Trace
     function __construct()
     {
         $this->getConection();
+
+        if ($this->conection->connect_error) {
+            die("Error en la conexión: " . $this->conection->connect_error);
+        }
     }
 
     public function getConection()
@@ -746,48 +750,33 @@ class Trace
     }
 
 
-    public function lista_empleados($pagina = 1, $empleados_por_pagina = 20, $busqueda = null)
+    public function lista_empleados($pagina = 1, $empleados_por_pagina = 20)
     {
-        // Calcular el offset para la paginación
+        // Calcular el offset para la consulta SQL
         $offset = ($pagina - 1) * $empleados_por_pagina;
-    
-        // Preparar la consulta SQL base
-        $sql = "SELECT * FROM t_empleados";
-    
-        // Si hay término de búsqueda, agregar condición WHERE
-        if ($busqueda) {
-            $sql .= " WHERE EMP_NIF LIKE ? OR EMP_NOMBRE LIKE ?";
-        }
-    
-        // Agregar LIMIT y OFFSET para paginación
-        $sql .= " LIMIT ? OFFSET ?";
-    
-        // Preparar y ejecutar la consulta
+
+        // Preparar la consulta SQL para obtener los datos de los empleados con límite y offset
+        $sql = "SELECT EMP_NIF, EMP_APE_1, EMP_APE_2, EMP_NOMBRE, EMP_TIPO FROM t_empleados LIMIT ? OFFSET ?";
         $stmt = $this->conection->prepare($sql);
-    
-        // Bind de parámetros según presencia de búsqueda
-        if ($busqueda) {
-            $param = "%{$busqueda}%";
-            $stmt->bind_param("ssii", $param, $param, $empleados_por_pagina, $offset);
-        } else {
-            $stmt->bind_param("ii", $empleados_por_pagina, $offset);
-        }
-    
+        $stmt->bind_param("ii", $empleados_por_pagina, $offset);
         $stmt->execute();
         $resultado = $stmt->get_result();
         $empleados = [];
-    
-        // Recorrer resultados y guardar en array de empleados
+
         while ($row = $resultado->fetch_assoc()) {
             $empleados[] = $row;
         }
-    
-        // Obtener el número total de empleados (sin límite de paginación)
-        $total_empleados = $this->obtener_total_empleados($busqueda);
-    
-        // Cerrar statement y retornar resultados
+
         $stmt->close();
-    
+
+        // Obtener el número total de empleados para la paginación
+        $sql_total = "SELECT COUNT(*) AS total FROM t_empleados";
+        $stmt_total = $this->conection->prepare($sql_total);
+        $stmt_total->execute();
+        $resultado_total = $stmt_total->get_result();
+        $total_empleados = $resultado_total->fetch_assoc()['total'];
+        $stmt_total->close();
+
         return [
             'empleados' => $empleados,
             'total_empleados' => $total_empleados,
@@ -795,35 +784,37 @@ class Trace
             'pagina_actual' => $pagina,
         ];
     }
-    
-    private function obtener_total_empleados($busqueda = null)
+
+    public function cambiar_tipo()
     {
-        // Preparar la consulta SQL para obtener el total de empleados
-        $sql = "SELECT COUNT(*) as total FROM t_empleados";
-    
-        // Si hay término de búsqueda, agregar condición WHERE
-        if ($busqueda) {
-            $sql .= " WHERE EMP_NIF LIKE ? OR EMP_NOMBRE LIKE ?";
+        $response = array(); // Array para almacenar la respuesta
+
+        if (isset($_POST['dni'], $_POST['nuevo_tipo'])) {
+            $dni = $_POST['dni'];
+            $nuevo_tipo = $_POST['nuevo_tipo'];
+
+            // Escapamos las variables para evitar SQL Injection
+            $dni_escapado = $this->conection->real_escape_string($dni);
+            $nuevo_tipo_escapado = $this->conection->real_escape_string($nuevo_tipo);
+
+            $sql = "UPDATE t_empleados SET EMP_TIPO = '$nuevo_tipo_escapado' WHERE EMP_NIF = '$dni_escapado'";
+            if ($this->conection->query($sql) === TRUE) {
+                $response['success'] = true;
+                $response['message'] = "Tipo de empleado actualizado correctamente.";
+            } else {
+                $response['success'] = false;
+                $response['message'] = "Error al actualizar el tipo de empleado: " . $this->conection->error;
+            }
+        } else {
+            $response['success'] = false;
+            $response['message'] = "Error: Datos incompletos al intentar actualizar el tipo de empleado.";
         }
-    
-        // Preparar y ejecutar la consulta
-        $stmt = $this->conection->prepare($sql);
-    
-        // Bind de parámetros según presencia de búsqueda
-        if ($busqueda) {
-            $param = "%{$busqueda}%";
-            $stmt->bind_param("ss", $param, $param);
-        }
-    
-        $stmt->execute();
-        $resultado = $stmt->get_result();
-        $row = $resultado->fetch_assoc();
-    
-        // Obtener el total y cerrar statement
-        $total = $row['total'];
-        $stmt->close();
-    
-        return $total;
+
+        ob_clean(); // Limpiar el buffer de salida
+
+        // Devolver la respuesta codificada en JSON
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        exit(); // Salir para asegurar que no se envíe nada más después de la respuesta JSON
     }
-    
 }
