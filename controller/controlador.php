@@ -365,7 +365,7 @@ class controlador
 
             $mail->isHTML(true);
             $mail->Subject = 'Confirmación de registro';
-            $mail->Body = "Haga clic en el siguiente enlace para confirmar su registro: <a href='http://localhost/php/Trabajo/index.php?action=confirmar_registro&token=$token'>Confirmar Registro</a>";
+            $mail->Body = "Haga clic en el siguiente enlace para confirmar su registro: <a href='http://40942650.servicio-online.net/index.php?action=confirmar_registro&token=$token'>Confirmar Registro</a>";
 
             // Envío del correo
             $mail->send();

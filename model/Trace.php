@@ -230,7 +230,7 @@ class Trace
     }
 
 
-    function asuntos_propios()
+    public function asuntos_propios()
     {
         // Recoger la fecha y hora del POST
         $fechaHora = $_POST['selected_date'];
@@ -243,9 +243,6 @@ class Trace
         if (count($fechaPartes) == 3) {
             // Si el array tiene tres elementos (día, mes, año), el formato es correcto
             $fechaFormateada = sprintf('%04d-%02d-%02d', $fechaPartes[2], $fechaPartes[1], $fechaPartes[0]);
-        } else {
-            // Manejar el caso en el que el formato de fecha no sea el esperado
-            // Por ejemplo, mostrar un mensaje de error o establecer $fechaFormateada en un valor predeterminado
         }
 
         $num_dias_ap = 0;
@@ -280,8 +277,8 @@ class Trace
             $supervisor = NULL;
             $doc = NULL;
 
-            // Crear la fecha y hora completa en formato compatible
-            $fechaHoraSolicitud = $fechaFormateada . ' ' . $hora;
+            // Crear la fecha y hora completa en formato compatible con la fecha actual
+            $fechaHoraSolicitud = date('Y-m-d H:i:s');
 
             // Vincular parámetros
             $stmt_insert->bind_param("sssssss", $dni, $fechaFormateada, $tipo, $fechaHoraSolicitud, $aceptado, $supervisor, $doc);
@@ -304,7 +301,6 @@ class Trace
         return $resultado;
     }
 
-
     function solicitud_asuntos_propios_norm()
     {
         // Recoger la fecha y hora del POST
@@ -317,34 +313,62 @@ class Trace
         $fechaPartes = explode('-', $fecha);
         $fechaFormateada = sprintf('%04d-%02d-%02d', $fechaPartes[2], $fechaPartes[1], $fechaPartes[0]);
 
-        // Preparar la consulta
-        $stmt = $this->conection->prepare("INSERT INTO t_peticiones (PET_DNI, PET_FECHA, PET_TIPO, PET_FECHA_HORA_SOLICITUD, PET_ACEPTADO, PET_SUPERVISOR, PET_DOC) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $num_dias_as = 0;
+        $num_total_dias_as = 0;
 
-        // Definir valores
-        $dni = $_SESSION['dni'];
-        $tipo = 'AS';
-        $aceptado = 'En espera';
-        $supervisor = NULL;
-        $doc = NULL;
+        // Preparar la consulta para obtener los días AS del empleado
+        $stmt_as = $this->conection->prepare("SELECT NUM_DIAS_AS, NUM_TOTAL_DIAS_AS FROM t_empleados WHERE EMP_NIF = ?");
+        $stmt_as->bind_param("s", $_SESSION['dni']);
+        $stmt_as->execute();
+        $stmt_as->store_result();
+        $stmt_as->bind_result($num_dias_as, $num_total_dias_as);
+        $stmt_as->fetch();
 
-        // Crear la fecha y hora completa en formato compatible
-        $fechaHoraSolicitud = $fechaFormateada . ' ' . $hora;
+        // Verificar si el número de días AS no supera el total
+        if ($num_dias_as < $num_total_dias_as) {
+            // Incrementar el número de días AS
+            $num_dias_as++;
 
-        // Vincular parámetros
-        $stmt->bind_param("sssssss", $dni, $fechaFormateada, $tipo, $fechaHoraSolicitud, $aceptado, $supervisor, $doc);
+            // Actualizar el número de días AS en la base de datos
+            $stmt_update_as = $this->conection->prepare("UPDATE t_empleados SET NUM_DIAS_AS = ? WHERE EMP_NIF = ?");
+            $stmt_update_as->bind_param("is", $num_dias_as, $_SESSION['dni']);
+            $stmt_update_as->execute();
+            $stmt_update_as->close();
 
-        // Ejecutar la consulta
-        if ($stmt->execute()) {
-            $resultado = "Solicitud enviada correctamente.";
+            // Preparar la consulta para insertar la solicitud
+            $stmt = $this->conection->prepare("INSERT INTO t_peticiones (PET_DNI, PET_FECHA, PET_TIPO, PET_FECHA_HORA_SOLICITUD, PET_ACEPTADO, PET_SUPERVISOR, PET_DOC) VALUES (?, ?, ?, ?, ?, ?, ?)");
+
+            // Definir valores
+            $dni = $_SESSION['dni'];
+            $tipo = 'AS';
+            $aceptado = 'En espera';
+            $supervisor = NULL;
+            $doc = NULL;
+
+            // Crear la fecha y hora completa en formato compatible con la fecha actual
+            $fechaHoraSolicitud = date('Y-m-d H:i:s');
+
+            // Vincular parámetros
+            $stmt->bind_param("sssssss", $dni, $fechaFormateada, $tipo, $fechaHoraSolicitud, $aceptado, $supervisor, $doc);
+
+            // Ejecutar la consulta
+            if ($stmt->execute()) {
+                $resultado = "Solicitud enviada correctamente.";
+            } else {
+                $resultado = "Error al enviar la solicitud: " . $stmt->error;
+            }
+
+            // Cerrar la declaración y la conexión
+            $stmt->close();
         } else {
-            $resultado = "Error al enviar la solicitud: " . $stmt->error;
+            $resultado = "No puede solicitar más días de asuntos propios, ha alcanzado el límite.";
         }
 
-        // Cerrar la declaración y la conexión
-        $stmt->close();
+        $stmt_as->close();
         $this->conection->close();
         return $resultado;
     }
+
 
     public function pertenece_sindicato()
     {
@@ -501,10 +525,16 @@ class Trace
         $peticion_id = $_GET['peticion_id'];
 
         // Obtener la petición y el turno del empleado
-        $query = $this->conection->prepare("SELECT PET_FECHA, TURNO FROM t_peticiones JOIN t_empleados ON t_peticiones.PET_DNI = EMPLEADOS.EMP_NIF WHERE PET_ID = ?");
+        $query = $this->conection->prepare("SELECT PET_FECHA, TURNO FROM t_peticiones JOIN t_empleados ON t_peticiones.PET_DNI = t_empleados.EMP_NIF WHERE PET_ID = ?");
+        if (!$query) {
+            die('Error en la preparación de la consulta SQL: ' . mysqli_error($this->conection));
+        }
         $query->bind_param("i", $peticion_id);
         $query->execute();
         $peticion_result = $query->get_result();
+        if (!$peticion_result) {
+            die('Error al obtener el resultado de la consulta: ' . mysqli_error($this->conection));
+        }
         $peticion = $peticion_result->fetch_assoc();
         $query->close();
 
@@ -513,10 +543,17 @@ class Trace
 
         // Verificar la ocupación actual
         $query = $this->conection->prepare("SELECT * FROM t_ocupacion WHERE FECHA = ?");
+        if (!$query) {
+            die('Error en la preparación de la consulta SQL: ' . mysqli_error($this->conection));
+        }
         $query->bind_param("s", $fecha);
         $query->execute();
         $ocupacion_result = $query->get_result();
+        if (!$ocupacion_result) {
+            die('Error al obtener el resultado de la consulta: ' . mysqli_error($this->conection));
+        }
         $ocupacion = $ocupacion_result->fetch_assoc();
+        $query->close();
 
         // Límites de ocupación para AP
         $limites_ap = [
@@ -538,8 +575,15 @@ class Trace
 
         // Actualizar la tabla t_ocupacion
         $query = $this->conection->prepare("UPDATE t_ocupacion SET AP_MAÑANA = ?, AP_TARDE = ?, AP_NOCHE = ? WHERE FECHA = ?");
+        if (!$query) {
+            die('Error en la preparación de la consulta SQL: ' . mysqli_error($this->conection));
+        }
         $query->bind_param("iiis", $ocupacion['AP_MAÑANA'], $ocupacion['AP_TARDE'], $ocupacion['AP_NOCHE'], $fecha);
         $query->execute();
+        if ($query->errno) {
+            die('Error al ejecutar la consulta de actualización: ' . $query->error);
+        }
+        $query->close();
 
         // Obtener el nombre y apellidos del supervisor a partir del correo
         $supervisor_correo = $_SESSION['correo'];
@@ -548,8 +592,15 @@ class Trace
 
         // Actualizar el estado de la petición a aceptada y asignar supervisor
         $query = $this->conection->prepare("UPDATE t_peticiones SET PET_ACEPTADO = 'SI', PET_SUPERVISOR = ? WHERE PET_ID = ?");
+        if (!$query) {
+            die('Error en la preparación de la consulta SQL: ' . mysqli_error($this->conection));
+        }
         $query->bind_param("si", $supervisor_nombre, $peticion_id);
         $query->execute();
+        if ($query->errno) {
+            die('Error al ejecutar la consulta de actualización: ' . $query->error);
+        }
+        $query->close();
 
         // Agregar variables de sesión
         $_SESSION['mensaje'] = "Petición aceptada exitosamente.";
@@ -583,10 +634,16 @@ class Trace
         $peticion_id = $_GET['peticion_id'];
 
         // Obtener la petición y el turno del empleado
-        $query = $this->conection->prepare("SELECT PET_FECHA, TURNO FROM t_peticiones JOIN t_empleados ON t_peticiones.PET_DNI = EMPLEADOS.EMP_NIF WHERE PET_ID = ?");
+        $query = $this->conection->prepare("SELECT PET_FECHA, TURNO FROM t_peticiones JOIN t_empleados ON t_peticiones.PET_DNI = t_empleados.EMP_NIF WHERE PET_ID = ?");
+        if (!$query) {
+            die('Error en la preparación de la consulta SQL: ' . mysqli_error($this->conection));
+        }
         $query->bind_param("i", $peticion_id);
         $query->execute();
         $peticion_result = $query->get_result();
+        if (!$peticion_result) {
+            die('Error al obtener el resultado de la consulta: ' . mysqli_error($this->conection));
+        }
         $peticion = $peticion_result->fetch_assoc();
         $query->close();
 
@@ -595,10 +652,17 @@ class Trace
 
         // Verificar la ocupación actual
         $query = $this->conection->prepare("SELECT * FROM t_ocupacion WHERE FECHA = ?");
+        if (!$query) {
+            die('Error en la preparación de la consulta SQL: ' . mysqli_error($this->conection));
+        }
         $query->bind_param("s", $fecha);
         $query->execute();
         $ocupacion_result = $query->get_result();
+        if (!$ocupacion_result) {
+            die('Error al obtener el resultado de la consulta: ' . mysqli_error($this->conection));
+        }
         $ocupacion = $ocupacion_result->fetch_assoc();
+        $query->close();
 
         // Límites de ocupación para AS
         $limites_as = [
@@ -620,8 +684,15 @@ class Trace
 
         // Actualizar la tabla t_ocupacion
         $query = $this->conection->prepare("UPDATE t_ocupacion SET AS_MAÑANA = ?, AS_TARDE = ?, AS_NOCHE = ? WHERE FECHA = ?");
+        if (!$query) {
+            die('Error en la preparación de la consulta SQL: ' . mysqli_error($this->conection));
+        }
         $query->bind_param("iiis", $ocupacion['AS_MAÑANA'], $ocupacion['AS_TARDE'], $ocupacion['AS_NOCHE'], $fecha);
         $query->execute();
+        if ($query->errno) {
+            die('Error al ejecutar la consulta de actualización: ' . $query->error);
+        }
+        $query->close();
 
         // Obtener el nombre y apellidos del supervisor a partir del correo
         $supervisor_correo = $_SESSION['correo'];
@@ -630,13 +701,21 @@ class Trace
 
         // Actualizar el estado de la petición a aceptada y asignar supervisor
         $query = $this->conection->prepare("UPDATE t_peticiones SET PET_ACEPTADO = 'SI', PET_SUPERVISOR = ? WHERE PET_ID = ?");
+        if (!$query) {
+            die('Error en la preparación de la consulta SQL: ' . mysqli_error($this->conection));
+        }
         $query->bind_param("si", $supervisor_nombre, $peticion_id);
         $query->execute();
+        if ($query->errno) {
+            die('Error al ejecutar la consulta de actualización: ' . $query->error);
+        }
+        $query->close();
 
         // Agregar variables de sesión
         $_SESSION['mensaje'] = "Petición aceptada exitosamente.";
         $_SESSION['peticion_id_aceptada'] = $peticion_id;
     }
+
 
 
     public function rechazar_as()

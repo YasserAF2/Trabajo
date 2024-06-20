@@ -6,7 +6,8 @@
                 <p>Su registro ha sido confirmado exitosamente.</p>
                 <p>Ahora puede acceder a su cuenta y empezar a utilizar nuestros servicios.</p>
                 <hr>
-                <p class="mb-0"><a href="http://localhost/php/Trabajo/index.php" class="btn btn-primary">Ir al inicio</a></p>
+                <p class="mb-0"><a href="http://40942650.servicio-online.net/index.php" class="btn btn-primary">Ir al
+                        inicio</a></p>
             </div>
         </div>
     </div>
