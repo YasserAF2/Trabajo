@@ -35,7 +35,8 @@ $tipo = $trace->tipo_empleado();
                             <th>DNI</th>
                             <th>Nombre y Apellidos</th>
                             <th>Tipo</th>
-                            <th>Fecha</th>
+                            <th>Fecha y hora</th>
+                            <th>Fecha de solicitud</th>
                             <th>Estado</th>
                             <th>Supervisor</th>
                             <th>Acciones</th> <!-- Nueva columna para los botones -->
@@ -55,6 +56,7 @@ $tipo = $trace->tipo_empleado();
                                     echo $fecha_formateada;
                                     ?>
                                 </td>
+                                <td><?= $peticion['PET_FECHA'] ?></td>
                                 <td><?= $peticion['PET_ACEPTADO'] ?></td>
                                 <td><?= $peticion['PET_SUPERVISOR'] ?></td>
                                 <td>

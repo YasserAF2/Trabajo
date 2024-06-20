@@ -230,7 +230,7 @@ class Trace
     }
 
 
-    function asuntos_propios()
+    public function asuntos_propios()
     {
         // Recoger la fecha y hora del POST
         $fechaHora = $_POST['selected_date'];
@@ -243,9 +243,6 @@ class Trace
         if (count($fechaPartes) == 3) {
             // Si el array tiene tres elementos (día, mes, año), el formato es correcto
             $fechaFormateada = sprintf('%04d-%02d-%02d', $fechaPartes[2], $fechaPartes[1], $fechaPartes[0]);
-        } else {
-            // Manejar el caso en el que el formato de fecha no sea el esperado
-            // Por ejemplo, mostrar un mensaje de error o establecer $fechaFormateada en un valor predeterminado
         }
 
         $num_dias_ap = 0;
@@ -280,8 +277,8 @@ class Trace
             $supervisor = NULL;
             $doc = NULL;
 
-            // Crear la fecha y hora completa en formato compatible
-            $fechaHoraSolicitud = $fechaFormateada . ' ' . $hora;
+            // Crear la fecha y hora completa en formato compatible con la fecha actual
+            $fechaHoraSolicitud = date('Y-m-d H:i:s');
 
             // Vincular parámetros
             $stmt_insert->bind_param("sssssss", $dni, $fechaFormateada, $tipo, $fechaHoraSolicitud, $aceptado, $supervisor, $doc);
@@ -304,7 +301,6 @@ class Trace
         return $resultado;
     }
 
-
     function solicitud_asuntos_propios_norm()
     {
         // Recoger la fecha y hora del POST
@@ -317,34 +313,62 @@ class Trace
         $fechaPartes = explode('-', $fecha);
         $fechaFormateada = sprintf('%04d-%02d-%02d', $fechaPartes[2], $fechaPartes[1], $fechaPartes[0]);
 
-        // Preparar la consulta
-        $stmt = $this->conection->prepare("INSERT INTO t_peticiones (PET_DNI, PET_FECHA, PET_TIPO, PET_FECHA_HORA_SOLICITUD, PET_ACEPTADO, PET_SUPERVISOR, PET_DOC) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $num_dias_as = 0;
+        $num_total_dias_as = 0;
 
-        // Definir valores
-        $dni = $_SESSION['dni'];
-        $tipo = 'AS';
-        $aceptado = 'En espera';
-        $supervisor = NULL;
-        $doc = NULL;
+        // Preparar la consulta para obtener los días AS del empleado
+        $stmt_as = $this->conection->prepare("SELECT NUM_DIAS_AS, NUM_TOTAL_DIAS_AS FROM t_empleados WHERE EMP_NIF = ?");
+        $stmt_as->bind_param("s", $_SESSION['dni']);
+        $stmt_as->execute();
+        $stmt_as->store_result();
+        $stmt_as->bind_result($num_dias_as, $num_total_dias_as);
+        $stmt_as->fetch();
 
-        // Crear la fecha y hora completa en formato compatible
-        $fechaHoraSolicitud = $fechaFormateada . ' ' . $hora;
+        // Verificar si el número de días AS no supera el total
+        if ($num_dias_as < $num_total_dias_as) {
+            // Incrementar el número de días AS
+            $num_dias_as++;
 
-        // Vincular parámetros
-        $stmt->bind_param("sssssss", $dni, $fechaFormateada, $tipo, $fechaHoraSolicitud, $aceptado, $supervisor, $doc);
+            // Actualizar el número de días AS en la base de datos
+            $stmt_update_as = $this->conection->prepare("UPDATE t_empleados SET NUM_DIAS_AS = ? WHERE EMP_NIF = ?");
+            $stmt_update_as->bind_param("is", $num_dias_as, $_SESSION['dni']);
+            $stmt_update_as->execute();
+            $stmt_update_as->close();
 
-        // Ejecutar la consulta
-        if ($stmt->execute()) {
-            $resultado = "Solicitud enviada correctamente.";
+            // Preparar la consulta para insertar la solicitud
+            $stmt = $this->conection->prepare("INSERT INTO t_peticiones (PET_DNI, PET_FECHA, PET_TIPO, PET_FECHA_HORA_SOLICITUD, PET_ACEPTADO, PET_SUPERVISOR, PET_DOC) VALUES (?, ?, ?, ?, ?, ?, ?)");
+
+            // Definir valores
+            $dni = $_SESSION['dni'];
+            $tipo = 'AS';
+            $aceptado = 'En espera';
+            $supervisor = NULL;
+            $doc = NULL;
+
+            // Crear la fecha y hora completa en formato compatible con la fecha actual
+            $fechaHoraSolicitud = date('Y-m-d H:i:s');
+
+            // Vincular parámetros
+            $stmt->bind_param("sssssss", $dni, $fechaFormateada, $tipo, $fechaHoraSolicitud, $aceptado, $supervisor, $doc);
+
+            // Ejecutar la consulta
+            if ($stmt->execute()) {
+                $resultado = "Solicitud enviada correctamente.";
+            } else {
+                $resultado = "Error al enviar la solicitud: " . $stmt->error;
+            }
+
+            // Cerrar la declaración y la conexión
+            $stmt->close();
         } else {
-            $resultado = "Error al enviar la solicitud: " . $stmt->error;
+            $resultado = "No puede solicitar más días de asuntos propios, ha alcanzado el límite.";
         }
 
-        // Cerrar la declaración y la conexión
-        $stmt->close();
+        $stmt_as->close();
         $this->conection->close();
         return $resultado;
     }
+
 
     public function pertenece_sindicato()
     {
