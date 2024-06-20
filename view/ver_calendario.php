@@ -8,33 +8,34 @@ $trace = new Trace();
 $peticiones = $trace->obtenerPeticionesAceptadas();
 ?>
 
-<div class="container mt-5 mb-5">
-    <div class="card">
-        <div class="card-header bg-primary text-white">
-            <h3>Calendario de Eventos</h3>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <?php foreach ($peticiones as $fecha => $eventos) : ?>
-                    <div class="col-md-4">
-                        <div class="list-group">
-                            <div class="list-group-item list-group-item-action active">
-                                Solicitud Aceptada <?php echo $fecha; ?>
-                            </div>
-                            <?php foreach ($eventos as $evento) : ?>
-                                <div class="list-group-item list-group-item-action">
-                                    Turno: <?php echo $evento['turno']; ?> <br>
-                                    Empleado: <?php echo $evento['nombre'] . ' ' . $evento['apellido1'] . ' ' . $evento['apellido2']; ?> <br>
-                                    Supervisor: <?php echo $evento['supervisor']; ?>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        </div>
-        <div class="card-footer text-end mb-">
-            <a href="index.php?action=admin" class="btn btn-secondary">Volver atrás</a>
-        </div>
+
+<div class="container mt-5">
+    <h1 class="mb-4">Peticiones Aceptadas</h1>
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Fecha</th>
+                <th>DNI</th>
+                <th>Nombre y Apellidos</th>
+                <th>Tipo</th>
+                <th>Fecha Solicitud</th>
+                <th>Supervisor</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($peticiones as $peticion) : ?>
+                <tr>
+                    <td><?php echo $peticion['PET_FECHA']; ?></td>
+                    <td><?php echo $peticion['PET_DNI']; ?></td>
+                    <td><?php echo $peticion['EMP_NOMBRE'] . ' ' . $peticion['EMP_APE_1']; ?></td>
+                    <td><?php echo $peticion['PET_TIPO']; ?></td>
+                    <td><?php echo $peticion['PET_FECHA_HORA_SOLICITUD']; ?></td>
+                    <td><?php echo $peticion['PET_SUPERVISOR']; ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    <div>
+        <a href="index.php?action=admin" class="btn btn-secondary">Volver atrás</a>
     </div>
 </div>

@@ -744,35 +744,19 @@ class Trace
     public function obtenerPeticionesAceptadas()
     {
         $query = $this->conection->prepare("
-        SELECT t_peticiones.PET_FECHA, t_empleados.TURNO, t_peticiones.PET_SUPERVISOR, t_empleados.EMP_NOMBRE, t_empleados.EMP_APE_1, t_empleados.EMP_APE_2
-        FROM t_peticiones 
-        JOIN t_empleados ON t_peticiones.PET_DNI = t_empleados.EMP_NIF 
-        WHERE t_peticiones.PET_ACEPTADO = 'SI'
+            SELECT t_peticiones.*, t_empleados.TURNO, t_empleados.EMP_NOMBRE, t_empleados.EMP_APE_1, t_empleados.EMP_APE_2
+            FROM t_peticiones 
+            JOIN t_empleados ON t_peticiones.PET_DNI = t_empleados.EMP_NIF 
+            WHERE t_peticiones.PET_ACEPTADO = 'SI'
         ");
         $query->execute();
         $result = $query->get_result();
         $peticiones = [];
-
+    
         while ($row = $result->fetch_assoc()) {
-            $fecha = $row['PET_FECHA'];
-            $turno = $row['TURNO'];
-            $supervisor = $row['PET_SUPERVISOR'];
-            $nombre = $row['EMP_NOMBRE'];
-            $apellido1 = $row['EMP_APE_1'];
-            $apellido2 = $row['EMP_APE_2'];
-
-            if (!isset($peticiones[$fecha])) {
-                $peticiones[$fecha] = [];
-            }
-            $peticiones[$fecha][] = [
-                'turno' => $turno,
-                'supervisor' => $supervisor,
-                'nombre' => $nombre,
-                'apellido1' => $apellido1,
-                'apellido2' => $apellido2
-            ];
+            $peticiones[] = $row;
         }
-
+    
         $query->close();
         return $peticiones;
     }
