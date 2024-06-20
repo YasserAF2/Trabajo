@@ -526,9 +526,15 @@ class Trace
 
         // Obtener la petición y el turno del empleado
         $query = $this->conection->prepare("SELECT PET_FECHA, TURNO FROM t_peticiones JOIN t_empleados ON t_peticiones.PET_DNI = t_empleados.EMP_NIF WHERE PET_ID = ?");
+        if (!$query) {
+            die('Error en la preparación de la consulta SQL: ' . mysqli_error($this->conection));
+        }
         $query->bind_param("i", $peticion_id);
         $query->execute();
         $peticion_result = $query->get_result();
+        if (!$peticion_result) {
+            die('Error al obtener el resultado de la consulta: ' . mysqli_error($this->conection));
+        }
         $peticion = $peticion_result->fetch_assoc();
         $query->close();
 
@@ -537,10 +543,17 @@ class Trace
 
         // Verificar la ocupación actual
         $query = $this->conection->prepare("SELECT * FROM t_ocupacion WHERE FECHA = ?");
+        if (!$query) {
+            die('Error en la preparación de la consulta SQL: ' . mysqli_error($this->conection));
+        }
         $query->bind_param("s", $fecha);
         $query->execute();
         $ocupacion_result = $query->get_result();
+        if (!$ocupacion_result) {
+            die('Error al obtener el resultado de la consulta: ' . mysqli_error($this->conection));
+        }
         $ocupacion = $ocupacion_result->fetch_assoc();
+        $query->close();
 
         // Límites de ocupación para AP
         $limites_ap = [
@@ -562,8 +575,15 @@ class Trace
 
         // Actualizar la tabla t_ocupacion
         $query = $this->conection->prepare("UPDATE t_ocupacion SET AP_MAÑANA = ?, AP_TARDE = ?, AP_NOCHE = ? WHERE FECHA = ?");
+        if (!$query) {
+            die('Error en la preparación de la consulta SQL: ' . mysqli_error($this->conection));
+        }
         $query->bind_param("iiis", $ocupacion['AP_MAÑANA'], $ocupacion['AP_TARDE'], $ocupacion['AP_NOCHE'], $fecha);
         $query->execute();
+        if ($query->errno) {
+            die('Error al ejecutar la consulta de actualización: ' . $query->error);
+        }
+        $query->close();
 
         // Obtener el nombre y apellidos del supervisor a partir del correo
         $supervisor_correo = $_SESSION['correo'];
@@ -572,8 +592,15 @@ class Trace
 
         // Actualizar el estado de la petición a aceptada y asignar supervisor
         $query = $this->conection->prepare("UPDATE t_peticiones SET PET_ACEPTADO = 'SI', PET_SUPERVISOR = ? WHERE PET_ID = ?");
+        if (!$query) {
+            die('Error en la preparación de la consulta SQL: ' . mysqli_error($this->conection));
+        }
         $query->bind_param("si", $supervisor_nombre, $peticion_id);
         $query->execute();
+        if ($query->errno) {
+            die('Error al ejecutar la consulta de actualización: ' . $query->error);
+        }
+        $query->close();
 
         // Agregar variables de sesión
         $_SESSION['mensaje'] = "Petición aceptada exitosamente.";
@@ -608,9 +635,15 @@ class Trace
 
         // Obtener la petición y el turno del empleado
         $query = $this->conection->prepare("SELECT PET_FECHA, TURNO FROM t_peticiones JOIN t_empleados ON t_peticiones.PET_DNI = t_empleados.EMP_NIF WHERE PET_ID = ?");
+        if (!$query) {
+            die('Error en la preparación de la consulta SQL: ' . mysqli_error($this->conection));
+        }
         $query->bind_param("i", $peticion_id);
         $query->execute();
         $peticion_result = $query->get_result();
+        if (!$peticion_result) {
+            die('Error al obtener el resultado de la consulta: ' . mysqli_error($this->conection));
+        }
         $peticion = $peticion_result->fetch_assoc();
         $query->close();
 
@@ -619,10 +652,17 @@ class Trace
 
         // Verificar la ocupación actual
         $query = $this->conection->prepare("SELECT * FROM t_ocupacion WHERE FECHA = ?");
+        if (!$query) {
+            die('Error en la preparación de la consulta SQL: ' . mysqli_error($this->conection));
+        }
         $query->bind_param("s", $fecha);
         $query->execute();
         $ocupacion_result = $query->get_result();
+        if (!$ocupacion_result) {
+            die('Error al obtener el resultado de la consulta: ' . mysqli_error($this->conection));
+        }
         $ocupacion = $ocupacion_result->fetch_assoc();
+        $query->close();
 
         // Límites de ocupación para AS
         $limites_as = [
@@ -644,8 +684,15 @@ class Trace
 
         // Actualizar la tabla t_ocupacion
         $query = $this->conection->prepare("UPDATE t_ocupacion SET AS_MAÑANA = ?, AS_TARDE = ?, AS_NOCHE = ? WHERE FECHA = ?");
+        if (!$query) {
+            die('Error en la preparación de la consulta SQL: ' . mysqli_error($this->conection));
+        }
         $query->bind_param("iiis", $ocupacion['AS_MAÑANA'], $ocupacion['AS_TARDE'], $ocupacion['AS_NOCHE'], $fecha);
         $query->execute();
+        if ($query->errno) {
+            die('Error al ejecutar la consulta de actualización: ' . $query->error);
+        }
+        $query->close();
 
         // Obtener el nombre y apellidos del supervisor a partir del correo
         $supervisor_correo = $_SESSION['correo'];
@@ -654,13 +701,21 @@ class Trace
 
         // Actualizar el estado de la petición a aceptada y asignar supervisor
         $query = $this->conection->prepare("UPDATE t_peticiones SET PET_ACEPTADO = 'SI', PET_SUPERVISOR = ? WHERE PET_ID = ?");
+        if (!$query) {
+            die('Error en la preparación de la consulta SQL: ' . mysqli_error($this->conection));
+        }
         $query->bind_param("si", $supervisor_nombre, $peticion_id);
         $query->execute();
+        if ($query->errno) {
+            die('Error al ejecutar la consulta de actualización: ' . $query->error);
+        }
+        $query->close();
 
         // Agregar variables de sesión
         $_SESSION['mensaje'] = "Petición aceptada exitosamente.";
         $_SESSION['peticion_id_aceptada'] = $peticion_id;
     }
+
 
 
     public function rechazar_as()
