@@ -30,7 +30,15 @@ $total_paginas = ceil($total_empleados / $empleados_por_pagina);
 
 <div class="container mt-5">
     <h2>Lista de Empleados</h2>
-    <a href="index.php?action=admin" class="btn btn-secondary">Volver atrás</a>
+
+    <div class="container mt-5">
+        <div class="form-group">
+            <label for="buscador">Buscar por DNI o Nombre:</label>
+            <input type="text" id="buscador" name="buscador" class="form-control" placeholder="Introduce DNI o Nombre">
+        </div>
+        <button type="submit" class="btn btn-primary">Buscar</button>
+        <a href="index.php?action=admin" class="btn btn-secondary">Volver atrás</a>
+    </div>
 
     <table class="table table-bordered">
         <thead>
@@ -42,24 +50,32 @@ $total_paginas = ceil($total_empleados / $empleados_por_pagina);
         </thead>
         <tbody>
             <?php foreach ($dataToView['empleados'] as $empleado) : ?>
-                <tr>
-                    <td><?php echo $empleado['EMP_NIF']; ?></td>
-                    <td><?php echo $empleado['EMP_NOMBRE'] . ' ' . $empleado['EMP_APE_1'] . ' ' . $empleado['EMP_APE_2']; ?></td>
-                    <td>
-                        <form action="index.php?action=cambiar_tipo" method="post" onsubmit="return confirm('¿Está seguro de querer modificar a <?php echo $empleado['EMP_NOMBRE'] . ' ' . $empleado['EMP_APE_1']; ?> al rol ' + this.nuevo_tipo.value + '?');">
-                            <input type="hidden" name="dni" value="<?php echo $empleado['EMP_NIF']; ?>">
-                            <div class="form-group">
-                                <select name="nuevo_tipo" class="form-control">
-                                    <option value="ADMINISTRADOR" <?php echo $empleado['EMP_TIPO'] == 'ADMINISTRADOR' ? 'selected' : ''; ?>>Administrador</option>
-                                    <option value="USUARIO" <?php echo $empleado['EMP_TIPO'] == 'USUARIO' ? 'selected' : ''; ?>>Usuario</option>
-                                    <option value="BASICO" <?php echo $empleado['EMP_TIPO'] == 'BASICO' ? 'selected' : ''; ?>>Básico</option>
-                                    <option value="SUPERUSUARIO" <?php echo $empleado['EMP_TIPO'] == 'SUPERUSUARIO' ? 'selected' : ''; ?>>Superusuario</option>
-                                </select>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Cambiar</button>
-                        </form>
-                    </td>
-                </tr>
+            <tr>
+                <td class="emp_nif"><?php echo $empleado['EMP_NIF']; ?></td>
+                <td><?php echo $empleado['EMP_NOMBRE'] . ' ' . $empleado['EMP_APE_1'] . ' ' . $empleado['EMP_APE_2']; ?>
+                </td>
+                <td>
+                    <form action="index.php?action=cambiar_tipo" method="post"
+                        onsubmit="return confirm('¿Está seguro de querer modificar a <?php echo $empleado['EMP_NOMBRE'] . ' ' . $empleado['EMP_APE_1']; ?> al rol ' + this.nuevo_tipo.value + '?');">
+                        <input type="hidden" name="dni" value="<?php echo $empleado['EMP_NIF']; ?>">
+                        <div class="form-group">
+                            <select name="nuevo_tipo" class="form-control">
+                                <option value="ADMINISTRADOR"
+                                    <?php echo $empleado['EMP_TIPO'] == 'ADMINISTRADOR' ? 'selected' : ''; ?>>
+                                    Administrador</option>
+                                <option value="USUARIO"
+                                    <?php echo $empleado['EMP_TIPO'] == 'USUARIO' ? 'selected' : ''; ?>>Usuario</option>
+                                <option value="BASICO"
+                                    <?php echo $empleado['EMP_TIPO'] == 'BASICO' ? 'selected' : ''; ?>>Básico</option>
+                                <option value="SUPERUSUARIO"
+                                    <?php echo $empleado['EMP_TIPO'] == 'SUPERUSUARIO' ? 'selected' : ''; ?>>
+                                    Superusuario</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Cambiar</button>
+                    </form>
+                </td>
+            </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
@@ -68,60 +84,75 @@ $total_paginas = ceil($total_empleados / $empleados_por_pagina);
     <nav>
         <ul class="pagination">
             <?php if ($pagina_actual > 1) : ?>
-                <li class="page-item"><a class="page-link" href="index.php?action=cambiar_roles&pagina=<?php echo $pagina_actual - 1; ?>">Anterior</a></li>
+            <li class="page-item"><a class="page-link"
+                    href="index.php?action=cambiar_roles&pagina=<?php echo $pagina_actual - 1; ?>">Anterior</a></li>
             <?php endif; ?>
             <?php for ($i = 1; $i <= $total_paginas; $i++) : ?>
-                <li class="page-item <?php echo $i == $pagina_actual ? 'active' : ''; ?>">
-                    <a class="page-link" href="index.php?action=cambiar_roles&pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
-                </li>
+            <li class="page-item <?php echo $i == $pagina_actual ? 'active' : ''; ?>">
+                <a class="page-link"
+                    href="index.php?action=cambiar_roles&pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
+            </li>
             <?php endfor; ?>
             <?php if ($pagina_actual < $total_paginas) : ?>
-                <li class="page-item"><a class="page-link" href="index.php?action=cambiar_roles&pagina=<?php echo $pagina_actual + 1; ?>">Siguiente</a></li>
+            <li class="page-item"><a class="page-link"
+                    href="index.php?action=cambiar_roles&pagina=<?php echo $pagina_actual + 1; ?>">Siguiente</a></li>
             <?php endif; ?>
         </ul>
     </nav>
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Escucha el evento submit del formulario
-        document.querySelectorAll("form").forEach(form => {
-            form.addEventListener("submit", function(event) {
-                event.preventDefault(); // Evita que se envíe el formulario de forma tradicional
+/* https://www.youtube.com/watch?v=I3stKiPIb-w */
+document.addEventListener("keyup", e => {
+    if (e.target.matches("#buscador")) {
+        if (e.key === "Escape") e.target.value = ""
+        document.querySelectorAll(".emp_nif").forEach(emp => {
+            emp.textContent.toLowerCase().includes(e.target.value.toLowerCase()) ?
+                emp.classList.remove("filtro") :
+                emp.classList.add("filtro")
+        })
+    }
+})
 
-                // Obtén los datos del formulario
-                var formData = new FormData(this);
+document.addEventListener("DOMContentLoaded", function() {
+    // Escucha el evento submit del formulario
+    document.querySelectorAll("form").forEach(form => {
+        form.addEventListener("submit", function(event) {
+            event.preventDefault(); // Evita que se envíe el formulario de forma tradicional
 
-                // Realiza la petición AJAX
-                fetch(this.action, {
-                        method: 'POST',
-                        body: formData
-                    })
-                    .then(response => {
-                        // Verificar el estado de la respuesta HTTP
-                        if (!response.ok) {
-                            throw new Error('Error en la solicitud HTTP: ' + response.status);
-                        }
-                        return response.json(); // Convertir la respuesta a JSON
-                    })
-                    .then(data => {
-                        console.log("Respuesta del servidor:", data);
+            // Obtén los datos del formulario
+            var formData = new FormData(this);
 
-                        // Muestra una alerta basada en la respuesta recibida
-                        if (data.success) {
-                            alert(data.message); // Mensaje de éxito
-                            // Ejemplo de actualización de la vista: recargar la página
-                            location.reload();
-                        } else {
-                            alert(data.message); // Mensaje de error
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error al procesar la solicitud:', error);
-                        alert('Error al procesar la solicitud. Por favor, intenta de nuevo.');
-                    });
+            // Realiza la petición AJAX
+            fetch(this.action, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    // Verificar el estado de la respuesta HTTP
+                    if (!response.ok) {
+                        throw new Error('Error en la solicitud HTTP: ' + response.status);
+                    }
+                    return response.json(); // Convertir la respuesta a JSON
+                })
+                .then(data => {
+                    console.log("Respuesta del servidor:", data);
 
-            });
+                    // Muestra una alerta basada en la respuesta recibida
+                    if (data.success) {
+                        alert(data.message); // Mensaje de éxito
+                        // Ejemplo de actualización de la vista: recargar la página
+                        location.reload();
+                    } else {
+                        alert(data.message); // Mensaje de error
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al procesar la solicitud:', error);
+                    alert('Error al procesar la solicitud. Por favor, intenta de nuevo.');
+                });
+
         });
     });
+});
 </script>

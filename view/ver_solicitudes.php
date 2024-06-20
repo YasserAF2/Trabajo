@@ -1,4 +1,4 @@
-<?php 
+<?php
 // Asigna la variable de sesión si no está definida
 if (!isset($_SESSION['correo'])) {
     $_SESSION['correo'] = $correo;
@@ -21,9 +21,9 @@ $peticiones = $dataToView['peticiones'];
             <div class="perfil-titulo text-end">
                 <h1 class="mb-0">Lista de Peticiones</h1>
             </div>
-        </div>  
+        </div>
 
-        <?php if (!empty($peticiones)): ?>
+        <?php if (!empty($peticiones)) : ?>
             <div class="mt-4">
                 <table class="table table-striped">
                     <thead>
@@ -37,12 +37,25 @@ $peticiones = $dataToView['peticiones'];
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($peticiones as $peticion): ?>
+                        <?php foreach ($peticiones as $peticion) : ?>
                             <tr>
                                 <td><?= $peticion['PET_DNI'] ?></td>
-                                <td><?= $peticion['PET_FECHA'] ?></td>
+                                <td>
+                                    <?php
+                                    $fecha_peticion = $peticion['PET_FECHA'];
+                                    $fecha_formateada_peticion = date("d/m/Y", strtotime($fecha_peticion));
+                                    echo $fecha_formateada_peticion;
+                                    ?>
+                                </td>
                                 <td><?= $peticion['PET_TIPO'] ?></td>
-                                <td><?= $peticion['PET_FECHA_HORA_SOLICITUD'] ?></td>
+                                <td>
+                                    <?php
+                                    $fecha_hora_solicitud = $peticion['PET_FECHA_HORA_SOLICITUD'];
+                                    $fecha = date("d/m/Y", strtotime($fecha_hora_solicitud));
+                                    $hora = date("H:i:s", strtotime($fecha_hora_solicitud));
+                                    echo $fecha . ' ' . $hora;
+                                    ?>
+                                </td>
                                 <td><?= $peticion['PET_ACEPTADO'] ?></td>
                                 <td><?= $peticion['PET_SUPERVISOR'] ?></td>
                             </tr>
@@ -50,7 +63,7 @@ $peticiones = $dataToView['peticiones'];
                     </tbody>
                 </table>
             </div>
-        <?php else: ?>
+        <?php else : ?>
             <p>No hay peticiones disponibles.</p>
         <?php endif; ?>
 

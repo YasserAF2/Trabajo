@@ -1,4 +1,4 @@
-<?php 
+<?php
 // Asigna la variable de sesión si no está definida
 if (!isset($_SESSION['correo'])) {
     $_SESSION['correo'] = $correo;
@@ -27,7 +27,7 @@ $tipo = $trace->tipo_empleado();
             </div>
         </div>
 
-        <?php if (!empty($peticiones)): ?>
+        <?php if (!empty($peticiones)) : ?>
             <div class="mt-4">
                 <table class="table table-striped">
                     <thead>
@@ -42,19 +42,26 @@ $tipo = $trace->tipo_empleado();
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($peticiones as $peticion): ?>
+                        <?php foreach ($peticiones as $peticion) : ?>
                             <tr>
                                 <td><?= $peticion['PET_DNI'] ?></td>
-                                <td><?= $peticion['EMP_NOMBRE'] . ' ' . $peticion['EMP_APE_1'] . ' ' . $peticion['EMP_APE_2'] ?></td>
+                                <td><?= $peticion['EMP_NOMBRE'] . ' ' . $peticion['EMP_APE_1'] . ' ' . $peticion['EMP_APE_2'] ?>
+                                </td>
                                 <td><?= $peticion['PET_TIPO'] ?></td>
-                                <td><?= $peticion['PET_FECHA_HORA_SOLICITUD'] ?></td>
+                                <td>
+                                    <?php
+                                    $fecha_hora_solicitud = $peticion['PET_FECHA_HORA_SOLICITUD'];
+                                    $fecha_formateada = date("d/m/Y H:i:s", strtotime($fecha_hora_solicitud));
+                                    echo $fecha_formateada;
+                                    ?>
+                                </td>
                                 <td><?= $peticion['PET_ACEPTADO'] ?></td>
                                 <td><?= $peticion['PET_SUPERVISOR'] ?></td>
                                 <td>
-                                    <?php if ($tipo == 'ADMINISTRADOR' || $tipo == 'SUPERUSUARIO'): ?>
+                                    <?php if ($tipo == 'ADMINISTRADOR' || $tipo == 'SUPERUSUARIO') : ?>
                                         <a href="index.php?action=aceptar_as&peticion_id=<?= $peticion['PET_ID'] ?>" class="btn btn-success" onclick="return confirm('¿Estás seguro de que quieres aceptar esta petición?')">Aceptar</a>
                                         <a href="index.php?action=rechazar_as&peticion_id=<?= $peticion['PET_ID'] ?>" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que quieres rechazar esta petición?')">Rechazar</a>
-                                    <?php else: ?>
+                                    <?php else : ?>
                                         <button class="btn btn-success" disabled>Aceptar</button>
                                         <button class="btn btn-danger" disabled>Rechazar</button>
                                     <?php endif; ?>
@@ -64,7 +71,7 @@ $tipo = $trace->tipo_empleado();
                     </tbody>
                 </table>
             </div>
-        <?php else: ?>
+        <?php else : ?>
             <p>No hay peticiones disponibles.</p>
         <?php endif; ?>
 

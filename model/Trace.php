@@ -501,7 +501,7 @@ class Trace
         $peticion_id = $_GET['peticion_id'];
 
         // Obtener la petición y el turno del empleado
-        $query = $this->conection->prepare("SELECT PET_FECHA, TURNO FROM t_peticiones JOIN t_empleados ON t_peticiones.PET_DNI = EMPLEADOS.EMP_NIF WHERE PET_ID = ?");
+        $query = $this->conection->prepare("SELECT PET_FECHA, TURNO FROM t_peticiones JOIN t_empleados ON t_peticiones.PET_DNI = t_empleados.EMP_NIF WHERE PET_ID = ?");
         $query->bind_param("i", $peticion_id);
         $query->execute();
         $peticion_result = $query->get_result();
@@ -583,7 +583,7 @@ class Trace
         $peticion_id = $_GET['peticion_id'];
 
         // Obtener la petición y el turno del empleado
-        $query = $this->conection->prepare("SELECT PET_FECHA, TURNO FROM t_peticiones JOIN t_empleados ON t_peticiones.PET_DNI = EMPLEADOS.EMP_NIF WHERE PET_ID = ?");
+        $query = $this->conection->prepare("SELECT PET_FECHA, TURNO FROM t_peticiones JOIN t_empleados ON t_peticiones.PET_DNI = t_empleados.EMP_NIF WHERE PET_ID = ?");
         $query->bind_param("i", $peticion_id);
         $query->execute();
         $peticion_result = $query->get_result();

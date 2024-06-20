@@ -45,9 +45,16 @@ $tipo = $trace->tipo_empleado();
                         <?php foreach ($peticiones as $peticion) : ?>
                             <tr>
                                 <td><?= $peticion['PET_DNI'] ?></td>
-                                <td><?= $peticion['EMP_NOMBRE'] . ' ' . $peticion['EMP_APE_1'] . ' ' . $peticion['EMP_APE_2'] ?></td>
+                                <td><?= $peticion['EMP_NOMBRE'] . ' ' . $peticion['EMP_APE_1'] . ' ' . $peticion['EMP_APE_2'] ?>
+                                </td>
                                 <td><?= $peticion['PET_TIPO'] ?></td>
-                                <td><?= $peticion['PET_FECHA_HORA_SOLICITUD'] ?></td>
+                                <td>
+                                    <?php
+                                    $fecha_hora_solicitud = $peticion['PET_FECHA_HORA_SOLICITUD'];
+                                    $fecha_formateada = date("d/m/Y H:i:s", strtotime($fecha_hora_solicitud));
+                                    echo $fecha_formateada;
+                                    ?>
+                                </td>
                                 <td><?= $peticion['PET_ACEPTADO'] ?></td>
                                 <td><?= $peticion['PET_SUPERVISOR'] ?></td>
                                 <td>
