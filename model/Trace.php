@@ -878,6 +878,6 @@ class Trace
         // Devolver la respuesta codificada en JSON
         header('Content-Type: application/json');
         echo json_encode($response);
-        exit(); // Salir para asegurar que no se envíe nada más después de la respuesta JSON
+        exit();
     }
 }
