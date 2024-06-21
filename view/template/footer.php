@@ -22,7 +22,6 @@
         </div>
     </div>
 </footer>
-<script src="js/archivo.js"></script>
+<!-- <script src="js/archivo.js"></script> -->
 </body>
-
 </html>

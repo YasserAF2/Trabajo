@@ -200,8 +200,20 @@ class controlador
         session_start();
         $mensaje = $this->trace->submit_baja_accidente();
         $_SESSION['resultado_solicitud'] = $mensaje;
+        $this->view = "resultado_baja_accidente_enfermedad";
+    }
 
-        $this->view = "resultado_asuntos_propios";
+    public function documentacion_baja_enfermedad()
+    {
+        $this->view = 'documentacion_baja_enfermedad';
+    }
+
+    public function submit_baja_enfermedad()
+    {
+        session_start();
+        $mensaje = $this->trace->submit_baja_enfermedad();
+        $_SESSION['resultado_solicitud'] = $mensaje;
+        $this->view = "resultado_baja_accidente_enfermedad";
     }
 
     public function solicitud_asuntos_propios_no_remunerados()
@@ -212,11 +224,6 @@ class controlador
     public function solicitud_licencia_lactancia_maternidad_paternidad()
     {
         $this->view = 'solicitud_maternidad';
-    }
-
-    public function documentacion_baja_enfermedad()
-    {
-        $this->view = 'documentacion_baja_enfermedad';
     }
 
     public function solicitud_hora_sindical()
@@ -417,6 +424,20 @@ class controlador
             $resultado = $this->trace->solicitud_asuntos_propios_norm();
             $_SESSION['resultado_solicitud'] = $resultado;
             $this->view = 'asuntos_propios_norm_resultado';
+        }
+    }
+
+    public function ver_bajas(){
+        session_start();
+        if (isset($_SESSION['correo'])) {
+            $peticiones = $this->trace->ver_bajas_licencias();
+            $datos = array(
+                'peticiones' => $peticiones,
+            );
+            $this->view = "ver_bajas";
+            return $datos;
+        } else {
+            $this->view = "login";
         }
     }
 }

@@ -26,6 +26,7 @@
                     <a href="index.php?action=ver_solicitudes_ap" class="list-group-item list-group-item-action">Ver Solicitudes Pendientes AP</a>
                     <a href="index.php?action=ver_solicitudes_as" class="list-group-item list-group-item-action">Ver Solicitudes Pendientes AS</a>
                     <a href="index.php?action=ver_calendario" class="list-group-item list-group-item-action">Ver Calendario</a>
+                    <a href="index.php?action=ver_bajas" class="list-group-item list-group-item-action">Ver bajas Accidente/Enfermedad</a>
                     <?php if ($tipo == "SUPERUSUARIO") : ?>
                         <a href="index.php?action=cambiar_roles" class="list-group-item list-group-item-action">Cambiar Roles</a>
                     <?php endif; ?>

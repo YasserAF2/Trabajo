@@ -441,6 +441,54 @@ class Trace
         }
     }
 
+    public function submit_baja_enfermedad(){
+        $fecha = $_POST['fecha'];
+        $hora = $_POST['hora'];
+
+        // Verificar si el archivo fue subido sin errores
+        if (isset($_FILES['archivo']) && $_FILES['archivo']['error'] === UPLOAD_ERR_OK) {
+            // Ruta de almacenamiento del archivo
+            $nombreArchivo = $_FILES['archivo']['name'];
+            $rutaTemporal = $_FILES['archivo']['tmp_name'];
+            $rutaDestino = 'view/documentos/' . $nombreArchivo;
+
+            // Mover el archivo subido al directorio de destino
+            if (move_uploaded_file($rutaTemporal, $rutaDestino)) {
+                // Preparar la consulta
+                $stmt = $this->conection->prepare("INSERT INTO t_peticiones (PET_DNI, PET_FECHA, PET_TIPO, PET_FECHA_HORA_SOLICITUD, PET_ACEPTADO, PET_SUPERVISOR, PET_DOC) VALUES (?, ?, ?, ?, ?, ?, ?)");
+
+                // Definir valores
+                $dni = $_SESSION['dni'];
+                $tipo = 'E';
+                $aceptado = 'En espera';
+                $supervisor = NULL;
+                $doc = $nombreArchivo;
+
+                // Crear la fecha y hora completa en formato compatible
+                $fechaHoraSolicitud = $fecha . ' ' . $hora;
+
+                // Vincular parámetros
+                $stmt->bind_param("sssssss", $dni, $fecha, $tipo, $fechaHoraSolicitud, $aceptado, $supervisor, $doc);
+
+                // Ejecutar la consulta
+                if ($stmt->execute()) {
+                    $resultado = "Solicitud enviada correctamente.";
+                } else {
+                    $resultado = "Error al enviar la solicitud: " . $stmt->error;
+                }
+
+                // Cerrar la declaración y la conexión
+                $stmt->close();
+                $this->conection->close();
+                return $resultado;
+            } else {
+                return "Error al mover el archivo subido.";
+            }
+        } else {
+            return "Error al subir el archivo: " . $_FILES['archivo']['error'];
+        }
+    }
+    
     public function tipo_empleado()
     {
         $dni = $_SESSION['dni'];
@@ -499,6 +547,28 @@ class Trace
 
         return $peticiones;
     }
+
+    public function ver_bajas_licencias()
+    {
+        // Tipos de peticiones que queremos excluir
+        $tipo_excluir_1 = "AP";
+        $tipo_excluir_2 = "AS";
+        $sql = "SELECT p.*, e.EMP_NOMBRE, e.EMP_APE_1, e.EMP_APE_2 
+                FROM t_peticiones p
+                JOIN t_empleados e ON e.EMP_NIF = p.PET_DNI
+                WHERE p.PET_TIPO NOT IN (?, ?)";
+        $stmt = $this->conection->prepare($sql);
+        $stmt->bind_param("ss", $tipo_excluir_1, $tipo_excluir_2);
+        $stmt->execute();
+    
+        // Obtener el resultado y cerrar la sentencia
+        $resultado = $stmt->get_result();
+        $peticiones = $resultado->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+    
+        return $peticiones;
+    }
+    
 
     //obtener los datos del empleado por el dni
     public function datos_empleado($dni)
@@ -880,4 +950,6 @@ class Trace
         echo json_encode($response);
         exit();
     }
+
+
 }
