@@ -488,7 +488,151 @@ class Trace
             return "Error al subir el archivo: " . $_FILES['archivo']['error'];
         }
     }
+
+    public function submit_lmp(){
+        $fecha = $_POST['fecha'];
+        $hora = $_POST['hora'];
+
+        // Verificar si el archivo fue subido sin errores
+        if (isset($_FILES['archivo']) && $_FILES['archivo']['error'] === UPLOAD_ERR_OK) {
+            // Ruta de almacenamiento del archivo
+            $nombreArchivo = $_FILES['archivo']['name'];
+            $rutaTemporal = $_FILES['archivo']['tmp_name'];
+            $rutaDestino = 'view/documentos/' . $nombreArchivo;
+
+            // Mover el archivo subido al directorio de destino
+            if (move_uploaded_file($rutaTemporal, $rutaDestino)) {
+                // Preparar la consulta
+                $stmt = $this->conection->prepare("INSERT INTO t_peticiones (PET_DNI, PET_FECHA, PET_TIPO, PET_FECHA_HORA_SOLICITUD, PET_ACEPTADO, PET_SUPERVISOR, PET_DOC) VALUES (?, ?, ?, ?, ?, ?, ?)");
+
+                // Definir valores
+                $dni = $_SESSION['dni'];
+                $tipo = 'CMP';
+                $aceptado = 'En espera';
+                $supervisor = NULL;
+                $doc = $nombreArchivo;
+
+                // Crear la fecha y hora completa en formato compatible
+                $fechaHoraSolicitud = $fecha . ' ' . $hora;
+
+                // Vincular parámetros
+                $stmt->bind_param("sssssss", $dni, $fecha, $tipo, $fechaHoraSolicitud, $aceptado, $supervisor, $doc);
+
+                // Ejecutar la consulta
+                if ($stmt->execute()) {
+                    $resultado = "Solicitud enviada correctamente.";
+                } else {
+                    $resultado = "Error al enviar la solicitud: " . $stmt->error;
+                }
+
+                // Cerrar la declaración y la conexión
+                $stmt->close();
+                $this->conection->close();
+                return $resultado;
+            } else {
+                return "Error al mover el archivo subido.";
+            }
+        } else {
+            return "Error al subir el archivo: " . $_FILES['archivo']['error'];
+        }
+    }
+
+    public function submit_licencia(){
+        $fecha = $_POST['fecha'];
+        $hora = $_POST['hora'];
+
+        // Verificar si el archivo fue subido sin errores
+        if (isset($_FILES['archivo']) && $_FILES['archivo']['error'] === UPLOAD_ERR_OK) {
+            // Ruta de almacenamiento del archivo
+            $nombreArchivo = $_FILES['archivo']['name'];
+            $rutaTemporal = $_FILES['archivo']['tmp_name'];
+            $rutaDestino = 'view/documentos/' . $nombreArchivo;
+
+            // Mover el archivo subido al directorio de destino
+            if (move_uploaded_file($rutaTemporal, $rutaDestino)) {
+                // Preparar la consulta
+                $stmt = $this->conection->prepare("INSERT INTO t_peticiones (PET_DNI, PET_FECHA, PET_TIPO, PET_FECHA_HORA_SOLICITUD, PET_ACEPTADO, PET_SUPERVISOR, PET_DOC) VALUES (?, ?, ?, ?, ?, ?, ?)");
+
+                // Definir valores
+                $dni = $_SESSION['dni'];
+                $tipo = 'L';
+                $aceptado = 'En espera';
+                $supervisor = NULL;
+                $doc = $nombreArchivo;
+
+                // Crear la fecha y hora completa en formato compatible
+                $fechaHoraSolicitud = $fecha . ' ' . $hora;
+
+                // Vincular parámetros
+                $stmt->bind_param("sssssss", $dni, $fecha, $tipo, $fechaHoraSolicitud, $aceptado, $supervisor, $doc);
+
+                // Ejecutar la consulta
+                if ($stmt->execute()) {
+                    $resultado = "Solicitud enviada correctamente.";
+                } else {
+                    $resultado = "Error al enviar la solicitud: " . $stmt->error;
+                }
+
+                // Cerrar la declaración y la conexión
+                $stmt->close();
+                $this->conection->close();
+                return $resultado;
+            } else {
+                return "Error al mover el archivo subido.";
+            }
+        } else {
+            return "Error al subir el archivo: " . $_FILES['archivo']['error'];
+        }
+    }
     
+    public function submit_hora_sindical(){
+        $fecha = $_POST['fecha'];
+        $hora = $_POST['hora'];
+
+        // Verificar si el archivo fue subido sin errores
+        if (isset($_FILES['archivo']) && $_FILES['archivo']['error'] === UPLOAD_ERR_OK) {
+            // Ruta de almacenamiento del archivo
+            $nombreArchivo = $_FILES['archivo']['name'];
+            $rutaTemporal = $_FILES['archivo']['tmp_name'];
+            $rutaDestino = 'view/documentos/' . $nombreArchivo;
+
+            // Mover el archivo subido al directorio de destino
+            if (move_uploaded_file($rutaTemporal, $rutaDestino)) {
+                // Preparar la consulta
+                $stmt = $this->conection->prepare("INSERT INTO t_peticiones (PET_DNI, PET_FECHA, PET_TIPO, PET_FECHA_HORA_SOLICITUD, PET_ACEPTADO, PET_SUPERVISOR, PET_DOC) VALUES (?, ?, ?, ?, ?, ?, ?)");
+
+                // Definir valores
+                $dni = $_SESSION['dni'];
+                $tipo = 'HS';
+                $aceptado = 'En espera';
+                $supervisor = NULL;
+                $doc = $nombreArchivo;
+
+                // Crear la fecha y hora completa en formato compatible
+                $fechaHoraSolicitud = $fecha . ' ' . $hora;
+
+                // Vincular parámetros
+                $stmt->bind_param("sssssss", $dni, $fecha, $tipo, $fechaHoraSolicitud, $aceptado, $supervisor, $doc);
+
+                // Ejecutar la consulta
+                if ($stmt->execute()) {
+                    $resultado = "Solicitud enviada correctamente.";
+                } else {
+                    $resultado = "Error al enviar la solicitud: " . $stmt->error;
+                }
+
+                // Cerrar la declaración y la conexión
+                $stmt->close();
+                $this->conection->close();
+                return $resultado;
+            } else {
+                return "Error al mover el archivo subido.";
+            }
+        } else {
+            return "Error al subir el archivo: " . $_FILES['archivo']['error'];
+        }
+    }
+
     public function tipo_empleado()
     {
         $dni = $_SESSION['dni'];

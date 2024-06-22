@@ -11,15 +11,23 @@ if (!isset($_SESSION['correo'])) {
     header("Location: index.php");
     exit();
 }
+
+// Obtiene la fecha y hora actual
+$fechaActual = date('Y-m-d');
+$horaActual = date('H:i:s');
+
 ?>
+
 <div class="container mt-5">
     <h2>Solicitud Licencia por Lactancia/Maternidad/Paternidad</h2>
-    <form action="index.php?action=submit_licencia" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+    <form action="index.php?action=submit_lmp" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
         <div class="form-group">
             <label for="archivo">Subir Archivo (máximo 10MB):</label>
             <input type="file" class="form-control-file" id="archivo" name="archivo" required>
             <div class="invalid-feedback">Por favor, suba un archivo.</div>
         </div>
+        <input type="hidden" name="fecha" value="<?php echo $fechaActual; ?>">
+        <input type="hidden" name="hora" value="<?php echo $horaActual; ?>">
         <button type="submit" class="btn btn-primary">Enviar Solicitud</button>
         <div class="mt-4 text-end">
             <a href="index.php?action=logeado" class="btn btn-secondary">Volver atrás</a>

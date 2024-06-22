@@ -12,6 +12,10 @@ if (!isset($_SESSION['correo'])) {
     exit();
 }
 
+// Obtiene la fecha y hora actual
+$fechaActual = date('Y-m-d');
+$horaActual = date('H:i:s');
+
 ?>
 <div class="container mt-5">
     <h2>Solicitud de Licencia</h2>
@@ -22,6 +26,8 @@ if (!isset($_SESSION['correo'])) {
             <input type="file" class="form-control-file" id="archivo" name="archivo" required>
             <div class="invalid-feedback">Por favor, suba un archivo.</div>
         </div>
+        <input type="hidden" name="fecha" value="<?php echo $fechaActual; ?>">
+        <input type="hidden" name="hora" value="<?php echo $horaActual; ?>">
         <button type="submit" class="btn btn-primary">Enviar Solicitud</button>
     </form>
     <div class="mt-4 text-end">

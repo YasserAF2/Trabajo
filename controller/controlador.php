@@ -226,14 +226,35 @@ class controlador
         $this->view = 'solicitud_maternidad';
     }
 
+    public function submit_lmp(){
+        session_start();
+        $mensaje = $this->trace->submit_lmp();
+        $_SESSION['resultado_solicitud'] = $mensaje;
+        $this->view = "resultado_baja_accidente_enfermedad";
+    }
+
     public function solicitud_hora_sindical()
     {
         $this->view = 'solicitud_hora_sindical';
     }
 
+    public function submit_hora_sindical(){
+        session_start();
+        $mensaje = $this->trace->submit_hora_sindical();
+        $_SESSION['resultado_solicitud'] = $mensaje;
+        $this->view = "resultado_baja_accidente_enfermedad";
+    }
+
     public function solicitud_licencia()
     {
         $this->view = 'solicitud_licencia';
+    }
+
+    public function submit_licencia(){
+        session_start();
+        $mensaje = $this->trace->submit_licencia();
+        $_SESSION['resultado_solicitud'] = $mensaje;
+        $this->view = "resultado_baja_accidente_enfermedad";
     }
 
     public function mensaje_direccion()
@@ -371,7 +392,7 @@ class controlador
             $mail->addAddress($email);
 
             $mail->isHTML(true);
-            $mail->Subject = 'Confirmación de registro';
+            $mail->Subject = 'TRACE - Confirmar registro';
             $mail->Body = "Haga clic en el siguiente enlace para confirmar su registro: <a href='http://40942650.servicio-online.net/index.php?action=confirmar_registro&token=$token'>Confirmar Registro</a>";
 
             // Envío del correo
