@@ -934,8 +934,6 @@ class Trace
         $_SESSION['peticion_id_aceptada'] = $peticion_id;
     }
 
-
-
     public function rechazar_as()
     {
         session_start();
@@ -956,6 +954,59 @@ class Trace
             return false;
         }
     }
+
+    public function aceptar_baja() {
+        session_start();
+        $peticion_id = $_GET['peticion_id'];
+        $supervisor_correo = $_SESSION['correo'];
+        $supervisor = $this->getEmpleadoCorreo($supervisor_correo);
+        $supervisor_nombre = $supervisor['EMP_NOMBRE'] . ' ' . $supervisor['EMP_APE_1'] . ' ' . $supervisor['EMP_APE_2'];
+        $query = "UPDATE t_peticiones SET PET_ACEPTADO = 'SI', PET_SUPERVISOR = ? WHERE PET_ID = ?";
+        $stmt = $this->conection->prepare($query);
+    
+        // Verificar si la preparación de la consulta fue exitosa
+        if ($stmt === false) {
+            // Manejar el error de preparación de consulta
+            return false;
+        }
+    
+        // Bind de parámetros
+        $stmt->bind_param("si", $supervisor_nombre, $peticion_id);
+    
+        // Ejecutar la consulta
+        if ($stmt->execute()) {
+            return true; // Actualización exitosa
+        } else {
+            return false; // Error al ejecutar la consulta
+        }
+    }
+    
+
+    public function rechazar_baja() {
+        session_start();
+        $peticion_id = $_GET['peticion_id'];
+        $supervisor_correo = $_SESSION['correo'];
+        $supervisor = $this->getEmpleadoCorreo($supervisor_correo);
+        $supervisor_nombre = $supervisor['EMP_NOMBRE'] . ' ' . $supervisor['EMP_APE_1'] . ' ' . $supervisor['EMP_APE_2'];
+        $query = "UPDATE t_peticiones SET PET_ACEPTADO = 'NO', PET_SUPERVISOR = ? WHERE PET_ID = ?";
+        $stmt = $this->conection->prepare($query);
+    
+        // Verificar si la preparación de la consulta fue exitosa
+        if ($stmt === false) {
+            // Manejar el error de preparación de consulta
+            return false;
+        }
+    
+        $stmt->bind_param("si", $supervisor_nombre, $peticion_id);
+    
+        // Ejecutar la consulta
+        if ($stmt->execute()) {
+            return true; // Actualización exitosa
+        } else {
+            return false; // Error al ejecutar la consulta
+        }
+    }
+    
 
 
     //peticiones aceptadas

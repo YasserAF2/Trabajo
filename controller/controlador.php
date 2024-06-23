@@ -110,6 +110,28 @@ class controlador
         }
     }
 
+    public function aceptar_baja()
+    {
+        if (isset($_GET['peticion_id'])) {
+            $this->trace->aceptar_baja();
+            header("Location: index.php?action=ver_bajas");
+            exit();
+        } else {
+            echo "No se ha proporcionado un ID de petición en la URL.";
+        }
+    }
+
+    public function rechazar_baja()
+    {
+        if (isset($_GET['peticion_id'])) {
+            $this->trace->rechazar_baja();
+            header("Location: index.php?action=ver_bajas");
+            exit();
+        } else {
+            echo "No se ha proporcionado un ID de petición en la URL.";
+        }
+    }
+
     public function rechazar_ap()
     {
         if (isset($_GET['peticion_id'])) {
