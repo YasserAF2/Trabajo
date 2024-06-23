@@ -441,7 +441,8 @@ class Trace
         }
     }
 
-    public function submit_baja_enfermedad(){
+    public function submit_baja_enfermedad()
+    {
         $fecha = $_POST['fecha'];
         $hora = $_POST['hora'];
 
@@ -489,7 +490,8 @@ class Trace
         }
     }
 
-    public function submit_lmp(){
+    public function submit_lmp()
+    {
         $fecha = $_POST['fecha'];
         $hora = $_POST['hora'];
 
@@ -537,7 +539,8 @@ class Trace
         }
     }
 
-    public function submit_licencia(){
+    public function submit_licencia()
+    {
         $fecha = $_POST['fecha'];
         $hora = $_POST['hora'];
 
@@ -584,8 +587,9 @@ class Trace
             return "Error al subir el archivo: " . $_FILES['archivo']['error'];
         }
     }
-    
-    public function submit_hora_sindical(){
+
+    public function submit_hora_sindical()
+    {
         $fecha = $_POST['fecha'];
         $hora = $_POST['hora'];
 
@@ -704,15 +708,15 @@ class Trace
         $stmt = $this->conection->prepare($sql);
         $stmt->bind_param("ss", $tipo_excluir_1, $tipo_excluir_2);
         $stmt->execute();
-    
+
         // Obtener el resultado y cerrar la sentencia
         $resultado = $stmt->get_result();
         $peticiones = $resultado->fetch_all(MYSQLI_ASSOC);
         $stmt->close();
-    
+
         return $peticiones;
     }
-    
+
 
     //obtener los datos del empleado por el dni
     public function datos_empleado($dni)
@@ -966,11 +970,11 @@ class Trace
         $query->execute();
         $result = $query->get_result();
         $peticiones = [];
-    
+
         while ($row = $result->fetch_assoc()) {
             $peticiones[] = $row;
         }
-    
+
         $query->close();
         return $peticiones;
     }
@@ -1027,15 +1031,11 @@ class Trace
     }
 
 
-    public function lista_empleados($pagina = 1, $empleados_por_pagina = 20)
+    public function lista_empleados()
     {
-        // Calcular el offset para la consulta SQL
-        $offset = ($pagina - 1) * $empleados_por_pagina;
-
-        // Preparar la consulta SQL para obtener los datos de los empleados con límite y offset
-        $sql = "SELECT EMP_NIF, EMP_APE_1, EMP_APE_2, EMP_NOMBRE, EMP_TIPO FROM t_empleados LIMIT ? OFFSET ?";
+        // Preparar la consulta SQL para obtener todos los datos de los empleados
+        $sql = "SELECT EMP_NIF, EMP_APE_1, EMP_APE_2, EMP_NOMBRE, EMP_TIPO FROM t_empleados";
         $stmt = $this->conection->prepare($sql);
-        $stmt->bind_param("ii", $empleados_por_pagina, $offset);
         $stmt->execute();
         $resultado = $stmt->get_result();
         $empleados = [];
@@ -1046,20 +1046,7 @@ class Trace
 
         $stmt->close();
 
-        // Obtener el número total de empleados para la paginación
-        $sql_total = "SELECT COUNT(*) AS total FROM t_empleados";
-        $stmt_total = $this->conection->prepare($sql_total);
-        $stmt_total->execute();
-        $resultado_total = $stmt_total->get_result();
-        $total_empleados = $resultado_total->fetch_assoc()['total'];
-        $stmt_total->close();
-
-        return [
-            'empleados' => $empleados,
-            'total_empleados' => $total_empleados,
-            'empleados_por_pagina' => $empleados_por_pagina,
-            'pagina_actual' => $pagina,
-        ];
+        return $empleados;
     }
 
     public function cambiar_tipo()
@@ -1093,6 +1080,33 @@ class Trace
         header('Content-Type: application/json');
         echo json_encode($response);
         exit();
+    }
+
+
+    public function buscar_empleado_rol($buscador)
+    {
+        $stmt = $this->conection->prepare("SELECT * FROM t_empleados WHERE EMP_NIF LIKE ? OR EMP_NOMBRE LIKE ?");
+        $likeBuscador = "%$buscador%";
+        $stmt->bind_param('ss', $likeBuscador, $likeBuscador);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $resultados = [];
+        while ($fila = $result->fetch_assoc()) {
+            $resultados[] = $fila;
+        }
+        $stmt->close();
+        return $resultados;
+    }
+
+    public function ver_cupo_peticion($fecha)
+    {
+        $stmt = $this->conection->prepare("SELECT * FROM t_ocupacion WHERE FECHA = ?");
+        $stmt->bind_param('s', $fecha);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $cupos = $result->fetch_assoc();
+        $stmt->close();
+        return $cupos;
     }
 
 

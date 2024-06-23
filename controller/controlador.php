@@ -1,12 +1,11 @@
 <?php
+// Incluir autoload.php de Composer
+require_once 'vendor/autoload.php';
 
-include_once 'vendor/autoload.php';
-// Importación de clases PHPMailer
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 
 class controlador
 {
@@ -56,7 +55,7 @@ class controlador
 
         $dni = $_SESSION['dni'];
         $correo = $_SESSION['correo'];
-
+        
         $peticiones = $this->trace->peticiones_dni($dni);
         $datos = array(
             'peticiones' => $peticiones,
@@ -73,10 +72,11 @@ class controlador
 
     public function cambiar_roles()
     {
-        $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
-        $empleados_por_pagina = 20;
-        $datos = $this->trace->lista_empleados($pagina, $empleados_por_pagina);
+        $empleados = $this->trace->lista_empleados();
         $this->view = 'cambiar_roles';
+        $datos = array(
+            'empleados' => $empleados,
+        );
         return $datos;
     }
 
@@ -460,5 +460,65 @@ class controlador
         } else {
             $this->view = "login";
         }
+    }
+
+    public function buscar() {
+        ob_clean();
+        
+        $buscador = isset($_GET['buscador']) ? $_GET['buscador'] : '';
+        $resultados = $this->trace->buscar_empleado_rol($buscador);
+        header('Content-Type: application/json');
+    
+        if ($resultados) {
+            echo json_encode(['success' => true, 'data' => $resultados]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'No se encontraron resultados.']);
+        }
+    
+        exit();
+    }
+    
+
+    // Función para generar y descargar Excel
+    public function excel() {
+        // Lógica para obtener los datos de la tabla que deseas exportar
+        $peticiones = $this->trace->obtenerPeticionesAceptadas();
+
+        // Crear un nuevo libro de Excel
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Agregar encabezados
+        $sheet->setCellValue('A1', 'Fecha');
+        $sheet->setCellValue('B1', 'DNI');
+        $sheet->setCellValue('C1', 'Nombre y Apellidos');
+        $sheet->setCellValue('D1', 'Tipo');
+        $sheet->setCellValue('E1', 'Fecha Solicitud');
+        $sheet->setCellValue('F1', 'Supervisor');
+
+        // Llenar datos desde la base de datos
+        $fila = 2;
+        foreach ($peticiones as $peticion) {
+            $sheet->setCellValue('A' . $fila, date("d/m/Y", strtotime($peticion['PET_FECHA'])));
+            $sheet->setCellValue('B' . $fila, $peticion['PET_DNI']);
+            $sheet->setCellValue('C' . $fila, $peticion['EMP_NOMBRE'] . ' ' . $peticion['EMP_APE_1']);
+            $sheet->setCellValue('D' . $fila, $peticion['PET_TIPO']);
+            $sheet->setCellValue('E' . $fila, date("d/m/Y H:i:s", strtotime($peticion['PET_FECHA_HORA_SOLICITUD'])));
+            $sheet->setCellValue('F' . $fila, $peticion['PET_SUPERVISOR']);
+            $fila++;
+        }
+
+        // Establecer el nombre del archivo
+        $filename = 'peticiones_aceptadas.xlsx';
+
+        // Configurar los encabezados HTTP para la descarga del archivo
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+
+        // Crear el escritor y generar la salida del archivo
+        $writer = new Xlsx($spreadsheet);
+        $writer->save('php://output');
+        exit();
     }
 }

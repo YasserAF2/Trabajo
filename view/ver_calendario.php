@@ -8,7 +8,6 @@ $trace = new Trace();
 $peticiones = $trace->obtenerPeticionesAceptadas();
 ?>
 
-
 <div class="container mt-5">
     <h1 class="mb-4">Peticiones Aceptadas</h1>
     <table class="table table-bordered table-striped">
@@ -25,17 +24,18 @@ $peticiones = $trace->obtenerPeticionesAceptadas();
         <tbody>
             <?php foreach ($peticiones as $peticion) : ?>
                 <tr>
-                    <td><?php echo $peticion['PET_FECHA']; ?></td>
+                    <td><?php echo date("d/m/Y", strtotime($peticion['PET_FECHA'])); ?></td>
                     <td><?php echo $peticion['PET_DNI']; ?></td>
                     <td><?php echo $peticion['EMP_NOMBRE'] . ' ' . $peticion['EMP_APE_1']; ?></td>
                     <td><?php echo $peticion['PET_TIPO']; ?></td>
-                    <td><?php echo $peticion['PET_FECHA_HORA_SOLICITUD']; ?></td>
+                    <td><?php echo date("d/m/Y H:i:s", strtotime($peticion['PET_FECHA_HORA_SOLICITUD'])); ?></td>
                     <td><?php echo $peticion['PET_SUPERVISOR']; ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
-    <div>
+    <div class="mb-3">
+        <a href="index.php?action=excel" class="btn btn-success">Descargar como Excel</a>
         <a href="index.php?action=admin" class="btn btn-secondary">Volver atrás</a>
     </div>
 </div>
