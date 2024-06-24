@@ -234,6 +234,7 @@ class Trace
     {
         // Recoger la fecha y hora del POST
         $fechaHora = $_POST['selected_date'];
+        $turno = $_POST['turno'];
 
         // Separar la fecha y la hora
         list($fecha, $hora) = explode(' ', $fechaHora);
@@ -258,40 +259,109 @@ class Trace
 
         // Verificar si el número de días AP no supera el total
         if ($num_dias_ap < $num_total_dias_ap) {
-            // Incrementar el número de días AP
-            $num_dias_ap++;
+            // Inicializar la variable count
+            $count = 0;
 
-            // Actualizar el número de días AP en la base de datos
-            $stmt_update_ap = $this->conection->prepare("UPDATE t_empleados SET NUM_DIAS_AP = ? WHERE EMP_NIF = ?");
-            $stmt_update_ap->bind_param("is", $num_dias_ap, $_SESSION['dni']);
-            $stmt_update_ap->execute();
-            $stmt_update_ap->close();
+            // Verificar si la fecha ya ha sido solicitada con PET_TIPO AP
+            $stmt_check_date = $this->conection->prepare("SELECT COUNT(*) FROM t_peticiones WHERE PET_DNI = ? AND PET_FECHA = ? AND PET_TIPO = 'AP'");
+            $stmt_check_date->bind_param("ss", $_SESSION['dni'], $fechaFormateada);
+            $stmt_check_date->execute();
+            $stmt_check_date->bind_result($count);
+            $stmt_check_date->fetch();
+            $stmt_check_date->close();
 
-            // Preparar la consulta para insertar la solicitud
-            $stmt_insert = $this->conection->prepare("INSERT INTO t_peticiones (PET_DNI, PET_FECHA, PET_TIPO, PET_FECHA_HORA_SOLICITUD, PET_ACEPTADO, PET_SUPERVISOR, PET_DOC) VALUES (?, ?, ?, ?, ?, ?, ?)");
-
-            // Definir valores
-            $dni = $_SESSION['dni'];
-            $tipo = 'AP';
-            $aceptado = 'En espera';
-            $supervisor = NULL;
-            $doc = NULL;
-
-            // Crear la fecha y hora completa en formato compatible con la fecha actual
-            $fechaHoraSolicitud = date('Y-m-d H:i:s');
-
-            // Vincular parámetros
-            $stmt_insert->bind_param("sssssss", $dni, $fechaFormateada, $tipo, $fechaHoraSolicitud, $aceptado, $supervisor, $doc);
-
-            // Ejecutar la consulta
-            if ($stmt_insert->execute()) {
-                $resultado = "Solicitud enviada correctamente.";
-            } else {
-                $resultado = "Error al enviar la solicitud: " . $stmt_insert->error;
+            if ($count > 0) {
+                return "Ya has solicitado un día de asuntos propios para esta fecha.";
             }
 
-            // Cerrar la declaración y la conexión
-            $stmt_insert->close();
+            // Verificar el cupo para el turno específico
+            $cupo_maximo = 0;
+            switch ($turno) {
+                case 'T_MAÑANA':
+                    $cupo_maximo = 25;
+                    break;
+                case 'T_TARDE':
+                    $cupo_maximo = 15;
+                    break;
+                case 'T_NOCHE':
+                    $cupo_maximo = 10;
+                    break;
+                default:
+                    return "Turno no válido.";
+            }
+
+            // Consultar el número actual de solicitudes para el turno específico
+            $turno_columna = '';
+            switch ($turno) {
+                case 'T_MAÑANA':
+                    $turno_columna = 'AP_MAÑANA';
+                    break;
+                case 'T_TARDE':
+                    $turno_columna = 'AP_TARDE';
+                    break;
+                case 'T_NOCHE':
+                    $turno_columna = 'AP_NOCHE';
+                    break;
+            }
+
+            if (!empty($turno_columna)) {
+                $cupo_actual = 0;
+                $stmt_check_cupo = $this->conection->prepare("SELECT $turno_columna FROM t_ocupacion WHERE FECHA = ?");
+                $stmt_check_cupo->bind_param("s", $fechaFormateada);
+                $stmt_check_cupo->execute();
+                $stmt_check_cupo->bind_result($cupo_actual);
+                $stmt_check_cupo->fetch();
+                $stmt_check_cupo->close();
+
+                // Verificar si el cupo está lleno
+                if ($cupo_actual >= $cupo_maximo) {
+                    return "El cupo para el turno $turno en la fecha $fechaFormateada está lleno.";
+                }
+
+                // Incrementar el número de días AP
+                $num_dias_ap++;
+
+                // Actualizar el número de días AP en la base de datos
+                $stmt_update_ap = $this->conection->prepare("UPDATE t_empleados SET NUM_DIAS_AP = ? WHERE EMP_NIF = ?");
+                $stmt_update_ap->bind_param("is", $num_dias_ap, $_SESSION['dni']);
+                $stmt_update_ap->execute();
+                $stmt_update_ap->close();
+
+                // Preparar la consulta para insertar la solicitud
+                $stmt_insert = $this->conection->prepare("INSERT INTO t_peticiones (PET_DNI, PET_FECHA, PET_TIPO, PET_FECHA_HORA_SOLICITUD, PET_ACEPTADO, PET_SUPERVISOR, PET_DOC) VALUES (?, ?, ?, ?, ?, ?, ?)");
+
+                // Definir valores
+                $dni = $_SESSION['dni'];
+                $tipo = 'AP';
+                $aceptado = 'En espera';
+                $supervisor = NULL;
+                $doc = NULL;
+
+                // Crear la fecha y hora completa en formato compatible con la fecha actual
+                $fechaHoraSolicitud = date('Y-m-d H:i:s');
+
+                // Vincular parámetros
+                $stmt_insert->bind_param("sssssss", $dni, $fechaFormateada, $tipo, $fechaHoraSolicitud, $aceptado, $supervisor, $doc);
+
+                // Ejecutar la consulta
+                if ($stmt_insert->execute()) {
+                    // Incrementar el cupo en t_ocupacion
+                    $cupo_actual++;
+                    $stmt_update_cupo = $this->conection->prepare("UPDATE t_ocupacion SET $turno_columna = ? WHERE FECHA = ?");
+                    $stmt_update_cupo->bind_param("is", $cupo_actual, $fechaFormateada);
+                    $stmt_update_cupo->execute();
+                    $stmt_update_cupo->close();
+
+                    $resultado = "Solicitud enviada correctamente.";
+                } else {
+                    $resultado = "Error al enviar la solicitud: " . $stmt_insert->error;
+                }
+
+                // Cerrar la declaración y la conexión
+                $stmt_insert->close();
+            } else {
+                return "Turno no válido.";
+            }
         } else {
             $resultado = "No puede solicitar más días de asuntos propios, ha alcanzado el límite.";
         }
@@ -305,6 +375,7 @@ class Trace
     {
         // Recoger la fecha y hora del POST
         $fechaHora = $_POST['selected_date'];
+        $turno = $_POST['turno'];
 
         // Separar la fecha y la hora
         list($fecha, $hora) = explode(' ', $fechaHora);
@@ -326,49 +397,108 @@ class Trace
 
         // Verificar si el número de días AS no supera el total
         if ($num_dias_as < $num_total_dias_as) {
-            // Incrementar el número de días AS
-            $num_dias_as++;
+            // Inicializar la variable count
+            $count = 0;
 
-            // Actualizar el número de días AS en la base de datos
-            $stmt_update_as = $this->conection->prepare("UPDATE t_empleados SET NUM_DIAS_AS = ? WHERE EMP_NIF = ?");
-            $stmt_update_as->bind_param("is", $num_dias_as, $_SESSION['dni']);
-            $stmt_update_as->execute();
-            $stmt_update_as->close();
+            // Verificar si la fecha ya ha sido solicitada con PET_TIPO AS
+            $stmt_check_date = $this->conection->prepare("SELECT COUNT(*) FROM t_peticiones WHERE PET_DNI = ? AND PET_FECHA = ? AND PET_TIPO = 'AS'");
+            $stmt_check_date->bind_param("ss", $_SESSION['dni'], $fechaFormateada);
+            $stmt_check_date->execute();
+            $stmt_check_date->bind_result($count);
+            $stmt_check_date->fetch();
+            $stmt_check_date->close();
 
-            // Preparar la consulta para insertar la solicitud
-            $stmt = $this->conection->prepare("INSERT INTO t_peticiones (PET_DNI, PET_FECHA, PET_TIPO, PET_FECHA_HORA_SOLICITUD, PET_ACEPTADO, PET_SUPERVISOR, PET_DOC) VALUES (?, ?, ?, ?, ?, ?, ?)");
-
-            // Definir valores
-            $dni = $_SESSION['dni'];
-            $tipo = 'AS';
-            $aceptado = 'En espera';
-            $supervisor = NULL;
-            $doc = NULL;
-
-            // Crear la fecha y hora completa en formato compatible con la fecha actual
-            $fechaHoraSolicitud = date('Y-m-d H:i:s');
-
-            // Vincular parámetros
-            $stmt->bind_param("sssssss", $dni, $fechaFormateada, $tipo, $fechaHoraSolicitud, $aceptado, $supervisor, $doc);
-
-            // Ejecutar la consulta
-            if ($stmt->execute()) {
-                $resultado = "Solicitud enviada correctamente.";
-            } else {
-                $resultado = "Error al enviar la solicitud: " . $stmt->error;
+            if ($count > 0) {
+                return "Ya has solicitado un día de asuntos propios para esta fecha.";
             }
 
-            // Cerrar la declaración y la conexión
-            $stmt->close();
-        } else {
-            $resultado = "No puede solicitar más días de asuntos propios, ha alcanzado el límite.";
+            // Verificar el cupo para el turno específico
+            $cupo_maximo = 0;
+            switch ($turno) {
+                case 'T_MAÑANA':
+                    $cupo_maximo = 25;
+                    break;
+                case 'T_TARDE':
+                    $cupo_maximo = 15;
+                    break;
+                case 'T_NOCHE':
+                    $cupo_maximo = 10;
+                    break;
+                default:
+                    return "Turno no válido.";
+            }
+
+            // Consultar el número actual de solicitudes para el turno específico
+            $turno_columna = '';
+            switch ($turno) {
+                case 'T_MAÑANA':
+                    $turno_columna = 'AP_MAÑANA';
+                    break;
+                case 'T_TARDE':
+                    $turno_columna = 'AP_TARDE';
+                    break;
+                case 'T_NOCHE':
+                    $turno_columna = 'AP_NOCHE';
+                    break;
+            }
+
+            if (!empty($turno_columna)) {
+                $cupo_actual = 0;
+                $stmt_check_cupo = $this->conection->prepare("SELECT $turno_columna FROM t_ocupacion WHERE FECHA = ?");
+                $stmt_check_cupo->bind_param("s", $fechaFormateada);
+                $stmt_check_cupo->execute();
+                $stmt_check_cupo->bind_result($cupo_actual);
+                $stmt_check_cupo->fetch();
+                $stmt_check_cupo->close();
+
+                // Verificar si el cupo está lleno
+                if ($cupo_actual >= $cupo_maximo) {
+                    return "El cupo para el turno $turno en la fecha $fechaFormateada está lleno.";
+                }
+
+                // Incrementar el número de días AS
+                $num_dias_as++;
+
+                // Actualizar el número de días AS en la base de datos
+                $stmt_update_as = $this->conection->prepare("UPDATE t_empleados SET NUM_DIAS_AS = ? WHERE EMP_NIF = ?");
+                $stmt_update_as->bind_param("is", $num_dias_as, $_SESSION['dni']);
+                $stmt_update_as->execute();
+                $stmt_update_as->close();
+
+                // Preparar la consulta para insertar la solicitud
+                $stmt = $this->conection->prepare("INSERT INTO t_peticiones (PET_DNI, PET_FECHA, PET_TIPO, PET_FECHA_HORA_SOLICITUD, PET_ACEPTADO, PET_SUPERVISOR, PET_DOC) VALUES (?, ?, ?, ?, ?, ?, ?)");
+
+                // Definir valores
+                $dni = $_SESSION['dni'];
+                $tipo = 'AS';
+                $aceptado = 'En espera';
+                $supervisor = NULL;
+                $doc = NULL;
+
+                // Crear la fecha y hora completa en formato compatible con la fecha actual
+                $fechaHoraSolicitud = date('Y-m-d H:i:s');
+
+                // Vincular parámetros
+                $stmt->bind_param("sssssss", $dni, $fechaFormateada, $tipo, $fechaHoraSolicitud, $aceptado, $supervisor, $doc);
+
+                // Ejecutar la consulta
+                if ($stmt->execute()) {
+                    $resultado = "Solicitud enviada correctamente.";
+                } else {
+                    $resultado = "Error al enviar la solicitud: " . $stmt->error;
+                }
+
+                // Cerrar la declaración y la conexión
+                $stmt->close();
+            } else {
+                $resultado = "No puede solicitar más días de asuntos propios, ha alcanzado el límite.";
+            }
+
+            $stmt_as->close();
+            $this->conection->close();
+            return $resultado;
         }
-
-        $stmt_as->close();
-        $this->conection->close();
-        return $resultado;
     }
-
 
     public function pertenece_sindicato()
     {
@@ -658,6 +788,27 @@ class Trace
         return $tipo;
     }
 
+    public function turno_empleado()
+    {
+        $dni = $_SESSION['dni'];
+        $sql = "SELECT TURNO FROM t_empleados WHERE EMP_NIF = ?";
+        $stmt = $this->conection->prepare($sql);
+        $stmt->bind_param("s", $dni);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        $turno = null; // Inicializar la variable $tipo como nula
+
+        // Verificar si se encontró un resultado
+        if ($resultado->num_rows > 0) {
+            // Obtener el valor del campo EMP_TIPO
+            $row = $resultado->fetch_assoc();
+            $turno = $row['TURNO'];
+        }
+
+        $stmt->close();
+        return $turno;
+    }
+
     public function ver_solicitudes_ap()
     {
         $tipo = "AP";  // Tipo de petición que queremos filtrar
@@ -775,7 +926,7 @@ class Trace
 
         // Límites de ocupación para AP
         $limites_ap = [
-            'AP_MAÑANA' => 20,
+            'AP_MAÑANA' => 25,
             'AP_TARDE' => 15,
             'AP_NOCHE' => 10
         ];
@@ -884,7 +1035,7 @@ class Trace
 
         // Límites de ocupación para AS
         $limites_as = [
-            'AS_MAÑANA' => 20,
+            'AS_MAÑANA' => 25,
             'AS_TARDE' => 15,
             'AS_NOCHE' => 10
         ];
@@ -955,7 +1106,8 @@ class Trace
         }
     }
 
-    public function aceptar_baja() {
+    public function aceptar_baja()
+    {
         session_start();
         $peticion_id = $_GET['peticion_id'];
         $supervisor_correo = $_SESSION['correo'];
@@ -963,16 +1115,16 @@ class Trace
         $supervisor_nombre = $supervisor['EMP_NOMBRE'] . ' ' . $supervisor['EMP_APE_1'] . ' ' . $supervisor['EMP_APE_2'];
         $query = "UPDATE t_peticiones SET PET_ACEPTADO = 'SI', PET_SUPERVISOR = ? WHERE PET_ID = ?";
         $stmt = $this->conection->prepare($query);
-    
+
         // Verificar si la preparación de la consulta fue exitosa
         if ($stmt === false) {
             // Manejar el error de preparación de consulta
             return false;
         }
-    
+
         // Bind de parámetros
         $stmt->bind_param("si", $supervisor_nombre, $peticion_id);
-    
+
         // Ejecutar la consulta
         if ($stmt->execute()) {
             return true; // Actualización exitosa
@@ -980,9 +1132,10 @@ class Trace
             return false; // Error al ejecutar la consulta
         }
     }
-    
 
-    public function rechazar_baja() {
+
+    public function rechazar_baja()
+    {
         session_start();
         $peticion_id = $_GET['peticion_id'];
         $supervisor_correo = $_SESSION['correo'];
@@ -990,15 +1143,15 @@ class Trace
         $supervisor_nombre = $supervisor['EMP_NOMBRE'] . ' ' . $supervisor['EMP_APE_1'] . ' ' . $supervisor['EMP_APE_2'];
         $query = "UPDATE t_peticiones SET PET_ACEPTADO = 'NO', PET_SUPERVISOR = ? WHERE PET_ID = ?";
         $stmt = $this->conection->prepare($query);
-    
+
         // Verificar si la preparación de la consulta fue exitosa
         if ($stmt === false) {
             // Manejar el error de preparación de consulta
             return false;
         }
-    
+
         $stmt->bind_param("si", $supervisor_nombre, $peticion_id);
-    
+
         // Ejecutar la consulta
         if ($stmt->execute()) {
             return true; // Actualización exitosa
@@ -1006,7 +1159,7 @@ class Trace
             return false; // Error al ejecutar la consulta
         }
     }
-    
+
 
 
     //peticiones aceptadas
@@ -1159,6 +1312,4 @@ class Trace
         $stmt->close();
         return $cupos;
     }
-
-
 }

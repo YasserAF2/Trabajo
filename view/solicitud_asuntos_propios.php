@@ -16,7 +16,7 @@ $dni = $_SESSION['dni'];
 $trace = new Trace();
 $festivos = $trace->ver_festivos();
 $festivos_json = json_encode(array_column($festivos, 'FEST_FECHA'));
-
+$turno = $trace->turno_empleado();
 
 ?>
 
@@ -30,6 +30,7 @@ $festivos_json = json_encode(array_column($festivos, 'FEST_FECHA'));
         </div>
         <input type="hidden" id="selected-date" name="selected_date">
         <input type="hidden" id="dias" name="dias" value="<?php echo $dias; ?>">
+        <input type="hidden" id="turno" name="turno" value="<?php echo $turno; ?>">
         <div class="calendar">
             <div class="calendar__info">
                 <div class="calendar__prev" id="prev-month">
@@ -95,20 +96,23 @@ $festivos_json = json_encode(array_column($festivos, 'FEST_FECHA'));
         const maxDate = getMaxDate();
 
         for (let i = startDay(); i > 0; i--) {
-            dates.innerHTML += `<div class="calendar__date calendar__item calendar__last-days">${getTotalDays(monthNumber - 1) - (i - 1)}</div>`;
+            dates.innerHTML +=
+                `<div class="calendar__date calendar__item calendar__last-days">${getTotalDays(monthNumber - 1) - (i - 1)}</div>`;
         }
 
         for (let i = 1; i <= getTotalDays(month); i++) {
             let date = new Date(currentYear, month, i);
             let dateString = `${currentYear}-${(month + 1).toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
             let isSelectable = date >= minDate && date <= maxDate;
-            let isCurrentDay = (i === currentDay && month === currentDate.getMonth() && currentYear === currentDate.getFullYear());
+            let isCurrentDay = (i === currentDay && month === currentDate.getMonth() && currentYear === currentDate
+                .getFullYear());
             let isHoliday = festivos.includes(dateString);
 
             console.log(dateString);
 
             if (isCurrentDay && isHoliday) {
-                dates.innerHTML += `<div class="calendar__date calendar__item calendar__today calendar__date--holiday">${i}</div>`;
+                dates.innerHTML +=
+                    `<div class="calendar__date calendar__item calendar__today calendar__date--holiday">${i}</div>`;
             } else if (isCurrentDay) {
                 dates.innerHTML += `<div class="calendar__date calendar__item calendar__today">${i}</div>`;
             } else if (isHoliday) {
@@ -205,7 +209,8 @@ $festivos_json = json_encode(array_column($festivos, 'FEST_FECHA'));
                 let seconds = now.getSeconds().toString().padStart(2, '0');
 
                 // Actualiza el campo oculto con la fecha y hora seleccionada
-                document.getElementById('selected-date').value = `${this.textContent}-${monthNumber + 1}-${currentYear} ${hours}:${minutes}:${seconds}`;
+                document.getElementById('selected-date').value =
+                    `${this.textContent}-${monthNumber + 1}-${currentYear} ${hours}:${minutes}:${seconds}`;
             });
         });
     }
@@ -216,7 +221,8 @@ $festivos_json = json_encode(array_column($festivos, 'FEST_FECHA'));
             let [day, month, yearWithTime] = selectedDate.split('-');
             let year = yearWithTime.split(' ')[0];
             let formattedDate = `${day} de ${monthNames[month - 1]} de ${year}`;
-            let confirmMessage = `¿Estás seguro de que deseas seleccionar el ${formattedDate} como día de asuntos propios?`;
+            let confirmMessage =
+                `¿Estás seguro de que deseas seleccionar el ${formattedDate} como día de asuntos propios?`;
             if (!window.confirm(confirmMessage)) {
                 event.preventDefault(); // Cancela el envío del formulario
             }
