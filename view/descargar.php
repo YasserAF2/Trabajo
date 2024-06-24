@@ -1,22 +1,18 @@
 <?php
-// Asigna la variable de sesión si no está definida
-if (!isset($_SESSION['correo'])) {
-    $_SESSION['correo'] = $correo;
-}
+session_start(); // Inicia la sesión si no está iniciada
 
-// Verifica si la variable de sesión está definida
+// Verifica si la variable de sesión 'correo' está definida
 if (!isset($_SESSION['correo'])) {
     header("Location: index.php");
     exit();
 }
 
-
 if (isset($_GET['file'])) {
     $file = $_GET['file'];
-    $filePath = __DIR__ . '\documentos\\' . basename($file); // Asegúrate de que la ruta sea correcta y segura
+    $filePath = __DIR__ . '/documentos/' . basename($file); // Ruta con barras normales
 
     if (file_exists($filePath)) {
-        // Establece los encabezados para la descarga
+        // Configuración de encabezados para la descarga
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
         header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
@@ -32,4 +28,3 @@ if (isset($_GET['file'])) {
 } else {
     echo "Archivo no especificado.";
 }
-

@@ -812,7 +812,7 @@ class Trace
     public function ver_solicitudes_ap()
     {
         $tipo = "AP";  // Tipo de petición que queremos filtrar
-        $sql = "SELECT p.*, e.EMP_NOMBRE, e.EMP_APE_1, e.EMP_APE_2 
+        $sql = "SELECT p.*, e.* 
                 FROM t_peticiones p
                 JOIN t_empleados e ON e.EMP_NIF = p.PET_DNI
                 WHERE p.PET_TIPO = ?";
@@ -831,7 +831,7 @@ class Trace
     public function ver_solicitudes_as()
     {
         $tipo = "AS";
-        $sql = "SELECT p.*, e.EMP_NOMBRE, e.EMP_APE_1, e.EMP_APE_2 
+        $sql = "SELECT p.*, e.* 
                 FROM t_peticiones p
                 JOIN t_empleados e ON e.EMP_NIF = p.PET_DNI
                 WHERE p.PET_TIPO = ?";
@@ -852,7 +852,7 @@ class Trace
         // Tipos de peticiones que queremos excluir
         $tipo_excluir_1 = "AP";
         $tipo_excluir_2 = "AS";
-        $sql = "SELECT p.*, e.EMP_NOMBRE, e.EMP_APE_1, e.EMP_APE_2 
+        $sql = "SELECT p.*, e.* 
                 FROM t_peticiones p
                 JOIN t_empleados e ON e.EMP_NIF = p.PET_DNI
                 WHERE p.PET_TIPO NOT IN (?, ?)";
