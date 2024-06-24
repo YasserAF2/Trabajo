@@ -22,7 +22,7 @@ $turno = $trace->turno_empleado();
 
 <div class="container mt-5">
     <form id="asuntos-form" action="index.php?action=asuntos_propios" method="post" class="needs-validation" novalidate>
-        <div class="d-flex justify-content-between align-items-center px-5 ms-xl-4 mb-2" style="height: 100px;">
+        <div class="header d-flex justify-content-between align-items-center px-5 ms-xl-4 mb-2" style="height: 100px;">
             <img class="logo" src="view/template/imagenes/trace4-sin-fondo.png" alt="LOGOTIPO TRACE">
             <div class="perfil-titulo">
                 <h1>Elegir Días de Asuntos Propios</h1>
@@ -108,14 +108,7 @@ $turno = $trace->turno_empleado();
                 .getFullYear());
             let isHoliday = festivos.includes(dateString);
 
-            console.log(dateString);
-
-            if (isCurrentDay && isHoliday) {
-                dates.innerHTML +=
-                    `<div class="calendar__date calendar__item calendar__today calendar__date--holiday">${i}</div>`;
-            } else if (isCurrentDay) {
-                dates.innerHTML += `<div class="calendar__date calendar__item calendar__today">${i}</div>`;
-            } else if (isHoliday) {
+            if (isHoliday) {
                 dates.innerHTML += `<div class="calendar__date calendar__item calendar__date--holiday">${i}</div>`;
             } else if (isSelectable) {
                 dates.innerHTML += `<div class="calendar__date calendar__item selectable">${i}</div>`;

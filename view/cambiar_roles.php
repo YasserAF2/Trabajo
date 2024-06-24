@@ -26,12 +26,12 @@ $empleados = $dataToView['empleados'];
 ?>
 
 <div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center px-5 ms-xl-4 mb-2 mt-2">
-            <img class="logo" src="view/template/imagenes/trace4-sin-fondo.png" alt="LOGOTIPO TRACE">
-            <div class="perfil-titulo text-end">
-                <h1 class="mb-0">Cambiar roles empleados</h1>
-            </div>
+    <div class="header d-flex justify-content-between align-items-center px-5 ms-xl-4 mb-2 mt-2">
+        <img class="logo" src="view/template/imagenes/trace4-sin-fondo.png" alt="LOGOTIPO TRACE">
+        <div class="perfil-titulo text-end">
+            <h1 class="mb-0">Cambiar roles empleados</h1>
         </div>
+    </div>
     <div class="container mt-5">
         <form id="searchForm" method="get" action="index.php?action=buscar_empleado_rol">
             <div class="form-group">

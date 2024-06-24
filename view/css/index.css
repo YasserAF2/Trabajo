@@ -12,106 +12,111 @@ body {
   height: 100%;
 }
 
-.formulario {
-  min-height: 60vh;
-}
-
-.formulario form {
-  height: 65vh;
-}
-
 .logo {
   height: 100px;
   width: auto;
 }
 
-.calendar{
+.consola-admin {
+  padding: .75rem 1.25rem;
+  margin-bottom: 0;
+  background-color: #015d7e;
+  border-bottom: 1px solid #015d7e;
+}
+
+.calendar {
   user-select: none;
-  border-radius: 7%;
-  background: beige;
-  width: 80%;
+  border-radius: 10px;
+  background: #f8f9fa;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
   max-width: 600px;
   margin: 1em auto;
-  padding: .5em 0;
-
-  .calendar__info {
-    display: flex;
-    align-items: center;
-    padding: 0 2em;
-    font-size: 1.2em;
-    text-transform: uppercase;
-  }
-
-  .calendar__prev, .calendar__next {
-    color: black;
-    cursor: pointer;
-    font-size: 1.4em;
-  }
-
-  .calendar__prev{
-    margin-right: auto;
-  }
-
-  .calendar__next{
-    margin-left: auto;
-  }
-
-  .calendar__week, .calendar__dates{
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 10px;
-  }
-
-  .calendar__month{
-    padding: .5em 1em;
-
-  }
-
-  .calendar__item{
-    text-align: center;
-    line-height: 2;
-  }
-
-  .calendar__today {
-    background: blue;
-    color: white;
-    width: 50%;
-    border-radius: 50%;
-    margin: auto;
-  }
-
-  .calendar__last-days{
-    opacity: .3;
-  }
+  padding: 1em;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.calendar__date.selected {
-  background-color: #007bff;
-  color: white;
+.calendar__info {
+  display: flex;
+  align-items: center;
+  padding: 0 1em;
+  font-size: 1.2em;
+  text-transform: uppercase;
+  color: #343a40;
 }
 
-.selectable{
+.calendar__prev,
+.calendar__next {
+  color: #343a40;
+  cursor: pointer;
+  font-size: 1.4em;
+  transition: color 0.3s;
+}
+
+.calendar__prev:hover,
+.calendar__next:hover {
+  color: #007bff;
+}
+
+.calendar__prev {
+  margin-right: auto;
+}
+
+.calendar__next {
+  margin-left: auto;
+}
+
+.calendar__week,
+.calendar__dates {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  padding: 0 1em;
+}
+
+.calendar__day,
+.calendar__item {
+  text-align: center;
+  line-height: 2;
+  padding: 0.5em;
+  border-radius: 5px;
+  transition: background 0.3s, color 0.3s;
+}
+
+.calendar__day {
+  font-weight: bold;
+  background: #e9ecef;
+}
+
+.calendar__date {
   cursor: pointer;
 }
 
-.non-selectable {
-  color: #999; 
-  pointer-events: none; 
+.calendar__date:hover {
+  background: #e2e6ea;
+}
+
+.calendar__last-days {
+  opacity: 0.5;
+  color: #adb5bd;
+}
+
+.calendar__date.selected {
+  background-color: #28a745;
+  color: white;
 }
 
 .calendar__date--holiday {
-  color: rgb(204, 0, 0);
+  color: #dc3545;
 }
 
-.pie {
-  height: 226px;
-  position: relative;
-  bottom: 0;
+.non-selectable {
+  color: #adb5bd;
+  pointer-events: none;
 }
 
-.pie div.container {
-  padding-top: 20px;
-}
+
+
 
 /* cabecera */
 .cabecera {
@@ -125,7 +130,7 @@ body {
   justify-content: start;
   align-items: center;
   padding-left: 100px;
-  background-color: #007bff;
+  background-color: #015d7e;
   color: #fff;
   height: 100%;
   width: 50%;
@@ -135,12 +140,12 @@ body {
 
 /* Estilos para la diagonal */
 .cabecera > div:first-child::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   bottom: 0;
   width: 50%;
-  background-color: #28a745;
+  background-color: #a7cb47;
   transform-origin: bottom right;
   transform: skew(-30deg);
   right: 0;
@@ -149,7 +154,7 @@ body {
 
 /* Estilos para el div de la imagen */
 .cabecera > div:last-child {
-  background-color: #28a745;
+  background-color: #a7cb47;
   height: 100%;
   width: 50%;
   position: relative;
@@ -207,8 +212,6 @@ label {
   border-color: #007bff;
 }
 
-/* vista logeado */
-/* Estilos generales para el contenido del main */
 main {
   display: flex;
   justify-content: center;
@@ -216,8 +219,6 @@ main {
   background-color: #f5f5f5;
   padding: 20px;
   margin: 0 auto;
-  margin-top: 10px;
-  margin-bottom: 10px;
   min-height: 60vh;
   max-width: 1200px;
 }
@@ -237,7 +238,7 @@ li {
 }
 
 /* Estilo para el botón de editar perfil */
-input[type='submit'] {
+input[type="submit"] {
   margin-top: 10px;
   background-color: #007bff;
   border: none;
@@ -247,18 +248,18 @@ input[type='submit'] {
   cursor: pointer;
 }
 
-input[type='submit']:hover {
+input[type="submit"]:hover {
   background-color: #0069d9;
 }
 
 /* Estilo para el botón de cerrar sesión */
-input[type='submit'][value='Cerrar sesión'] {
+input[type="submit"][value="Cerrar sesión"] {
   margin-top: 10px;
   margin-bottom: 10px;
   background-color: #dc3545;
 }
 
-input[type='submit'][value='Cerrar sesión']:hover {
+input[type="submit"][value="Cerrar sesión"]:hover {
   background-color: #c82333;
 }
 
@@ -281,71 +282,6 @@ ul li:not(:last-child) {
   margin-bottom: 0.75rem;
 }
 
-/* tabla usuarios vista lista_usuarios.php */
-.tabla-empleados {
-  border-top: 10px;
-  border-bottom: 50px;
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.tabla-empleados th,
-.tabla-empleados td {
-  padding: 8px;
-  border: 1px solid #ddd;
-}
-
-.tabla-empleados th {
-  background-color: #f2f2f2;
-  color: #333;
-  font-weight: bold;
-  text-align: left;
-}
-
-.tabla-empleados tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-.tabla-empleados tr:hover {
-  background-color: #ddd;
-}
-
-.empleados-lista {
-  margin-bottom: 50px;
-}
-
-/* botón volver atrás */
-.volver {
-  background-color: #4caf50; /* Color de fondo */
-  border: none; /* Sin borde */
-  color: black; /* Color del texto */
-  font-weight: bold;
-  padding: 15px 32px; /* Espaciado interno */
-  text-align: center; /* Alineación del texto */
-  text-decoration: none; /* Sin subrayado */
-  font-size: 16px; /* Tamaño de fuente */
-  margin: 20px 0; /* Margen superior e inferior */
-  cursor: pointer; /* Cursor al pasar por encima */
-  float: right; /* Alineación a la derecha */
-}
-
-/* botón editar */
-.editar {
-  background-color: #007bff; /* Color de fondo */
-  border: none; /* Sin borde */
-  color: black; /* Color del texto */
-  font-weight: bold;
-  padding: 15px 32px; /* Espaciado interno */
-  text-align: center; /* Alineación del texto */
-  text-decoration: none; /* Sin subrayado */
-  font-size: 16px; /* Tamaño de fuente */
-  margin: 20px 0; /* Margen superior e inferior */
-  cursor: pointer; /* Cursor al pasar por encima */
-  float: right; /* Alineación a la derecha */
-}
-
-/* editar perfil de usuario */
-
 form {
   padding: 20px;
 }
@@ -354,73 +290,6 @@ form label {
   display: block;
   margin-bottom: 10px;
   font-weight: bold;
-}
-
-form input[type='text'],
-form input[type='email'],
-form input[type='number'] {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-bottom: 20px;
-  font-size: 16px;
-}
-
-form input[type='submit'] {
-  background-color: #0066cc;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-form input[type='submit']:hover {
-  background-color: #0055aa;
-}
-
-.volver-editar-perfil {
-  background-color: #0066cc;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-  margin-top: 20px;
-}
-
-.volver-editar-perfil:hover {
-  background-color: #0055aa;
-}
-
-/* botón de cerrar sesión del perfil */
-.cerrar {
-  background-color: #f5f5f5;
-  padding: initial;
-  border-radius: 0px;
-  box-shadow: none;
-}
-
-/* botón de editar del pefil */
-.editar {
-  background-color: #f5f5f5;
-  padding: initial;
-  border-radius: 0px;
-  box-shadow: none;
-}
-
-.editar2 {
-  padding: initial;
-  border-radius: 0px;
-  box-shadow: none;
-  width: 0px;
-}
-
-.tabla-empleados tr:hover > td > form.editar2 {
-  background-color: #ddd;
 }
 
 /* lista del perfil */
@@ -465,53 +334,128 @@ form input[type='submit']:hover {
   grid-template-columns: 1fr 1fr;
 }
 
-.perfil-titulo {
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 5rem;
+  margin-bottom: 2rem;
+  height: 100px;
+}
+
+.header .logo {
+  max-height: 100px;
+}
+
+.header .perfil-titulo h1 {
+  margin: 0;
   width: 100%;
   height: 50px;
   text-align: center;
 }
 
-/* principal admin */
-main.admin {
-  height: calc(100vh - 318px);
+.pie {
+  height: auto; /* Ajusta la altura automáticamente */
+  position: relative;
+  bottom: 0;
+  padding-top: 20px;
 }
 
-.botones {
-  float: right;
+.pie .container {
+  padding-top: 20px;
 }
 
+.pie .contacto h5 {
+  margin-bottom: 15px;
+}
+
+.pie .contacto p {
+  margin: 0;
+}
+
+.pie .logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pie .logo {
+  max-width: 100%;
+  height: auto;
+}
+
+.pie .text-center {
+  margin-top: 20px;
+}
+
+
+
+/*////////////////////////////////////////////*/
+
+/* Estilo para pantallas pequeñas */
 @media screen and (max-width: 480px) {
-  .cabecera div img {
-    z-index: 99;
-  }
-
-  .cabecera:last-child {
-    width: 90% !important;
-    z-index: auto;
-  }
-
-  .formulario form button {
-    width: auto !important;
-  }
-
-  .pie {
-    height: 38vh;
-  }
-
   .perfil-usuario {
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
   }
 
-  .botones {
-    float: initial;
+  .perfil-usuario .container {
+    order: 1;
+  }
+
+  .perfil-usuario nav.opciones ul {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
   }
 
-  .opciones {
-    width: auto;
+  .perfil-usuario nav.opciones ul li {
+    margin-bottom: 10px;
+  }
+
+  .opciones,
+  .container {
+    width: 100%;
+  }
+
+  .opciones ul {
+    padding: 0;
+  }
+
+  .opciones li {
+    list-style: none;
+  }
+
+  .opciones li a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    margin-bottom: 5px;
+  }
+
+  .header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    height: auto;
+    padding: 0 1rem;
+  }
+
+  .header .logo {
+    max-height: 50px;
+  }
+
+  .header .perfil-titulo h1 {
+    font-size: 1.5rem;
+  }
+
+  .pie .contacto,
+  .pie .logo-container {
+    text-align: center;
+  }
+
+  .pie .logo-container {
+    margin-top: 20px;
   }
 }
+

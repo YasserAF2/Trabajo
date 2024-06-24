@@ -20,7 +20,7 @@ $tipo = $trace->tipo_empleado();
 
 <div class="container">
     <div class="formulario">
-        <div class="d-flex justify-content-between align-items-center px-5 ms-xl-4 mb-2 mt-2">
+        <div class="header d-flex justify-content-between align-items-center px-5 ms-xl-4 mb-2 mt-2">
             <img class="logo" src="view/template/imagenes/trace4-sin-fondo.png" alt="LOGOTIPO TRACE">
             <div class="perfil-titulo text-end">
                 <h1 class="mb-0">Lista de Peticiones Asuntos Propios</h1>

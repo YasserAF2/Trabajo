@@ -15,10 +15,9 @@
 
     ?>
 
-
     <div class="container mt-5 mb-5">
         <div class="card">
-            <div class="card-header bg-primary text-white">
+            <div class="consola-admin text-white">
                 <h3>Consola de Administración</h3>
             </div>
             <div class="card-body">

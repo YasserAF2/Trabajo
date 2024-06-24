@@ -19,7 +19,7 @@ $tipo = $trace->tipo_empleado();
 
 <main>
     <div>
-        <div class="d-flex justify-content-between align-items-center px-5 ms-xl-4 mb-2" style="height: 100px;">
+        <div class="header">
             <img class="logo" src="view/template/imagenes/trace4-sin-fondo.png" alt="LOGOTIPO TRACE">
             <div class="perfil-titulo">
                 <h1 class="text-end">
@@ -29,7 +29,6 @@ $tipo = $trace->tipo_empleado();
                 </h1>
             </div>
         </div>
-
         <div class="perfil-usuario">
             <nav class="opciones">
                 <ul>
@@ -40,7 +39,7 @@ $tipo = $trace->tipo_empleado();
                     <li><a href="index.php?action=solicitud_licencia_lactancia_maternidad_paternidad">SOLICITUD LICENCIA
                             POR LACTANCIA/MATERNIDAD/PATERNIDAD</a></li>
                     <?php if ($perteneceSindicato) : ?>
-                    <li><a href="index.php?action=solicitud_hora_sindical">SOLICITUD HORA SINDICAL</a></li>
+                        <li><a href="index.php?action=solicitud_hora_sindical">SOLICITUD HORA SINDICAL</a></li>
                     <?php endif; ?>
                     <li><a href="index.php?action=solicitud_licencia">SOLICITUD LICENCIA</a></li>
                     <li><a href="index.php?action=documentacion_baja_accidente">DOCUMENTACION BAJA ACCIDENTE</a></li>
@@ -57,7 +56,7 @@ $tipo = $trace->tipo_empleado();
             <div class="container pl-0">
                 <div>
                     <?php if ($tipo !== 'BASICO') : ?>
-                    <a href="index.php?action=admin" class="btn btn-primary mb-2">VISTA ADMINISTRADOR</a>
+                        <a href="index.php?action=admin" class="btn btn-primary mb-2">VISTA ADMINISTRADOR</a>
                     <?php endif; ?>
                     <ul class="list-group">
                         <li class="list-group-item"><strong>Fecha de Nacimiento:</strong>

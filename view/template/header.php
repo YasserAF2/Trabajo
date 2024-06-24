@@ -27,9 +27,9 @@
 </head>
 
 <div class="cabecera d-flex">
-    <div class="bg-primary w-50">
+    <div class="w-50">
     </div>
-    <div class="bg-success">
+    <div>
     </div>
 </div>
 

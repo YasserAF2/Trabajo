@@ -14,7 +14,7 @@
                 <input type="password" class="form-control" id="contraseña" name="contraseña" required>
                 <div class="invalid-feedback">Por favor, introduzca su contraseña.</div>
             </div>
-            <button type="submit" class="btn btn-primary w-25">Iniciar Sesión</button>
+            <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
             <div class="mt-3">
                 <p>¿No tienes cuenta? <a href="index.php?action=registro_dni" class="btn btn-secondary">Regístrate</a></p>
             </div>
