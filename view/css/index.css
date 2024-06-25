@@ -18,7 +18,7 @@ body {
 }
 
 .consola-admin {
-  padding: .75rem 1.25rem;
+  padding: 0.75rem 1.25rem;
   margin-bottom: 0;
   background-color: #015d7e;
   border-bottom: 1px solid #015d7e;
@@ -115,9 +115,6 @@ body {
   pointer-events: none;
 }
 
-
-
-
 /* cabecera */
 .cabecera {
   display: flex;
@@ -140,7 +137,7 @@ body {
 
 /* Estilos para la diagonal */
 .cabecera > div:first-child::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   bottom: 0;
@@ -238,7 +235,7 @@ li {
 }
 
 /* Estilo para el botón de editar perfil */
-input[type="submit"] {
+input[type='submit'] {
   margin-top: 10px;
   background-color: #007bff;
   border: none;
@@ -248,18 +245,18 @@ input[type="submit"] {
   cursor: pointer;
 }
 
-input[type="submit"]:hover {
+input[type='submit']:hover {
   background-color: #0069d9;
 }
 
 /* Estilo para el botón de cerrar sesión */
-input[type="submit"][value="Cerrar sesión"] {
+input[type='submit'][value='Cerrar sesión'] {
   margin-top: 10px;
   margin-bottom: 10px;
   background-color: #dc3545;
 }
 
-input[type="submit"][value="Cerrar sesión"]:hover {
+input[type='submit'][value='Cerrar sesión']:hover {
   background-color: #c82333;
 }
 
@@ -334,6 +331,22 @@ form label {
   grid-template-columns: 1fr 1fr;
 }
 
+.main-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.form-container {
+  background: #f8f9fa; /* Color de fondo ligero */
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+}
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -387,8 +400,6 @@ form label {
 .pie .text-center {
   margin-top: 20px;
 }
-
-
 
 /*////////////////////////////////////////////*/
 
@@ -458,4 +469,3 @@ form label {
     margin-top: 20px;
   }
 }
-

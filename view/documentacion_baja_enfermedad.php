@@ -17,22 +17,27 @@ $fechaActual = date('Y-m-d');
 $horaActual = date('H:i:s');
 ?>
 
-<div class="container mt-5">
-    <h2>Solicitar Baja por Enfermedad</h2>
-    <form action="index.php?action=submit_baja_enfermedad" method="post" enctype="multipart/form-data"
-        class="needs-validation" novalidate>
-        <div class="form-group">
-            <label for="archivo">Subir Archivo (máximo 10MB):</label>
-            <input type="file" class="form-control-file" id="archivo" name="archivo" required>
-            <div class="invalid-feedback">Por favor, suba un archivo.</div>
+<div class="container main-container">
+    <div class="form-container">
+        <div class="d-flex flex-column align-items-center text-center">
+            <img class="logo mb-4" src="view/template/imagenes/trace4-sin-fondo.png" alt="LOGOTIPO TRACE">
+            <h2 class="mb-4 text-center">Solicitar Baja por Enfermedad</h2>
         </div>
-        <input type="hidden" name="fecha" value="<?php echo $fechaActual; ?>">
-        <input type="hidden" name="hora" value="<?php echo $horaActual; ?>">
-        <button type="submit" class="btn btn-primary">Enviar Solicitud</button>
-        <div class="mt-4 text-end">
-            <a href="index.php?action=logeado" class="btn btn-secondary">Volver atrás</a>
-        </div>
-    </form>
+        <form action="index.php?action=submit_baja_enfermedad" method="post" enctype="multipart/form-data"
+            class="needs-validation" novalidate>
+            <div class="form-group">
+                <label for="archivo">Subir Archivo (máximo 10MB):</label>
+                <input type="file" class="form-control-file" id="archivo" name="archivo" required>
+                <div class="invalid-feedback">Por favor, suba un archivo.</div>
+            </div>
+            <input type="hidden" name="fecha" value="<?php echo $fechaActual; ?>">
+            <input type="hidden" name="hora" value="<?php echo $horaActual; ?>">
+            <div class="d-flex">
+                <button type="submit" class="btn btn-primary mr-1">Enviar Solicitud</button>
+                <a href="index.php?action=logeado" class="btn btn-secondary">Volver atrás</a>
+            </div>
+        </form>
+    </div>
 </div>
 
 <script>
