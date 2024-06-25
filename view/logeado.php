@@ -39,7 +39,7 @@ $tipo = $trace->tipo_empleado();
                     <li><a href="index.php?action=solicitud_licencia_lactancia_maternidad_paternidad">SOLICITUD LICENCIA
                             POR LACTANCIA/MATERNIDAD/PATERNIDAD</a></li>
                     <?php if ($perteneceSindicato) : ?>
-                        <li><a href="index.php?action=solicitud_hora_sindical">SOLICITUD HORA SINDICAL</a></li>
+                    <li><a href="index.php?action=solicitud_hora_sindical">SOLICITUD HORA SINDICAL</a></li>
                     <?php endif; ?>
                     <li><a href="index.php?action=solicitud_licencia">SOLICITUD LICENCIA</a></li>
                     <li><a href="index.php?action=documentacion_baja_accidente">DOCUMENTACION BAJA ACCIDENTE</a></li>
@@ -55,9 +55,11 @@ $tipo = $trace->tipo_empleado();
             </nav>
             <div class="container pl-0">
                 <div>
-                    <?php if ($tipo !== 'BASICO') : ?>
+                    <div class="boton-admin">
+                        <?php if ($tipo !== 'BASICO') : ?>
                         <a href="index.php?action=admin" class="btn btn-primary mb-2">VISTA ADMINISTRADOR</a>
-                    <?php endif; ?>
+                        <?php endif; ?>
+                    </div>
                     <ul class="list-group">
                         <li class="list-group-item"><strong>Fecha de Nacimiento:</strong>
                             <?php

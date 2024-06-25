@@ -468,4 +468,49 @@ form label {
   .pie .logo-container {
     margin-top: 20px;
   }
+
+  .calendar {
+    max-width: 100%;
+    padding: 0.5em;
+  }
+
+  .calendar__info {
+    font-size: 1em;
+    padding: 0 0.5em;
+  }
+
+  .calendar__prev,
+  .calendar__next {
+    font-size: 1.2em;
+  }
+
+  .calendar__week,
+  .calendar__dates {
+    gap: 2px;
+    padding: 0 0.5em;
+  }
+
+  .calendar__day,
+  .calendar__item {
+    line-height: 1.5;
+    padding: 0.3em;
+  }
+
+  .calendar__day {
+    font-size: 0.9em;
+  }
+
+  .calendar__date {
+    font-size: 0.9em;
+  }
+
+  .boton-admin {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+  }
+
+  ul li strong {
+    width: 155px;
+  }
 }
