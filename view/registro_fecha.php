@@ -12,7 +12,7 @@
                     <div class="invalid-feedback">Por favor, introduzca una fecha válida.</div>
                 </div>
                 <div class="d-flex flex-column flex-md-row align-items-center w-75 justify-content-center">
-                    <button type="submit" class="btn btn-primary mb-3 mb-md-0 me-md-3">Enviar</button>
+                    <button type="submit" class="btn btn-primary mb-3 mb-md-0 me-md-3 mr-3">Confirmar Fecha</button>
                     <a href="index.php" class="btn btn-secondary">Volver al inicio</a>
                 </div>
             </form>

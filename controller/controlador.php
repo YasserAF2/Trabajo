@@ -55,7 +55,7 @@ class controlador
 
         $dni = $_SESSION['dni'];
         $correo = $_SESSION['correo'];
-        
+
         $peticiones = $this->trace->peticiones_dni($dni);
         $datos = array(
             'peticiones' => $peticiones,
@@ -248,7 +248,8 @@ class controlador
         $this->view = 'solicitud_maternidad';
     }
 
-    public function submit_lmp(){
+    public function submit_lmp()
+    {
         session_start();
         $mensaje = $this->trace->submit_lmp();
         $_SESSION['resultado_solicitud'] = $mensaje;
@@ -260,7 +261,8 @@ class controlador
         $this->view = 'solicitud_hora_sindical';
     }
 
-    public function submit_hora_sindical(){
+    public function submit_hora_sindical()
+    {
         session_start();
         $mensaje = $this->trace->submit_hora_sindical();
         $_SESSION['resultado_solicitud'] = $mensaje;
@@ -272,7 +274,8 @@ class controlador
         $this->view = 'solicitud_licencia';
     }
 
-    public function submit_licencia(){
+    public function submit_licencia()
+    {
         session_start();
         $mensaje = $this->trace->submit_licencia();
         $_SESSION['resultado_solicitud'] = $mensaje;
@@ -419,7 +422,8 @@ class controlador
 
             // Envío del correo
             $mail->send();
-            $_SESSION['mensaje_correo'] = 'El mensaje ha sido enviado.';
+            $_SESSION['mensaje_correo'] = 'Se ha enviado un correo electrónico de confirmación a su dirección de correo registrada. 
+            Por favor, verifique su bandeja de entrada para completar el proceso de registro.';
         } catch (Exception $e) {
             $_SESSION['mensaje_correo'] = "El mensaje no pudo ser enviado. Mailer Error: {$mail->ErrorInfo}";
         }
@@ -470,7 +474,8 @@ class controlador
         }
     }
 
-    public function ver_bajas(){
+    public function ver_bajas()
+    {
         session_start();
         if (isset($_SESSION['correo'])) {
             $peticiones = $this->trace->ver_bajas_licencias();
@@ -484,25 +489,27 @@ class controlador
         }
     }
 
-    public function buscar() {
+    public function buscar()
+    {
         ob_clean();
-        
+
         $buscador = isset($_GET['buscador']) ? $_GET['buscador'] : '';
         $resultados = $this->trace->buscar_empleado_rol($buscador);
         header('Content-Type: application/json');
-    
+
         if ($resultados) {
             echo json_encode(['success' => true, 'data' => $resultados]);
         } else {
             echo json_encode(['success' => false, 'message' => 'No se encontraron resultados.']);
         }
-    
+
         exit();
     }
-    
+
 
     // Función para generar y descargar Excel
-    public function excel() {
+    public function excel()
+    {
         // Lógica para obtener los datos de la tabla que deseas exportar
         $peticiones = $this->trace->obtenerPeticionesAceptadas();
 
