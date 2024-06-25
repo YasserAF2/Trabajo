@@ -41,27 +41,6 @@ $horaActual = date('H:i:s');
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM completamente cargado.');
-
-        // Obtener la altura del viewport
-        var viewportHeight = window.innerHeight;
-        console.log('Altura del viewport:', viewportHeight);
-
-        // Obtener la altura de otros elementos en la pantalla y restarlas
-        var headerHeight = document.getElementById('header').offsetHeight;
-        var footerHeight = document.getElementById('footer').offsetHeight;
-
-        // Calcular la altura disponible para el div1
-        var availableHeight = viewportHeight - headerHeight - footerHeight;
-        console.log('Altura disponible para div1:', availableHeight);
-
-        // Establecer la altura del div1
-        var div1 = document.getElementById('div1');
-        div1.style.height = availableHeight + 'px';
-        console.log('Se estableció la altura de div1:', div1.style.height);
-    });
-
     // Validación del formulario y tamaño del archivo
     (function() {
         'use strict';

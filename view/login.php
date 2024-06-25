@@ -1,4 +1,4 @@
-<div class="container-fluid" id="div1">
+<div class="container-fluid">
     <!-- Contenedor principal -->
     <div class="row justify-content-center align-items-center h-100">
         <!-- Fila para centrar verticalmente -->

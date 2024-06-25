@@ -1,6 +1,6 @@
-document.addEventListener('DOMContentLoaded', function () {
+/* document.addEventListener('DOMContentLoaded', function () {
   // Verificar el ancho de la pantalla
-  if (window.innerWidth > 480) {
+  if (window.innerWidth < 480) {
     console.log('DOM completamente cargado.');
 
     // Obtener la altura del viewport
@@ -25,5 +25,8 @@ document.addEventListener('DOMContentLoaded', function () {
     } else {
       console.log('El elemento div1 no se encontró en el DOM.');
     }
+  } else {
+    console.log('La pantalla es igual o menor a 480px. No se realizaron cambios.');
   }
 });
+ */

@@ -108,8 +108,6 @@ $turno = $trace->turno_empleado();
                 .getFullYear());
             let isHoliday = festivos.includes(dateString);
 
-            console.log(dateString);
-
             if (isHoliday) {
                 dates.innerHTML += `<div class="calendar__date calendar__item calendar__date--holiday">${i}</div>`;
             } else if (isSelectable) {
