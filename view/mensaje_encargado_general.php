@@ -12,9 +12,8 @@ if (!isset($_SESSION['correo'])) {
     exit();
 }
 ?>
-<div class="formulario">
-    <form action="index.php?action=enviar_mensaje" method="post"
-        class="needs-validation d-flex flex-column justify-content-center align-items-center" novalidate>
+<div class="formulario" id="div1">
+    <form action="index.php?action=enviar_mensaje" method="post" class="needs-validation d-flex flex-column justify-content-center align-items-center" novalidate>
         <div class="px-5 ms-xl-4">
             <img class="logo" src="view/template/imagenes/trace4-sin-fondo.png" alt="LOGOTIPO TRACE">
         </div>
@@ -33,25 +32,25 @@ if (!isset($_SESSION['correo'])) {
 </div>
 
 <script>
-(function() {
-    'use strict';
-    window.addEventListener('load', function() {
-        var forms = document.getElementsByClassName('needs-validation');
-        var validation = Array.prototype.filter.call(forms, function(form) {
-            form.addEventListener('submit', function(event) {
-                if (form.checkValidity() === false) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                } else {
-                    // Mostrar cuadro de diálogo de confirmación
-                    var confirmation = confirm("¿Estás seguro de enviar este mensaje?");
-                    if (!confirmation) {
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
                         event.preventDefault();
+                        event.stopPropagation();
+                    } else {
+                        // Mostrar cuadro de diálogo de confirmación
+                        var confirmation = confirm("¿Estás seguro de enviar este mensaje?");
+                        if (!confirmation) {
+                            event.preventDefault();
+                        }
                     }
-                }
-                form.classList.add('was-validated');
-            }, false);
-        });
-    }, false);
-})();
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
 </script>

@@ -18,7 +18,7 @@ $horaActual = date('H:i:s');
 
 ?>
 
-<div class="container main-container">
+<div class="container main-container" id="div1">
     <div class="form-container">
         <div class="d-flex flex-column align-items-center text-center">
             <img class="logo mb-4" src="view/template/imagenes/trace4-sin-fondo.png" alt="LOGOTIPO TRACE">

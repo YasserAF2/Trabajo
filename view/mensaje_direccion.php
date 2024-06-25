@@ -13,7 +13,7 @@ if (!isset($_SESSION['correo'])) {
 }
 
 ?>
-<div class="formulario">
+<div class="formulario" id="div1">
     <form action="index.php?action=enviar_mensaje" method="post"
         class="needs-validation d-flex flex-column justify-content-center align-items-center" novalidate>
         <div class="px-5 ms-xl-4">

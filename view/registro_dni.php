@@ -1,9 +1,13 @@
-<div class="container mt-5">
-    <div class="row justify-content-center">
+<div class="container mt-5" id="div1">
+    <!-- Contenedor principal -->
+    <div class="row justify-content-center align-items-center h-100">
+        <!-- Fila para centrar verticalmente -->
         <div class="col-md-6">
-            <form action="index.php?action=procesar_dni" method="post" class="needs-validation d-flex flex-column align-items-center" novalidate>
-                <div class="px-5 ms-xl-4">
-                    <img class="logo" src="view/template/imagenes/trace4-sin-fondo.png" alt="LOGOTIPO TRACE">
+            <!-- Columna para el formulario -->
+            <form action="index.php?action=procesar_dni" method="post"
+                class="needs-validation d-flex flex-column align-items-center" novalidate>
+                <div class="px-5 ms-xl-4 mb-4">
+                    <img class="logo img-fluid" src="view/template/imagenes/trace4-sin-fondo.png" alt="LOGOTIPO TRACE">
                 </div>
                 <div class="form-group w-75">
                     <label for="dni">DNI:</label>

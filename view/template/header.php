@@ -26,7 +26,7 @@
     <link rel="icon" type="image/x-icon" href="view\template\imagenes\favicon.ico" />
 </head>
 
-<div class="cabecera d-flex">
+<div class="cabecera d-flex" id="header">
     <div class="w-50">
     </div>
     <div>

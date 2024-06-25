@@ -17,14 +17,13 @@ $fechaActual = date('Y-m-d');
 $horaActual = date('H:i:s');
 
 ?>
-<div class="container main-container">
+<div class="container main-container" id="div1">
     <div class="form-container">
         <div class="d-flex flex-column align-items-center text-center">
             <img class="logo mb-4" src="view/template/imagenes/trace4-sin-fondo.png" alt="LOGOTIPO TRACE">
             <h2 class="mb-4 text-center">Solicitud de Licencia</h2>
         </div>
-        <form action="index.php?action=submit_licencia" method="post" enctype="multipart/form-data"
-            class="needs-validation" novalidate>
+        <form action="index.php?action=submit_licencia" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
             <div class="form-group">
                 <label for="archivo">Subir Archivo (máximo 10MB):</label>
                 <input type="file" class="form-control-file" id="archivo" name="archivo" required>
@@ -41,30 +40,51 @@ $horaActual = date('H:i:s');
 </div>
 
 <script>
-(function() {
-    'use strict';
-    window.addEventListener('load', function() {
-        var forms = document.getElementsByClassName('needs-validation');
-        var validation = Array.prototype.filter.call(forms, function(form) {
-            form.addEventListener('submit', function(event) {
-                var fileInput = document.getElementById('archivo');
-                var file = fileInput.files[0];
-                if (file && file.size > 10 * 1024 * 1024) { // 10 MB en bytes
-                    event.preventDefault();
-                    event.stopPropagation();
-                    fileInput.setCustomValidity('El archivo no debe exceder los 10MB.');
-                    fileInput.reportValidity();
-                } else {
-                    fileInput.setCustomValidity('');
-                }
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM completamente cargado.');
 
-                if (form.checkValidity() === false) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-                form.classList.add('was-validated');
-            }, false);
-        });
-    }, false);
-})();
+        // Obtener la altura del viewport
+        var viewportHeight = window.innerHeight;
+        console.log('Altura del viewport:', viewportHeight);
+
+        // Obtener la altura de otros elementos en la pantalla y restarlas
+        var headerHeight = document.getElementById('header').offsetHeight;
+        var footerHeight = document.getElementById('footer').offsetHeight;
+
+        // Calcular la altura disponible para el div1
+        var availableHeight = viewportHeight - headerHeight - footerHeight;
+        console.log('Altura disponible para div1:', availableHeight);
+
+        // Establecer la altura del div1
+        var div1 = document.getElementById('div1');
+        div1.style.height = availableHeight + 'px';
+        console.log('Se estableció la altura de div1:', div1.style.height);
+    });
+
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    var fileInput = document.getElementById('archivo');
+                    var file = fileInput.files[0];
+                    if (file && file.size > 10 * 1024 * 1024) { // 10 MB en bytes
+                        event.preventDefault();
+                        event.stopPropagation();
+                        fileInput.setCustomValidity('El archivo no debe exceder los 10MB.');
+                        fileInput.reportValidity();
+                    } else {
+                        fileInput.setCustomValidity('');
+                    }
+
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
 </script>

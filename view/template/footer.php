@@ -1,4 +1,4 @@
-<footer class="pie bg-dark text-white">
+<footer class="pie bg-dark text-white" id="footer">
     <div class="container">
         <div class="row">
             <div class="col-md-6">
@@ -22,6 +22,7 @@
         </div>
     </div>
 </footer>
-<!-- <script src="js/archivo.js"></script> -->
+<script src="js/archivo.js"></script>
 </body>
+
 </html>

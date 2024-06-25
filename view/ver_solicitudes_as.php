@@ -28,50 +28,50 @@ $tipo = $trace->tipo_empleado();
         </div>
 
         <?php if (!empty($peticiones)) : ?>
-        <div class="mt-4">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>DNI</th>
-                        <th>Nombre y Apellidos</th>
-                        <th>Categoría</th>
-                        <th>Tipo</th>
-                        <th>Fecha y hora</th>
-                        <th>Fecha de solicitud</th>
-                        <th>Estado</th>
-                        <th>Supervisor</th>
-                        <th>Acciones</th>
-                        <th>Mañana</th>
-                        <th>Tarde</th>
-                        <th>Noche</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($peticiones as $peticion) : ?>
-                    <tr>
-                        <td><?= $peticion['PET_DNI'] ?></td>
-                        <td><?= $peticion['EMP_NOMBRE'] . ' ' . $peticion['EMP_APE_1'] . ' ' . $peticion['EMP_APE_2'] ?>
-                        </td>
-                        <td><?= $peticion['EMP_CATEGORIA'] ?></td>
-                        <td><?= $peticion['PET_TIPO'] ?></td>
-                        <td>
-                            <?php
+            <div class="mt-4">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>DNI</th>
+                            <th>Nombre y Apellidos</th>
+                            <th>Categoría</th>
+                            <th>Tipo</th>
+                            <th>Fecha y hora</th>
+                            <th>Fecha de solicitud</th>
+                            <th>Estado</th>
+                            <th>Supervisor</th>
+                            <th>Acciones</th>
+                            <th>Mañana</th>
+                            <th>Tarde</th>
+                            <th>Noche</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($peticiones as $peticion) : ?>
+                            <tr>
+                                <td><?= $peticion['PET_DNI'] ?></td>
+                                <td><?= $peticion['EMP_NOMBRE'] . ' ' . $peticion['EMP_APE_1'] . ' ' . $peticion['EMP_APE_2'] ?>
+                                </td>
+                                <td><?= $peticion['EMP_CATEGORIA'] ?></td>
+                                <td><?= $peticion['PET_TIPO'] ?></td>
+                                <td>
+                                    <?php
                                     $fecha_hora_solicitud = $peticion['PET_FECHA_HORA_SOLICITUD'];
                                     $fecha_formateada = date("d/m/Y H:i:s", strtotime($fecha_hora_solicitud));
                                     echo $fecha_formateada;
                                     ?>
-                        </td>
-                        <td>
-                            <?php
+                                </td>
+                                <td>
+                                    <?php
                                     $fecha_peticion = $peticion['PET_FECHA'];
                                     $fecha_formateada = date("d/m/Y", strtotime($fecha_peticion));
                                     echo $fecha_formateada;
                                     ?>
-                        </td>
-                        <td><?= $peticion['PET_ACEPTADO'] ?></td>
-                        <td><?= $peticion['PET_SUPERVISOR'] ?></td>
-                        <td>
-                            <?php
+                                </td>
+                                <td><?= $peticion['PET_ACEPTADO'] ?></td>
+                                <td><?= $peticion['PET_SUPERVISOR'] ?></td>
+                                <td>
+                                    <?php
                                     // Obtener la fecha de la petición para consultar el cupo
                                     $fecha_peticion = $peticion['PET_FECHA'];
                                     $cuposAS = $trace->ver_cupo_peticion($fecha_peticion);
@@ -84,35 +84,31 @@ $tipo = $trace->tipo_empleado();
                                     // Determinar si el botón Aceptar debe estar deshabilitado
                                     $deshabilitar_aceptar = ($peticion['PET_ACEPTADO'] == 'SI');
                                     ?>
-                            <?php if ($tipo == 'ADMINISTRADOR' || $tipo == 'SUPERUSUARIO') : ?>
-                            <?php if (!$deshabilitar_aceptar) : ?>
-                            <a href="index.php?action=aceptar_as&peticion_id=<?= $peticion['PET_ID'] ?>"
-                                class="btn btn-success"
-                                onclick="return confirm('¿Estás seguro de que quieres aceptar esta petición?')">Aceptar</a>
-                            <?php else : ?>
-                            <button class="btn btn-success" disabled>Aceptar</button>
-                            <?php endif; ?>
-                            <a href="index.php?action=rechazar_as&peticion_id=<?= $peticion['PET_ID'] ?>"
-                                class="btn btn-danger"
-                                onclick="return confirm('¿Estás seguro de que quieres rechazar esta petición?')">Rechazar</a>
-                            <?php else : ?>
-                            <button class="btn btn-success" disabled>Aceptar</button>
-                            <button class="btn btn-danger" disabled>Rechazar</button>
-                            <?php endif; ?>
-                        </td>
-                        <td><?= $cupo_manana ?></td>
-                        <td><?= $cupo_tarde ?></td>
-                        <td><?= $cupo_noche ?></td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
+                                    <?php if ($tipo == 'ADMINISTRADOR' || $tipo == 'SUPERUSUARIO') : ?>
+                                        <?php if (!$deshabilitar_aceptar) : ?>
+                                            <a href="index.php?action=aceptar_as&peticion_id=<?= $peticion['PET_ID'] ?>" class="btn btn-success" onclick="return confirm('¿Estás seguro de que quieres aceptar esta petición?')">Aceptar</a>
+                                        <?php else : ?>
+                                            <button class="btn btn-success" disabled>Aceptar</button>
+                                        <?php endif; ?>
+                                        <a href="index.php?action=rechazar_as&peticion_id=<?= $peticion['PET_ID'] ?>" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que quieres rechazar esta petición?')">Rechazar</a>
+                                    <?php else : ?>
+                                        <button class="btn btn-success" disabled>Aceptar</button>
+                                        <button class="btn btn-danger" disabled>Rechazar</button>
+                                    <?php endif; ?>
+                                </td>
+                                <td><?= $cupo_manana ?></td>
+                                <td><?= $cupo_tarde ?></td>
+                                <td><?= $cupo_noche ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
         <?php else : ?>
-        <p>No hay peticiones disponibles.</p>
+            <p>No hay peticiones disponibles.</p>
         <?php endif; ?>
 
-        <div class="mt-4 text-end">
+        <div class="mt-3 mb-3 text-end">
             <a href="index.php?action=admin" class="btn btn-secondary">Volver atrás</a>
         </div>
     </div>

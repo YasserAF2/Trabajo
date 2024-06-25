@@ -17,7 +17,7 @@ $fechaActual = date('Y-m-d');
 $horaActual = date('H:i:s');
 
 ?>
-<div class="container mt-5">
+<div class="container mt-5" id="div1">
     <h2>Solicitud de Hora Sindical</h2>
     <form action="index.php?action=submit_hora_sindical" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
         <div class="form-group">
@@ -35,6 +35,27 @@ $horaActual = date('H:i:s');
 </div>
 
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM completamente cargado.');
+
+        // Obtener la altura del viewport
+        var viewportHeight = window.innerHeight;
+        console.log('Altura del viewport:', viewportHeight);
+
+        // Obtener la altura de otros elementos en la pantalla y restarlas
+        var headerHeight = document.getElementById('header').offsetHeight;
+        var footerHeight = document.getElementById('footer').offsetHeight;
+
+        // Calcular la altura disponible para el div1
+        var availableHeight = viewportHeight - headerHeight - footerHeight;
+        console.log('Altura disponible para div1:', availableHeight);
+
+        // Establecer la altura del div1
+        var div1 = document.getElementById('div1');
+        div1.style.height = availableHeight + 'px';
+        console.log('Se estableció la altura de div1:', div1.style.height);
+    });
+
     (function() {
         'use strict';
         window.addEventListener('load', function() {
