@@ -316,7 +316,7 @@ class controlador
                 // Configurar el correo
                 $mail->setFrom('ceutaportalempleados@gmail.com', 'Trace');
                 $mail->addAddress($destinatario);
-                $mail->Subject = "Mensaje desde la aplicación";
+                $mail->Subject = "Mensaje Portal de Empleados";
                 $mail->Body = "Has recibido un nuevo mensaje:\n\n" . $mensaje;
 
                 // Enviar el correo
