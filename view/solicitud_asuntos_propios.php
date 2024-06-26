@@ -57,7 +57,7 @@ $turno = $trace->turno_empleado();
         </div>
         <div class="d-flex justify-content-end mt-4">
             <button type="submit" class="btn btn-primary me-2 mr-2">Enviar</button>
-            <a href="index.php?action=logeado" class="btn btn-primary">Volver a la página principal</a>
+            <a href="index.php?action=logeado" class="btn btn-secondary">Volver atrás</a>
         </div>
     </form>
 </div>
