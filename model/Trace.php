@@ -170,6 +170,11 @@ class Trace
             return '¡La combinación de nombre de usuario y contraseña es incorrecta!';
         }
 
+        // Verificar si el usuario está confirmado por correo
+        if ($result['CONFIRMADO'] != 1) {
+            return '¡El usuario aún no ha sido confirmado por correo!';
+        }
+
         if (isset($result['EMP_CONTRASEÑA']) && password_verify($contraseña, $result['EMP_CONTRASEÑA'])) {
             $_SESSION['user_id'] = $result['EMP_CORREO'];
             $_SESSION['contraseña'] = $result['EMP_CONTRASEÑA'];
@@ -178,7 +183,6 @@ class Trace
             return false; // La contraseña no coincide
         }
     }
-
 
     /* Te devuelve las peticiones por el dni del empleado */
     public function peticiones_dni($dni)
