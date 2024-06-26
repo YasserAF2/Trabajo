@@ -42,7 +42,6 @@ $horaActual = date('H:i:s');
 </div>
 
 <script>
-// Validación del formulario y tamaño del archivo
 (function() {
     'use strict';
     window.addEventListener('load', function() {
@@ -56,13 +55,34 @@ $horaActual = date('H:i:s');
                     event.stopPropagation();
                     fileInput.setCustomValidity('El archivo no debe exceder los 10MB.');
                     fileInput.reportValidity();
+                    // Usar SweetAlert para mostrar el mensaje de error
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'El archivo no debe exceder los 10MB.',
+                        icon: 'error',
+                        confirmButtonText: 'Ok'
+                    });
                 } else {
                     fileInput.setCustomValidity('');
-                }
-
-                if (form.checkValidity() === false) {
-                    event.preventDefault();
-                    event.stopPropagation();
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    } else {
+                        event
+                            .preventDefault(); // Prevenir el envío del formulario para mostrar el diálogo
+                        Swal.fire({
+                            title: '¿Estás seguro de enviar esta solicitud?',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Sí, enviar',
+                            cancelButtonText: 'No, cancelar'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                form
+                                    .submit(); // Enviar el formulario si el usuario confirma
+                            }
+                        });
+                    }
                 }
                 form.classList.add('was-validated');
             }, false);

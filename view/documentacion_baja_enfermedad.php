@@ -23,7 +23,8 @@ $horaActual = date('H:i:s');
             <img class="logo mb-4" src="view/template/imagenes/trace4-sin-fondo.png" alt="LOGOTIPO TRACE">
             <h2 class="mb-4 text-center">Solicitar Baja por Enfermedad</h2>
         </div>
-        <form action="index.php?action=submit_baja_enfermedad" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+        <form action="index.php?action=submit_baja_enfermedad" method="post" enctype="multipart/form-data"
+            class="needs-validation" novalidate>
             <div class="form-group">
                 <label for="archivo">Subir Archivo (máximo 10MB):</label>
                 <input type="file" class="form-control-file" id="archivo" name="archivo" required>
@@ -40,31 +41,51 @@ $horaActual = date('H:i:s');
 </div>
 
 <script>
-    // Validación del formulario y tamaño del archivo
-    (function() {
-        'use strict';
-        window.addEventListener('load', function() {
-            var forms = document.getElementsByClassName('needs-validation');
-            var validation = Array.prototype.filter.call(forms, function(form) {
-                form.addEventListener('submit', function(event) {
-                    var fileInput = document.getElementById('archivo');
-                    var file = fileInput.files[0];
-                    if (file && file.size > 10 * 1024 * 1024) { // 10 MB en bytes
-                        event.preventDefault();
-                        event.stopPropagation();
-                        fileInput.setCustomValidity('El archivo no debe exceder los 10MB.');
-                        fileInput.reportValidity();
-                    } else {
-                        fileInput.setCustomValidity('');
-                    }
-
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+        var forms = document.getElementsByClassName('needs-validation');
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                var fileInput = document.getElementById('archivo');
+                var file = fileInput.files[0];
+                if (file && file.size > 10 * 1024 * 1024) { // 10 MB en bytes
+                    event.preventDefault();
+                    event.stopPropagation();
+                    fileInput.setCustomValidity('El archivo no debe exceder los 10MB.');
+                    fileInput.reportValidity();
+                    // Usar SweetAlert para mostrar el mensaje de error
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'El archivo no debe exceder los 10MB.',
+                        icon: 'error',
+                        confirmButtonText: 'Ok'
+                    });
+                } else {
+                    fileInput.setCustomValidity('');
                     if (form.checkValidity() === false) {
                         event.preventDefault();
                         event.stopPropagation();
+                    } else {
+                        event
+                            .preventDefault(); // Prevenir el envío del formulario para mostrar el diálogo
+                        Swal.fire({
+                            title: '¿Estás seguro de enviar esta solicitud?',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Sí, enviar',
+                            cancelButtonText: 'No, cancelar'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                form
+                                    .submit(); // Enviar el formulario si el usuario confirma
+                            }
+                        });
                     }
-                    form.classList.add('was-validated');
-                }, false);
-            });
-        }, false);
-    })();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    }, false);
+})();
 </script>
