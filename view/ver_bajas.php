@@ -54,18 +54,24 @@ $tipo = $trace->tipo_empleado();
                     <td>
                         <?php if ($tipo == 'ADMINISTRADOR' || $tipo == 'SUPERUSUARIO') : ?>
                         <?php if ($peticion['PET_ACEPTADO'] != 'SI') : ?>
-                        <a href="index.php?action=aceptar_baja&peticion_id=<?= $peticion['PET_ID'] ?>"
-                            class="btn btn-success"
-                            onclick="return confirm('¿Estás seguro de que quieres aceptar esta petición?')">Aceptar</a>
+                        <div class="d-flex">
+                            <a href="#" class="btn btn-success aceptar-btn mr-1"
+                                data-id="<?= $peticion['PET_ID'] ?>">Aceptar</a>
+                            <a href="#" class="btn btn-danger rechazar-btn"
+                                data-id="<?= $peticion['PET_ID'] ?>">Rechazar</a>
+                        </div>
                         <?php else : ?>
-                        <button class="btn btn-success" disabled>Aceptar</button>
+                        <div class="d-flex">
+                            <button class="btn btn-success mr-1" disabled>Aceptar</button>
+                            <a href="#" class="btn btn-danger rechazar-btn"
+                                data-id="<?= $peticion['PET_ID'] ?>">Rechazar</a>
+                        </div>
                         <?php endif; ?>
-                        <a href="index.php?action=rechazar_baja&peticion_id=<?= $peticion['PET_ID'] ?>"
-                            class="btn btn-danger"
-                            onclick="return confirm('¿Estás seguro de que quieres rechazar esta petición?')">Rechazar</a>
                         <?php else : ?>
-                        <button class="btn btn-success btn-custom mb-2" disabled>Aceptar</button>
-                        <button class="btn btn-danger btn-custom mb-2" disabled>Rechazar</button>
+                        <div class="d-flex">
+                            <button class="btn btn-success btn-custom mb-2 mr-1" disabled>Aceptar</button>
+                            <button class="btn btn-danger btn-custom mb-2" disabled>Rechazar</button>
+                        </div>
                         <?php endif; ?>
                     </td>
                 </tr>
@@ -82,3 +88,49 @@ $tipo = $trace->tipo_empleado();
         </div>
     </div>
 </div>
+
+<script>
+// Función para manejar la confirmación con SweetAlert
+document.addEventListener('DOMContentLoaded', function() {
+    const aceptarButtons = document.querySelectorAll('.aceptar-btn');
+    const rechazarButtons = document.querySelectorAll('.rechazar-btn');
+
+    aceptarButtons.forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+            const peticionId = this.getAttribute('data-id');
+            Swal.fire({
+                title: '¿Estás seguro de aceptar esta petición?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, aceptar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href =
+                        `index.php?action=aceptar_baja&peticion_id=${peticionId}`;
+                }
+            });
+        });
+    });
+
+    rechazarButtons.forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+            const peticionId = this.getAttribute('data-id');
+            Swal.fire({
+                title: '¿Estás seguro de rechazar esta petición?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, rechazar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href =
+                        `index.php?action=rechazar_baja&peticion_id=${peticionId}`;
+                }
+            });
+        });
+    });
+});
+</script>
