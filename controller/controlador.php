@@ -27,18 +27,13 @@ class controlador
     public function logeado()
     {
         $resultado = $this->trace->logeado();
+        $correo = $_SESSION['user_id'];
 
         if ($resultado === true) {
-            // Si el inicio de sesión fue exitoso, redireccionar o establecer la vista apropiada
-            $_SESSION['user_id'] = $_POST['correo'];  // Establecer el user_id basado en el correo electrónico ingresado
             $this->view = 'logeado';
-        } elseif ($resultado === false) {
-            // Si las credenciales son incorrectas, mostrar la vista de login
-            $this->view = 'login';
+            $_SESSION['user_id'] = $correo;
         } else {
-            // Si hay un mensaje de error, mostrar la vista de login y almacenar el mensaje de error
             $this->view = 'login';
-            $_SESSION['login_error'] = $resultado;
         }
     }
 
