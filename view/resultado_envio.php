@@ -16,7 +16,7 @@
             ?>
             <form action="index.php" method="get" class="text-center">
                 <input type="hidden" name="action" value="logeado">
-                <button type="submit" class="btn btn-primary mt-3">Volver a Logeado</button>
+                <button type="submit" class="btn btn-primary mt-3">Volver a Inicio</button>
             </form>
         </div>
     </div>

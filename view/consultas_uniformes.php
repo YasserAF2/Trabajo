@@ -44,11 +44,21 @@ if (!isset($_SESSION['correo'])) {
                     event.preventDefault();
                     event.stopPropagation();
                 } else {
-                    // Mostrar cuadro de diálogo de confirmación
-                    var confirmation = confirm("¿Estás seguro de enviar este mensaje?");
-                    if (!confirmation) {
-                        event.preventDefault();
-                    }
+                    // Mostrar cuadro de diálogo de confirmación con SweetAlert
+                    event
+                        .preventDefault(); // Prevenir el envío del formulario para mostrar el diálogo
+                    Swal.fire({
+                        title: '¿Estás seguro de enviar este mensaje?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Sí, enviar',
+                        cancelButtonText: 'No, cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form
+                                .submit(); // Enviar el formulario si el usuario confirma
+                        }
+                    });
                 }
                 form.classList.add('was-validated');
             }, false);
