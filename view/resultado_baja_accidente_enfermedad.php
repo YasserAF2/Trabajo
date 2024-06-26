@@ -12,21 +12,25 @@ if (!isset($_SESSION['correo'])) {
 }
 ?>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 offset-md-2 content">
-            <?php
-            // Verificar si la variable $resultado está definida en la sesión
-            if (isset($_SESSION['resultado_solicitud'])) {
-                // Mostrar el mensaje de resultado
-                echo "<h1 class='text-center'>{$_SESSION['resultado_solicitud']}</h1>";
-            } else {
-                // Si la variable $resultado no está definida, mostrar un mensaje de error
-                echo "<h1 class='text-center'>No se ha recibido ningún resultado.</h1>";
-            }
-            ?>
-            <div class="text-center mt-3">
-                <a href="index.php?action=logeado" class="btn btn-primary">Volver a la página principal</a>
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body text-center">
+                    <?php
+                    // Verificar si la variable $resultado está definida en la sesión
+                    if (isset($_SESSION['resultado_solicitud'])) {
+                        // Mostrar el mensaje de resultado
+                        echo "<h1>{$_SESSION['resultado_solicitud']}</h1>";
+                    } else {
+                        // Si la variable $resultado no está definida, mostrar un mensaje de error
+                        echo "<h1>No se ha recibido ningún resultado.</h1>";
+                    }
+                    ?>
+                    <div class="mt-3">
+                        <a href="index.php?action=logeado" class="btn btn-primary">Volver a la página principal</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
