@@ -118,9 +118,9 @@ $tipo = $trace->tipo_empleado();
                             <?php endif; ?>
                         </td>
 
-                        <td><?= $cupo_manana ?></td>
-                        <td><?= $cupo_tarde ?></td>
-                        <td><?= $cupo_noche ?></td>
+                        <td><?= $cupo_manana ?>/25</td>
+                        <td><?= $cupo_tarde ?>/15</td>
+                        <td><?= $cupo_noche ?>/10</td>
                     </tr>
                     <?php endforeach; ?>
                 </tbody>
