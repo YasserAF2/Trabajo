@@ -25,7 +25,7 @@ $turno = $trace->turno_empleado();
         <div class="header d-flex justify-content-between align-items-center px-5 ms-xl-4 mb-2" style="height: 100px;">
             <img class="logo" src="view/template/imagenes/trace4-sin-fondo.png" alt="LOGOTIPO TRACE">
             <div class="perfil-titulo">
-                <h1>Elegir Días de Asuntos Propios</h1>
+                <h1>Días de Asuntos Propios</h1>
             </div>
         </div>
         <input type="hidden" id="selected-date" name="selected_date">

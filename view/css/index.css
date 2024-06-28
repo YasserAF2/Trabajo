@@ -401,6 +401,13 @@ form label {
   margin-top: 20px;
 }
 
+.alert-custom {
+  font-size: 1.5rem;
+  padding: 2rem;
+  margin: 2rem 0;
+}
+
+
 /*////////////////////////////////////////////*/
 
 /* Estilo para pantallas pequeñas */
