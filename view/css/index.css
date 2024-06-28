@@ -520,4 +520,8 @@ form label {
   ul li strong {
     width: 155px;
   }
+
+  .titulo-maternidad{
+    font-size: 1.2em;
+  }
 }

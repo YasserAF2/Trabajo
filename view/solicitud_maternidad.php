@@ -22,7 +22,7 @@ $horaActual = date('H:i:s');
     <div class="form-container">
         <div class="d-flex flex-column align-items-center text-center">
             <img class="logo mb-4" src="view/template/imagenes/trace4-sin-fondo.png" alt="LOGOTIPO TRACE">
-            <h2 class="mb-4">Solicitud Licencia por Lactancia/Maternidad/Paternidad</h2>
+            <h2 class="mb-4 titulo-maternidad">Solicitud Licencia por Lactancia/Maternidad/Paternidad</h2>
         </div>
         <form action="index.php?action=submit_lmp" method="post" enctype="multipart/form-data" class="needs-validation"
             novalidate>

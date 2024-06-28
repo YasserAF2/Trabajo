@@ -19,7 +19,7 @@ if (!isset($_SESSION['correo'])) {
         <div class="px-5 ms-xl-4">
             <img class="logo" src="view/template/imagenes/trace4-sin-fondo.png" alt="LOGOTIPO TRACE">
         </div>
-        <h3 class="mt-4">Mensaje consulta de uniformes y calzado</h3>
+        <h3 class="mt-4 d-flex justify-content-center text-center">Mensaje consulta de uniformes y calzado</h3>
         <div class="form-group w-50">
             <label for="mensaje">Mensaje:</label>
             <textarea class="form-control" id="mensaje" name="mensaje" rows="4" required></textarea>
