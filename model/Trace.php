@@ -812,9 +812,9 @@ class Trace
     {
         $tipo = "AP";  // Tipo de petición que queremos filtrar
         $sql = "SELECT p.*, e.* 
-                FROM t_peticiones p
-                JOIN t_empleados e ON e.EMP_NIF = p.PET_DNI
-                WHERE p.PET_TIPO = ?";
+            FROM t_peticiones p
+            JOIN t_empleados e ON e.EMP_NIF = p.PET_DNI
+            WHERE p.PET_TIPO = ? ORDER BY p.PET_FECHA DESC";
         $stmt = $this->conection->prepare($sql);
         $stmt->bind_param("s", $tipo);
         $stmt->execute();
@@ -833,7 +833,7 @@ class Trace
         $sql = "SELECT p.*, e.* 
                 FROM t_peticiones p
                 JOIN t_empleados e ON e.EMP_NIF = p.PET_DNI
-                WHERE p.PET_TIPO = ?";
+                WHERE p.PET_TIPO = ? ORDER BY p.PET_FECHA DESC";
         $stmt = $this->conection->prepare($sql);
         $stmt->bind_param("s", $tipo);
         $stmt->execute();
