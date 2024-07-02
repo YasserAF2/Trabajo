@@ -84,9 +84,12 @@ class controlador
     public function cambiar_tipo()
     {
         $response = $this->trace->cambiar_tipo();
-        $this->view = 'cambiar_roles';
-        return $response;
+        ob_clean(); // Limpiar el buffer de salida
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        exit();
     }
+
 
 
     public function aceptar_ap()
@@ -172,6 +175,7 @@ class controlador
         }
     }
 
+    //solicitudes ap en admin
     public function ver_solicitudes_ap()
     {
         session_start();
@@ -187,7 +191,7 @@ class controlador
         }
     }
 
-
+    //solicitudes as en admin
     public function ver_solicitudes_as()
     {
         session_start();

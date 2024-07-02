@@ -814,7 +814,7 @@ class Trace
         $sql = "SELECT p.*, e.* 
             FROM t_peticiones p
             JOIN t_empleados e ON e.EMP_NIF = p.PET_DNI
-            WHERE p.PET_TIPO = ? ORDER BY p.PET_FECHA DESC";
+            WHERE p.PET_TIPO = ? ORDER BY p.PET_ID DESC";
         $stmt = $this->conection->prepare($sql);
         $stmt->bind_param("s", $tipo);
         $stmt->execute();
@@ -833,7 +833,7 @@ class Trace
         $sql = "SELECT p.*, e.* 
                 FROM t_peticiones p
                 JOIN t_empleados e ON e.EMP_NIF = p.PET_DNI
-                WHERE p.PET_TIPO = ? ORDER BY p.PET_FECHA DESC";
+                WHERE p.PET_TIPO = ? ORDER BY p.PET_ID DESC";
         $stmt = $this->conection->prepare($sql);
         $stmt->bind_param("s", $tipo);
         $stmt->execute();
@@ -1278,19 +1278,18 @@ class Trace
         }
 
         ob_clean(); // Limpiar el buffer de salida
-
-        // Devolver la respuesta codificada en JSON
         header('Content-Type: application/json');
         echo json_encode($response);
         exit();
     }
 
 
+    //BUSCADOR
     public function buscar_empleado_rol($buscador)
     {
-        $stmt = $this->conection->prepare("SELECT * FROM t_empleados WHERE EMP_NIF LIKE ? OR EMP_NOMBRE LIKE ?");
+        $stmt = $this->conection->prepare("SELECT * FROM t_empleados WHERE EMP_NIF LIKE ? OR EMP_NOMBRE LIKE ? OR EMP_APE_1 LIKE ? OR EMP_APE_2 LIKE ?");
         $likeBuscador = "%$buscador%";
-        $stmt->bind_param('ss', $likeBuscador, $likeBuscador);
+        $stmt->bind_param('ssss', $likeBuscador, $likeBuscador, $likeBuscador, $likeBuscador);
         $stmt->execute();
         $result = $stmt->get_result();
         $resultados = [];

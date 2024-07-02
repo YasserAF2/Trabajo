@@ -23,14 +23,14 @@ $peticiones = $trace->obtenerPeticionesAceptadas();
         </thead>
         <tbody>
             <?php foreach ($peticiones as $peticion) : ?>
-                <tr>
-                    <td><?php echo date("d/m/Y", strtotime($peticion['PET_FECHA'])); ?></td>
-                    <td><?php echo $peticion['PET_DNI']; ?></td>
-                    <td><?php echo $peticion['EMP_NOMBRE'] . ' ' . $peticion['EMP_APE_1']; ?></td>
-                    <td><?php echo $peticion['PET_TIPO']; ?></td>
-                    <td><?php echo date("d/m/Y H:i:s", strtotime($peticion['PET_FECHA_HORA_SOLICITUD'])); ?></td>
-                    <td><?php echo $peticion['PET_SUPERVISOR']; ?></td>
-                </tr>
+            <tr>
+                <td><?php echo date("d/m/Y", strtotime($peticion['PET_FECHA'])); ?></td>
+                <td><?php echo $peticion['PET_DNI']; ?></td>
+                <td><?php echo $peticion['EMP_NOMBRE'] . ' ' . $peticion['EMP_APE_1']; ?></td>
+                <td><?php echo $peticion['PET_TIPO']; ?></td>
+                <td><?php echo date("d/m/Y H:i:s", strtotime($peticion['PET_FECHA_HORA_SOLICITUD'])); ?></td>
+                <td><?php echo $peticion['PET_SUPERVISOR']; ?></td>
+            </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
