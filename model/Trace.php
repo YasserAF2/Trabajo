@@ -1310,4 +1310,64 @@ class Trace
         $stmt->close();
         return $cupos;
     }
+
+
+    //buscador del calendario
+    public function buscar_peticion()
+    {
+        $buscador = isset($_GET['buscador']) ? $_GET['buscador'] : '';
+        $trace = new Trace();
+        $peticiones = $trace->obtenerPeticionesAceptadas();
+
+        $response = [
+            'success' => true,
+            'peticiones' => $peticiones
+        ];
+
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        exit();
+    }
+
+    public function obtenerBusqueda($buscador = '')
+    {
+        $query = "SELECT 
+                    pa.PET_FECHA, 
+                    pa.PET_DNI, 
+                    emp.EMP_NOMBRE, 
+                    emp.EMP_APE_1, 
+                    pa.PET_TIPO, 
+                    pa.PET_FECHA_HORA_SOLICITUD, 
+                    pa.PET_SUPERVISOR 
+                  FROM t_peticiones pa
+                  INNER JOIN t_empleados emp ON pa.PET_DNI = emp.EMP_NIF
+                  WHERE pa.PET_ACEPTADO = 'SI'"; // Añade esta condición para peticiones aceptadas
+
+        if ($buscador) {
+            $query .= " AND (
+                        pa.PET_DNI LIKE ? OR 
+                        emp.EMP_NOMBRE LIKE ? OR 
+                        emp.EMP_APE_1 LIKE ? OR 
+                        emp.EMP_APE_2 LIKE ?
+                       )";
+        }
+
+        $stmt = $this->conection->prepare($query);
+
+        if ($buscador) {
+            $likeBuscador = "%$buscador%";
+            $stmt->bind_param('ssss', $likeBuscador, $likeBuscador, $likeBuscador, $likeBuscador);
+        }
+
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $resultados = [];
+
+        while ($fila = $result->fetch_assoc()) {
+            $resultados[] = $fila;
+        }
+
+        $stmt->close();
+        return $resultados;
+    }
 }

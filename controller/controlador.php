@@ -511,6 +511,22 @@ class controlador
         exit();
     }
 
+    //vista calendario para bajar excel
+    public function buscar_peticion()
+    {
+        $buscador = isset($_GET['buscador']) ? $_GET['buscador'] : '';
+        $trace = new Trace();
+        $peticiones = $trace->obtenerBusqueda($buscador);
+
+        $response = [
+            'success' => true,
+            'peticiones' => $peticiones
+        ];
+
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        exit();
+    }
 
     // Función para generar y descargar Excel
     public function excel()
