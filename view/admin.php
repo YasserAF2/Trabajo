@@ -29,7 +29,7 @@
                     <a href="index.php?action=ver_bajas" class="list-group-item list-group-item-action">Ver bajas
                         Accidente/Enfermedad</a>
                     <a href="index.php?action=ver_calendario" class="list-group-item list-group-item-action">Ver
-                        Calendario</a>
+                        Peticiones Aceptadas</a>
                     <?php if ($tipo == "SUPERUSUARIO") : ?>
                     <a href="index.php?action=cambiar_roles" class="list-group-item list-group-item-action">Cambiar
                         Roles</a>
