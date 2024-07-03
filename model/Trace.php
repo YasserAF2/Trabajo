@@ -298,7 +298,7 @@ class Trace
             $turno_columna = '';
             switch ($turno) {
                 case 'T_MAÑANA':
-                    $turno_columna = 'AP_MAÑANA';
+                    $turno_columna = 'AP_MANANA';
                     break;
                 case 'T_TARDE':
                     $turno_columna = 'AP_TARDE';
@@ -437,13 +437,13 @@ class Trace
             $turno_columna = '';
             switch ($turno) {
                 case 'T_MAÑANA':
-                    $turno_columna = 'AP_MAÑANA';
+                    $turno_columna = 'AS_MANANA';
                     break;
                 case 'T_TARDE':
-                    $turno_columna = 'AP_TARDE';
+                    $turno_columna = 'AS_TARDE';
                     break;
                 case 'T_NOCHE':
-                    $turno_columna = 'AP_NOCHE';
+                    $turno_columna = 'AS_NOCHE';
                     break;
             }
 
