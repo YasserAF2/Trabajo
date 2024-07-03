@@ -1359,7 +1359,7 @@ class Trace
                     pa.PET_SUPERVISOR 
                   FROM t_peticiones pa
                   INNER JOIN t_empleados emp ON pa.PET_DNI = emp.EMP_NIF
-                  WHERE pa.PET_ACEPTADO = 'SI'"; // Añade esta condición para peticiones aceptadas
+                  WHERE pa.PET_ACEPTADO = 'SI'";
 
         if ($buscador) {
             $query .= " AND (
@@ -1386,6 +1386,161 @@ class Trace
         }
 
         $stmt->close();
+        return $resultados;
+    }
+
+
+    // Función para buscar peticiones por DNI, nombre y apellidos
+    public function buscarPeticionesAp($buscador)
+    {
+        // Preparar la consulta SQL base
+        $query = "SELECT 
+                    pa.PET_FECHA, 
+                    pa.PET_DNI, 
+                    emp.EMP_NOMBRE, 
+                    emp.EMP_APE_1, 
+                    pa.PET_TIPO, 
+                    pa.PET_FECHA_HORA_SOLICITUD, 
+                    pa.PET_SUPERVISOR 
+                  FROM t_peticiones pa 
+                  INNER JOIN t_empleados emp ON pa.PET_DNI = emp.EMP_NIF 
+                  WHERE pa.PET_TIPO = 'AP'";
+
+        // Verificar si hay criterios de búsqueda para agregar a la consulta preparada
+        if ($buscador) {
+            $query .= " AND (
+                pa.PET_DNI LIKE ? OR 
+                emp.EMP_NOMBRE LIKE ? OR 
+                emp.EMP_APE_1 LIKE ? OR 
+                emp.EMP_APE_2 LIKE ?
+               )";
+        }
+
+        // Preparar la sentencia SQL
+        $stmt = $this->conection->prepare($query);
+
+        // Si hay criterios de búsqueda, bindear los parámetros
+        if ($buscador) {
+            $buscador_like = "%{$buscador}%";
+            $stmt->bind_param("ssss", $buscador_like, $buscador_like, $buscador_like, $buscador_like);
+        }
+
+        // Ejecutar la consulta
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $resultados = [];
+
+        // Iterar sobre los resultados y almacenarlos en un array
+        while ($fila = $result->fetch_assoc()) {
+            $resultados[] = $fila;
+        }
+
+        // Cerrar la consulta preparada
+        $stmt->close();
+
+        // Devolver los resultados encontrados
+        return $resultados;
+    }
+
+    public function buscarPeticionesAs($buscador)
+    {
+        // Preparar la consulta SQL base
+        $query = "SELECT 
+                    pa.PET_FECHA, 
+                    pa.PET_DNI, 
+                    emp.EMP_NOMBRE, 
+                    emp.EMP_APE_1, 
+                    pa.PET_TIPO, 
+                    pa.PET_FECHA_HORA_SOLICITUD, 
+                    pa.PET_SUPERVISOR 
+                  FROM t_peticiones pa 
+                  INNER JOIN t_empleados emp ON pa.PET_DNI = emp.EMP_NIF 
+                  WHERE pa.PET_TIPO = 'AS'";
+
+        // Verificar si hay criterios de búsqueda para agregar a la consulta preparada
+        if ($buscador) {
+            $query .= " AND (
+                pa.PET_DNI LIKE ? OR 
+                emp.EMP_NOMBRE LIKE ? OR 
+                emp.EMP_APE_1 LIKE ? OR 
+                emp.EMP_APE_2 LIKE ?
+               )";
+        }
+
+        // Preparar la sentencia SQL
+        $stmt = $this->conection->prepare($query);
+
+        // Si hay criterios de búsqueda, bindear los parámetros
+        if ($buscador) {
+            $buscador_like = "%{$buscador}%";
+            $stmt->bind_param("ssss", $buscador_like, $buscador_like, $buscador_like, $buscador_like);
+        }
+
+        // Ejecutar la consulta
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $resultados = [];
+
+        // Iterar sobre los resultados y almacenarlos en un array
+        while ($fila = $result->fetch_assoc()) {
+            $resultados[] = $fila;
+        }
+
+        // Cerrar la consulta preparada
+        $stmt->close();
+
+        // Devolver los resultados encontrados
+        return $resultados;
+    }
+
+    public function buscarPeticionesBajas($buscador)
+    {
+        // Preparar la consulta SQL base
+        $query = "SELECT 
+                    pa.PET_FECHA, 
+                    pa.PET_DNI, 
+                    emp.EMP_NOMBRE, 
+                    emp.EMP_APE_1, 
+                    pa.PET_TIPO, 
+                    pa.PET_FECHA_HORA_SOLICITUD, 
+                    pa.PET_SUPERVISOR 
+                  FROM t_peticiones pa 
+                  INNER JOIN t_empleados emp ON pa.PET_DNI = emp.EMP_NIF 
+                  WHERE pa.PET_TIPO NOT IN ('AP', 'AS')";
+
+        // Verificar si hay criterios de búsqueda para agregar a la consulta preparada
+        if ($buscador) {
+            $query .= " AND (
+                pa.PET_DNI LIKE ? OR 
+                emp.EMP_NOMBRE LIKE ? OR 
+                emp.EMP_APE_1 LIKE ? OR 
+                emp.EMP_APE_2 LIKE ?
+               )";
+        }
+
+        // Preparar la sentencia SQL
+        $stmt = $this->conection->prepare($query);
+
+        // Si hay criterios de búsqueda, bindear los parámetros
+        if ($buscador) {
+            $buscador_like = "%{$buscador}%";
+            $stmt->bind_param("ssss", $buscador_like, $buscador_like, $buscador_like, $buscador_like);
+        }
+
+        // Ejecutar la consulta
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $resultados = [];
+
+        // Iterar sobre los resultados y almacenarlos en un array
+        while ($fila = $result->fetch_assoc()) {
+            $resultados[] = $fila;
+        }
+
+        // Cerrar la consulta preparada
+        $stmt->close();
+
+        // Devolver los resultados encontrados
         return $resultados;
     }
 }

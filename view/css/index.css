@@ -407,7 +407,6 @@ form label {
   margin: 2rem 0;
 }
 
-
 /*////////////////////////////////////////////*/
 
 /* Estilo para pantallas pequeñas */
@@ -521,7 +520,7 @@ form label {
     width: 155px;
   }
 
-  .titulo-maternidad{
+  .titulo-maternidad {
     font-size: 1.2em;
   }
 }

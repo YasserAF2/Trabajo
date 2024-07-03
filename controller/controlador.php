@@ -544,6 +544,53 @@ class controlador
         exit();
     }
 
+    public function buscar_ap()
+    {
+        $buscador = isset($_GET['buscador']) ? $_GET['buscador'] : '';
+        $trace = new Trace();
+        $peticiones = $trace->buscarPeticionesAp($buscador);
+        $response = [
+            'success' => true,
+            'peticiones' => $peticiones
+        ];
+
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        exit();
+    }
+
+
+    public function buscar_as()
+    {
+        $buscador = isset($_GET['buscador']) ? $_GET['buscador'] : '';
+        $trace = new Trace();
+        $peticiones = $trace->buscarPeticionesAs($buscador);
+        $response = [
+            'success' => true,
+            'peticiones' => $peticiones
+        ];
+
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        exit();
+    }
+
+    public function buscar_bajas()
+    {
+        $buscador = isset($_GET['buscador']) ? $_GET['buscador'] : '';
+        $trace = new Trace();
+        $peticiones = $trace->buscarPeticionesBajas($buscador);
+        $response = [
+            'success' => true,
+            'peticiones' => $peticiones
+        ];
+
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        exit();
+    }
+
+
     // Función para generar y descargar Excel
     public function excel()
     {
