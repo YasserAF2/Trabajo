@@ -21,7 +21,7 @@ class Trace
         $this->conection = $dbObj->conection;
     }
 
-
+    //consulta del dni en la base de datos para el registro
     public function procesar_dni()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['dni'])) {
@@ -47,6 +47,7 @@ class Trace
         }
     }
 
+    //proceso de la fecha de nacimiento en la bd para el registro
     public function procesar_fecha()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['fecha'])) {
@@ -77,6 +78,7 @@ class Trace
         }
     }
 
+    //proceso del registro, encriptación de la contraseña
     public function procesar_registro()
     {
         $email = $_POST['email'];
@@ -107,6 +109,7 @@ class Trace
         return $resultado ? $token : false;
     }
 
+    //se confirma el registro por correo
     public function confirmar_registro($token)
     {
         // Verificar si el token es válido
@@ -128,6 +131,7 @@ class Trace
         }
     }
 
+    // Obtener los datos del empleado por su correo
     public function getEmpleadoCorreo($correo)
     {
         $stmt = $this->conection->prepare("SELECT * FROM t_empleados WHERE EMP_CORREO = ?");
@@ -148,6 +152,7 @@ class Trace
         }
     }
 
+    //funcion principal para el login del usuario y cambio de vista
     public function logeado()
     {
         session_start();
@@ -208,7 +213,7 @@ class Trace
         return $peticiones;
     }
 
-
+    //Obtener los dias de asuntos propios por el correo del empleado
     public function obtenerDiasAsuntosPropios($correo)
     {
         // Preparar la consulta con un marcador de posición para el valor del correo
@@ -228,7 +233,7 @@ class Trace
         return $dias_ap;
     }
 
-
+    //Se encarga de la solicitud de asuntos propios
     public function asuntos_propios()
     {
         // Recoger la fecha y hora del POST
@@ -370,6 +375,7 @@ class Trace
         return $resultado;
     }
 
+    //Solicitud de AS 
     function solicitud_asuntos_propios_norm()
     {
         // Recoger la fecha y hora del POST
@@ -499,6 +505,7 @@ class Trace
         }
     }
 
+    //Para saber si el empleado pertenece al sindicato para la opcion de hora sindical
     public function pertenece_sindicato()
     {
         $dni = $_SESSION['dni'];
@@ -570,6 +577,7 @@ class Trace
         }
     }
 
+    //INSERT PETICIÓN BAJA POR ENFERMEDAD
     public function submit_baja_enfermedad()
     {
         $fecha = $_POST['fecha'];
@@ -619,6 +627,7 @@ class Trace
         }
     }
 
+    //INSERT PETICIÓN BAJA POR maternidad/paternidad
     public function submit_lmp()
     {
         $fecha = $_POST['fecha'];
@@ -668,6 +677,7 @@ class Trace
         }
     }
 
+    //INSERT PETICIÓN licencia
     public function submit_licencia()
     {
         $fecha = $_POST['fecha'];
@@ -717,6 +727,7 @@ class Trace
         }
     }
 
+    //INSERT PETICIÓN HORA SINDICAL
     public function submit_hora_sindical()
     {
         $fecha = $_POST['fecha'];
@@ -766,6 +777,7 @@ class Trace
         }
     }
 
+    //TIPO DE EMPLEADO SEGUN EL CORREO
     public function tipo_empleado()
     {
         $dni = $_SESSION['dni'];
@@ -787,6 +799,7 @@ class Trace
         return $tipo;
     }
 
+    //TURNO DE EMPLEADO SEGUN EL CORREO
     public function turno_empleado()
     {
         $dni = $_SESSION['dni'];
@@ -808,6 +821,7 @@ class Trace
         return $turno;
     }
 
+    //EN ADMIN VER SOLICITUDES AP
     public function ver_solicitudes_ap()
     {
         $tipo = "AP";  // Tipo de petición que queremos filtrar
@@ -827,6 +841,7 @@ class Trace
         return $peticiones;
     }
 
+    //EN ADMIN VER SOLICITUDES AS
     public function ver_solicitudes_as()
     {
         $tipo = "AS";
@@ -846,6 +861,7 @@ class Trace
         return $peticiones;
     }
 
+    //EN ADMIN VER SOLICITUDES BAJAS
     public function ver_bajas_licencias()
     {
         // Tipos de peticiones que queremos excluir
@@ -1182,7 +1198,7 @@ class Trace
         return $peticiones;
     }
 
-
+    //SE ENCARGA DE LOS DIAS FESTIVOS EN EL CALENDARIO
     public function ver_festivos()
     {
         try {
@@ -1233,7 +1249,7 @@ class Trace
         }
     }
 
-
+    //TODOS LOS DATOS DE EMPLEADO
     public function lista_empleados()
     {
         // Preparar la consulta SQL para obtener todos los datos de los empleados
@@ -1252,6 +1268,7 @@ class Trace
         return $empleados;
     }
 
+    //CAMBIAR EL ROL DEL USUARIO EN LA VISTA DE ADMIN
     public function cambiar_tipo()
     {
         $response = array(); // Array para almacenar la respuesta
@@ -1300,6 +1317,7 @@ class Trace
         return $resultados;
     }
 
+    //SABER EL CUPO QUE HAY PARA CADA DIA
     public function ver_cupo_peticion($fecha)
     {
         $stmt = $this->conection->prepare("SELECT * FROM t_ocupacion WHERE FECHA = ?");

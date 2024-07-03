@@ -19,11 +19,13 @@ class controlador
         $this->trace = new Trace();
     }
 
+    //VISTA PARA REALIZAR EL LOGIN
     public function login()
     {
         $this->view = 'login';
     }
 
+    //VISTA PRINCIPAL PERFIL DE USUARIO CON OPCIONES
     public function logeado()
     {
         $resultado = $this->trace->logeado();
@@ -37,7 +39,7 @@ class controlador
         }
     }
 
-
+    //CERRAR SESIÓN
     public function logout()
     {
         session_start();
@@ -46,6 +48,7 @@ class controlador
         header('Location: index.php');
     }
 
+    //VISTA PARA VER LAS SOLICITUDES DEL EMPLEADO
     public function ver_solicitudes()
     {
         session_start();
@@ -66,11 +69,13 @@ class controlador
         return $datos;
     }
 
+    //VISTA EN ADMIN PARA VER LA VISTA DE SOLICITUDES ACEPTADAS
     public function ver_calendario()
     {
         $this->view = 'ver_calendario';
     }
 
+    //VISTA DE CAMBIAR ROLES
     public function cambiar_roles()
     {
         $empleados = $this->trace->lista_empleados();
@@ -81,6 +86,7 @@ class controlador
         return $datos;
     }
 
+    //CAMBIAR EL ROL DEL USUARIO
     public function cambiar_tipo()
     {
         $response = $this->trace->cambiar_tipo();
@@ -90,8 +96,7 @@ class controlador
         exit();
     }
 
-
-
+    //ACEPTAR SOLICITUDES
     public function aceptar_ap()
     {
         if (isset($_GET['peticion_id'])) {
@@ -125,6 +130,7 @@ class controlador
         }
     }
 
+    //RECHAZAR SOLICITUDES
     public function rechazar_baja()
     {
         if (isset($_GET['peticion_id'])) {
@@ -217,6 +223,7 @@ class controlador
         $this->view = "resultado_asuntos_propios";
     }
 
+    //VISTA PARA LICENCIAS Y BAJAS Y SUS SUBMITS
     public function documentacion_baja_accidente()
     {
         $this->view = 'documentacion_baja_accidente';
@@ -292,6 +299,7 @@ class controlador
         $this->view = 'mensaje_direccion';
     }
 
+    //VISTA PRINCIPAL PARA EL ADMIN
     public function admin()
     {
         $this->view = 'admin';
@@ -341,6 +349,7 @@ class controlador
     }
 
 
+    //VISTAS DE LAS OPCIONES PARA ENVIAR MENSAJES
     public function mensaje_encargado_general()
     {
         $this->view = 'mensaje_encargado_general';
@@ -373,6 +382,7 @@ class controlador
         $this->view = 'registro_fecha';
     }
 
+    //PROCESAR EL DNI DEL REGISTRO
     public function procesar_dni()
     {
         session_start();
@@ -388,6 +398,7 @@ class controlador
         }
     }
 
+    //PROCESAR LA FECHA DE NACIMIENTO DEL REGISTRO
     public function procesar_fecha()
     {
         session_start();
@@ -404,6 +415,7 @@ class controlador
         }
     }
 
+    //ENVIAR UN CORREO ELECTRÓNICO EN EL REGISTRO
     private function enviar_correo_confirmacion($email, $token)
     {
         // Configuración del correo
@@ -434,6 +446,7 @@ class controlador
         }
     }
 
+    //CONFIRMAR EL REGISTRO
     public function registro()
     {
         session_start();
@@ -469,6 +482,7 @@ class controlador
         }
     }
 
+    //SOLICITUDES AS RESULTADO
     public function solicitud_asuntos_propios_norm()
     {
         session_start();
@@ -479,6 +493,7 @@ class controlador
         }
     }
 
+    //VISTA PARA VER LAS SOLICITUDES DE BAJAS EN ADMIN
     public function ver_bajas()
     {
         session_start();
@@ -494,6 +509,7 @@ class controlador
         }
     }
 
+    //BUSCADOR DE EMPLEADOS EN CAMBIAR ROL
     public function buscar()
     {
         ob_clean();
