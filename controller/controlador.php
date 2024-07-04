@@ -29,15 +29,16 @@ class controlador
     public function logeado()
     {
         $resultado = $this->trace->logeado();
-        $correo = $_SESSION['user_id'];
 
         if ($resultado === true) {
+            $_SESSION['user_id'] = $_POST['correo']; // Guarda el correo del usuario en sesión
             $this->view = 'logeado';
-            $_SESSION['user_id'] = $correo;
         } else {
             $this->view = 'login';
+            $_SESSION['login_error'] = "Usuario o contraseña incorrectos"; // Establece el mensaje de error
         }
     }
+
 
     //CERRAR SESIÓN
     public function logout()

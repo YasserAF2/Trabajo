@@ -281,7 +281,7 @@ class Trace
             // Verificar el cupo para el turno específico
             $cupo_maximo = 0;
             switch ($turno) {
-                case 'T_MAÑANA':
+                case 'T_MANANA':
                     $cupo_maximo = 25;
                     break;
                 case 'T_TARDE':
@@ -297,7 +297,7 @@ class Trace
             // Consultar el número actual de solicitudes para el turno específico
             $turno_columna = '';
             switch ($turno) {
-                case 'T_MAÑANA':
+                case 'T_MANANA':
                     $turno_columna = 'AP_MANANA';
                     break;
                 case 'T_TARDE':
@@ -420,7 +420,7 @@ class Trace
             // Verificar el cupo para el turno específico
             $cupo_maximo = 0;
             switch ($turno) {
-                case 'T_MAÑANA':
+                case 'T_MANANA':
                     $cupo_maximo = 25;
                     break;
                 case 'T_TARDE':
@@ -436,7 +436,7 @@ class Trace
             // Consultar el número actual de solicitudes para el turno específico
             $turno_columna = '';
             switch ($turno) {
-                case 'T_MAÑANA':
+                case 'T_MANANA':
                     $turno_columna = 'AS_MANANA';
                     break;
                 case 'T_TARDE':
@@ -941,7 +941,7 @@ class Trace
 
         // Límites de ocupación para AP
         $limites_ap = [
-            'AP_MAÑANA' => 25,
+            'AP_MANANA' => 25,
             'AP_TARDE' => 15,
             'AP_NOCHE' => 10
         ];
@@ -1050,7 +1050,7 @@ class Trace
 
         // Límites de ocupación para AS
         $limites_as = [
-            'AS_MAÑANA' => 25,
+            'AS_MANANA' => 25,
             'AS_TARDE' => 15,
             'AS_NOCHE' => 10
         ];
