@@ -958,11 +958,11 @@ class Trace
         $ocupacion[$turno_ocupacion] += 1;
 
         // Actualizar la tabla t_ocupacion
-        $query = $this->conection->prepare("UPDATE t_ocupacion SET AP_MAÑANA = ?, AP_TARDE = ?, AP_NOCHE = ? WHERE FECHA = ?");
+        $query = $this->conection->prepare("UPDATE t_ocupacion SET AP_MANANA = ?, AP_TARDE = ?, AP_NOCHE = ? WHERE FECHA = ?");
         if (!$query) {
             die('Error en la preparación de la consulta SQL: ' . mysqli_error($this->conection));
         }
-        $query->bind_param("iiis", $ocupacion['AP_MAÑANA'], $ocupacion['AP_TARDE'], $ocupacion['AP_NOCHE'], $fecha);
+        $query->bind_param("iiis", $ocupacion['AP_MANANA'], $ocupacion['AP_TARDE'], $ocupacion['AP_NOCHE'], $fecha);
         $query->execute();
         if ($query->errno) {
             die('Error al ejecutar la consulta de actualización: ' . $query->error);
@@ -1067,11 +1067,11 @@ class Trace
         $ocupacion[$turno_ocupacion] += 1;
 
         // Actualizar la tabla t_ocupacion
-        $query = $this->conection->prepare("UPDATE t_ocupacion SET AS_MAÑANA = ?, AS_TARDE = ?, AS_NOCHE = ? WHERE FECHA = ?");
+        $query = $this->conection->prepare("UPDATE t_ocupacion SET AS_MANANA = ?, AS_TARDE = ?, AS_NOCHE = ? WHERE FECHA = ?");
         if (!$query) {
             die('Error en la preparación de la consulta SQL: ' . mysqli_error($this->conection));
         }
-        $query->bind_param("iiis", $ocupacion['AS_MAÑANA'], $ocupacion['AS_TARDE'], $ocupacion['AS_NOCHE'], $fecha);
+        $query->bind_param("iiis", $ocupacion['AS_MANANA'], $ocupacion['AS_TARDE'], $ocupacion['AS_NOCHE'], $fecha);
         $query->execute();
         if ($query->errno) {
             die('Error al ejecutar la consulta de actualización: ' . $query->error);
