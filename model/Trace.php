@@ -155,8 +155,6 @@ class Trace
     //funcion principal para el login del usuario y cambio de vista
     public function logeado()
     {
-        session_start();
-
         // Verificar si ya hay una sesión iniciada
         if (isset($_SESSION['user_id']) && isset($_SESSION['contraseña'])) {
             return true; // El usuario ya está autenticado

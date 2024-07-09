@@ -25,6 +25,6 @@ if (!isset($_SESSION['correo'])) {
         ?>
     </div>
     <div>
-        <a href="index.php?action=logeado" class="btn btn-primary">Volver a la página principal</a>
+        <a href="index.php?action=volver" class="btn btn-primary">Volver a la página principal</a>
     </div>
 </div>

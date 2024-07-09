@@ -28,6 +28,7 @@ class controlador
     //VISTA PRINCIPAL PERFIL DE USUARIO CON OPCIONES
     public function logeado()
     {
+        session_start();
         $resultado = $this->trace->logeado();
 
         if ($resultado === true) {
@@ -39,6 +40,15 @@ class controlador
         }
     }
 
+    public function volver()
+    {
+        session_start();
+        if (isset($_SESSION['user_id'])) {
+            $this->view = 'logeado';
+        } else {
+            $this->view = 'login';
+        }
+    }
 
     //CERRAR SESIÓN
     public function logout()

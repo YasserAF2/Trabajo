@@ -72,7 +72,7 @@ $peticiones = $dataToView['peticiones'];
         <?php endif; ?>
 
         <div class="mt-4 mb-4 text-end">
-            <a href="index.php?action=logeado" class="btn btn-secondary">Volver atrás</a>
+            <a href="index.php?action=volver" class="btn btn-secondary">Volver atrás</a>
         </div>
     </div>
 </div>

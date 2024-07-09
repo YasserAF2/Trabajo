@@ -22,20 +22,25 @@
             </div>
             <div class="card-body">
                 <div class="list-group">
-                    <a href="index.php?action=ver_solicitudes_ap" class="list-group-item list-group-item-action">Ver
-                        Solicitudes Pendientes AP</a>
-                    <a href="index.php?action=ver_solicitudes_as" class="list-group-item list-group-item-action">Ver
-                        Solicitudes Pendientes AS</a>
-                    <a href="index.php?action=ver_bajas" class="list-group-item list-group-item-action">Ver bajas
-                        Accidente/Enfermedad</a>
-                    <a href="index.php?action=ver_calendario" class="list-group-item list-group-item-action">Ver
-                        Peticiones Aceptadas</a>
+                    <a href="index.php?action=ver_solicitudes_ap" class="list-group-item list-group-item-action">
+                        Ver Solicitudes Pendientes AP
+                    </a>
+                    <a href="index.php?action=ver_solicitudes_as" class="list-group-item list-group-item-action">
+                        Ver Solicitudes Pendientes AS</a>
+                    <a href="index.php?action=ver_bajas" class="list-group-item list-group-item-action">
+                        Ver bajas Accidente/Enfermedad
+                    </a>
+                    <a href="index.php?action=ver_calendario" class="list-group-item list-group-item-action">
+                        Ver Peticiones Aceptadas
+                    </a>
                     <?php if ($tipo == "SUPERUSUARIO") : ?>
-                    <a href="index.php?action=cambiar_roles" class="list-group-item list-group-item-action">Cambiar
-                        Roles</a>
+                        <a href="index.php?action=cambiar_roles" class="list-group-item list-group-item-action">
+                            Cambiar Roles
+                        </a>
                     <?php endif; ?>
-                    <a href="index.php?action=logeado"
-                        class="list-group-item list-group-item-action btn btn-secondary">Volver atrás</a>
+                    <a href="index.php?action=volver" class="list-group-item list-group-item-action btn btn-secondary">
+                        Volver atrás
+                    </a>
                 </div>
             </div>
         </div>

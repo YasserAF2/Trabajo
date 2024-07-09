@@ -27,7 +27,7 @@ if (!isset($_SESSION['correo'])) {
         </div>
         <div class="mt-4 text-end">
             <button type="submit" class="btn btn-primary">Enviar</button>
-            <a href="index.php?action=logeado" class="btn btn-secondary">Volver atrás</a>
+            <a href="index.php?action=volver" class="btn btn-secondary">Volver atrás</a>
         </div>
     </form>
 </div>

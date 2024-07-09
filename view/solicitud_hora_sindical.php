@@ -31,7 +31,7 @@ $horaActual = date('H:i:s');
         <button type="submit" class="btn btn-primary">Enviar Solicitud</button>
     </form>
     <div class="mt-4 text-end">
-        <a href="index.php?action=logeado" class="btn btn-secondary">Volver atrás</a>
+        <a href="index.php?action=volver" class="btn btn-secondary">Volver atrás</a>
     </div>
 </div>
 
