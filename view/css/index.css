@@ -123,6 +123,18 @@ body {
   justify-content: center;
 }
 
+.cubo {
+  display: inline-block;
+  width: auto;
+  height: 50px; 
+  background-color: #3498db;
+  color: #ffffff;
+  text-align: center;
+  line-height: 50px; 
+  margin-right: 10px; 
+}
+
+
 /* cabecera */
 .cabecera {
   display: flex;

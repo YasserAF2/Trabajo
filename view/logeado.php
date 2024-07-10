@@ -16,7 +16,7 @@ $perteneceSindicato = $trace->pertenece_sindicato();
 $tipo = $trace->tipo_empleado();
 
 $dias_restantes = $trace->obtener_dias_restantes();
-
+$peticiones = $trace->peticiones_dni($_SESSION['dni']);
 
 ?>
 
@@ -42,7 +42,7 @@ $dias_restantes = $trace->obtener_dias_restantes();
                     <li><a href="index.php?action=solicitud_licencia_lactancia_maternidad_paternidad">SOLICITUD LICENCIA
                             POR LACTANCIA/MATERNIDAD/PATERNIDAD</a></li>
                     <?php if ($perteneceSindicato) : ?>
-                    <li><a href="index.php?action=solicitud_hora_sindical">SOLICITUD HORA SINDICAL</a></li>
+                        <li><a href="index.php?action=solicitud_hora_sindical">SOLICITUD HORA SINDICAL</a></li>
                     <?php endif; ?>
                     <li><a href="index.php?action=solicitud_licencia">SOLICITUD LICENCIA</a></li>
                     <li><a href="index.php?action=documentacion_baja_accidente">DOCUMENTACION BAJA ACCIDENTE</a></li>
@@ -60,10 +60,11 @@ $dias_restantes = $trace->obtener_dias_restantes();
                 <div>
                     <div class="boton-admin">
                         <?php if ($tipo !== 'BASICO') : ?>
-                        <a href="index.php?action=admin" class="btn btn-primary mb-2">VISTA ADMINISTRADOR</a>
+                            <a href="index.php?action=admin" class="btn btn-primary mb-2">VISTA ADMINISTRADOR</a>
                         <?php endif; ?>
                     </div>
                     <ul class="list-group">
+                        <!-- NÚMERO DE DÍAS RESTANTES AP -->
                         <li class="list-group-item">
                             <?php
                             echo "Días de Asuntos Propios (AP) Restantes:<br>";
@@ -71,6 +72,36 @@ $dias_restantes = $trace->obtener_dias_restantes();
                             echo "Año Siguiente: <span class='badge text-white bg-info'>" . $dias_restantes['dias_restantes_ap_sig'] . "</span>";
                             ?>
                         </li>
+                        <?php
+                        // Variable para verificar si hay peticiones de tipo AP aceptadas
+                        $hay_peticiones_ap = false;
+                        ?>
+
+                        <?php foreach ($peticiones as $peticion) : ?>
+                            <?php if ($peticion['PET_TIPO'] == 'AP' && $peticion['PET_ACEPTADO'] == 'SI') : ?>
+                                <?php
+                                // Si encontramos al menos una petición válida, marcamos la variable como true
+                                $hay_peticiones_ap = true;
+                                ?>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+
+                        <?php if ($hay_peticiones_ap) : ?>
+                            <li class="list-group-item">
+                                <p>Fecha de los días de Asuntos Propios (AP)</p>
+                                <?php foreach ($peticiones as $peticion) : ?>
+                                    <?php if ($peticion['PET_TIPO'] == 'AP' && $peticion['PET_ACEPTADO'] == 'SI') : ?>
+                                        <?php
+                                        // Formatear la fecha de año-mes-dia a dia-mes-año
+                                        $fecha_formateada = date('d-m-Y', strtotime($peticion['PET_FECHA']));
+                                        ?>
+                                        <div class="cubo pl-2 pr-2"><?php echo $fecha_formateada; ?></div>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            </li>
+                        <?php endif; ?>
+
+                        <!-- NÚMERO DE DÍAS AS RESTANTES AS -->
                         <li class="list-group-item">
                             <?php
                             echo "Días de Asuntos Propios no Remunerados (AS) Restantes:<br>";
@@ -78,6 +109,38 @@ $dias_restantes = $trace->obtener_dias_restantes();
                             echo "Año Siguiente: <span class='badge text-white bg-info'>" . $dias_restantes['dias_restantes_as_sig'] . "</span>";
                             ?>
                         </li>
+
+                        <!-- DÍAS -->
+                        <?php
+                        // Variable para verificar si hay peticiones de tipo AS aceptadas
+                        $hay_peticiones_as = false;
+                        ?>
+
+                        <?php foreach ($peticiones as $peticion) : ?>
+                            <?php if ($peticion['PET_TIPO'] == 'AS' && $peticion['PET_ACEPTADO'] == 'SI') : ?>
+                                <?php
+                                // Si encontramos al menos una petición válida, marcamos la variable como true
+                                $hay_peticiones_as = true;
+                                ?>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+
+                        <?php if ($hay_peticiones_as) : ?>
+                            <li class="list-group-item">
+                                <p>Fecha de los días de Asuntos No Remunerados (AS)</p>
+                                <?php foreach ($peticiones as $peticion) : ?>
+                                    <?php if ($peticion['PET_TIPO'] == 'AS' && $peticion['PET_ACEPTADO'] == 'SI') : ?>
+                                        <?php
+                                        // Formatear la fecha de año-mes-dia a dia-mes-año
+                                        $fecha_formateada = date('d-m-Y', strtotime($peticion['PET_FECHA']));
+                                        ?>
+                                        <div class="cubo pl-2 pr-2"><?php echo $fecha_formateada; ?></div>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            </li>
+                        <?php endif; ?>
+
+                        <!-- DATOS EMPLEADO -->
                         <li class="list-group-item"><strong>Fecha de Nacimiento:</strong>
                             <?php
                             $fecha_nacimiento = $empleado['EMP_FEC_NAC'];
