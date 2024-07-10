@@ -115,6 +115,14 @@ body {
   pointer-events: none;
 }
 
+.solicitud {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 /* cabecera */
 .cabecera {
   display: flex;

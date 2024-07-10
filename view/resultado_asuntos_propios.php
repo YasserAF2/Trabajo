@@ -12,10 +12,10 @@ if (!isset($_SESSION['correo'])) {
 }
 ?>
 
-<div class="container">
+<div class="container solicitud">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card mt-5">
+            <div class="card mt-5 mb-5">
                 <div class="card-body text-center">
                     <?php
                     // Verificar si la variable $resultado está definida en la sesión
@@ -28,8 +28,7 @@ if (!isset($_SESSION['correo'])) {
                     }
                     ?>
                     <div class="mt-3">
-                        <a href="index.php?action=solicitud_asuntos_propios" class="btn btn-primary">Volver a la página
-                            de solicitud de asuntos propios</a>
+                        <a href="index.php?action=solicitud_asuntos_propios" class="btn btn-primary">Volver atrás</a>
                     </div>
                 </div>
             </div>

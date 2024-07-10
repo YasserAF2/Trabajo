@@ -67,15 +67,15 @@ $dias_restantes = $trace->obtener_dias_restantes();
                         <li class="list-group-item">
                             <?php
                             echo "Días de Asuntos Propios (AP) Restantes:<br>";
-                            echo "Año Actual: <span class='badge bg-success'>" . $dias_restantes['dias_restantes_ap_act'] . "</span><br>";
-                            echo "Año Siguiente: <span class='badge bg-info'>" . $dias_restantes['dias_restantes_ap_sig'] . "</span>";
+                            echo "Año Actual: <span class='badge text-white bg-success'>" . $dias_restantes['dias_restantes_ap_act'] . "</span><br>";
+                            echo "Año Siguiente: <span class='badge text-white bg-info'>" . $dias_restantes['dias_restantes_ap_sig'] . "</span>";
                             ?>
                         </li>
                         <li class="list-group-item">
                             <?php
                             echo "Días de Asuntos Propios no Remunerados (AS) Restantes:<br>";
-                            echo "Año Actual: <span class='badge bg-success'>" . $dias_restantes['dias_restantes_as_act'] . "</span><br>";
-                            echo "Año Siguiente: <span class='badge bg-info'>" . $dias_restantes['dias_restantes_as_sig'] . "</span>";
+                            echo "Año Actual: <span class='badge text-white bg-success'>" . $dias_restantes['dias_restantes_as_act'] . "</span><br>";
+                            echo "Año Siguiente: <span class='badge text-white bg-info'>" . $dias_restantes['dias_restantes_as_sig'] . "</span>";
                             ?>
                         </li>
                         <li class="list-group-item"><strong>Fecha de Nacimiento:</strong>
