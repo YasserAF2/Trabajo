@@ -15,6 +15,9 @@ $perteneceSindicato = $trace->pertenece_sindicato();
 //verifica el tipo de usuario
 $tipo = $trace->tipo_empleado();
 
+$dias_restantes = $trace->obtener_dias_restantes();
+
+
 ?>
 
 <main>
@@ -62,7 +65,18 @@ $tipo = $trace->tipo_empleado();
                     </div>
                     <ul class="list-group">
                         <li class="list-group-item">
-                            Te quedan ??? días de asuntos propios
+                            <?php
+                            echo "Días de Asuntos Propios (AP) Restantes:<br>";
+                            echo "Año Actual: <span class='badge bg-success'>" . $dias_restantes['dias_restantes_ap_act'] . "</span><br>";
+                            echo "Año Siguiente: <span class='badge bg-info'>" . $dias_restantes['dias_restantes_ap_sig'] . "</span>";
+                            ?>
+                        </li>
+                        <li class="list-group-item">
+                            <?php
+                            echo "Días de Asuntos Propios no Remunerados (AS) Restantes:<br>";
+                            echo "Año Actual: <span class='badge bg-success'>" . $dias_restantes['dias_restantes_as_act'] . "</span><br>";
+                            echo "Año Siguiente: <span class='badge bg-info'>" . $dias_restantes['dias_restantes_as_sig'] . "</span>";
+                            ?>
                         </li>
                         <li class="list-group-item"><strong>Fecha de Nacimiento:</strong>
                             <?php

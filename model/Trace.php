@@ -1592,4 +1592,56 @@ class Trace
         // Devolver los resultados encontrados
         return $resultados;
     }
+
+
+    function obtener_dias_restantes()
+    {
+        $dni = $_SESSION['dni'];
+        $anio_actual = date('Y');
+        $anio_siguiente = $anio_actual + 1;
+
+        $num_dias_ap_act = 0;
+        $num_dias_ap_sig = 0;
+        $num_dias_as_act = 0;
+        $num_dias_as_sig = 0;
+        $num_total_dias_ap = 0;
+        $num_total_dias_as = 0;
+
+        // Preparar la consulta para obtener los días AP y AS del empleado
+        $stmt = $this->conection->prepare("
+        SELECT 
+            DIAS_AP_ACT, DIAS_AP_SIG, 
+            DIAS_AS_ACT, DIAS_AS_SIG, 
+            NUM_TOTAL_DIAS_AP, NUM_TOTAL_DIAS_AS 
+        FROM t_empleados 
+        WHERE EMP_NIF = ?
+    ");
+        $stmt->bind_param("s", $dni);
+        $stmt->execute();
+        $stmt->store_result();
+        $stmt->bind_result(
+            $num_dias_ap_act,
+            $num_dias_ap_sig,
+            $num_dias_as_act,
+            $num_dias_as_sig,
+            $num_total_dias_ap,
+            $num_total_dias_as
+        );
+        $stmt->fetch();
+        $stmt->close();
+
+        // Calcular los días restantes
+        $dias_restantes_ap_act = $num_total_dias_ap - $num_dias_ap_act;
+        $dias_restantes_ap_sig = $num_total_dias_ap - $num_dias_ap_sig;
+        $dias_restantes_as_act = $num_total_dias_as - $num_dias_as_act;
+        $dias_restantes_as_sig = $num_total_dias_as - $num_dias_as_sig;
+
+        // Devolver los resultados en un array asociativo
+        return array(
+            'dias_restantes_ap_act' => $dias_restantes_ap_act,
+            'dias_restantes_ap_sig' => $dias_restantes_ap_sig,
+            'dias_restantes_as_act' => $dias_restantes_as_act,
+            'dias_restantes_as_sig' => $dias_restantes_as_sig
+        );
+    }
 }
