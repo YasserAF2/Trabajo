@@ -40,6 +40,7 @@ class controlador
         }
     }
 
+    //función para los botones de volver atrás
     public function volver()
     {
         session_start();

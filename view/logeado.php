@@ -61,6 +61,9 @@ $tipo = $trace->tipo_empleado();
                         <?php endif; ?>
                     </div>
                     <ul class="list-group">
+                        <li class="list-group-item">
+                            Te quedan ??? días de asuntos propios
+                        </li>
                         <li class="list-group-item"><strong>Fecha de Nacimiento:</strong>
                             <?php
                             $fecha_nacimiento = $empleado['EMP_FEC_NAC'];
