@@ -333,13 +333,13 @@ class controlador
                 $mail->isSMTP();
                 $mail->Host = 'smtp.gmail.com';
                 $mail->SMTPAuth = true;
-                $mail->Username = "ceutaportalempleados@gmail.com";
+                $mail->Username = "correo@gmail.com";
                 $mail->Password = 'cfgs zaum nfkn rsaj';
                 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                 $mail->Port = 587;
 
                 // Configurar el correo
-                $mail->setFrom('ceutaportalempleados@gmail.com', 'Trace');
+                $mail->setFrom('correo@gmail.com', 'Trace');
                 $mail->addAddress($destinatario);
                 $mail->Subject = "Mensaje Portal de Empleados";
                 $mail->Body = "Has recibido un nuevo mensaje:\n\n" . $mensaje;
@@ -437,12 +437,12 @@ class controlador
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com'; // Servidor SMTP
             $mail->SMTPAuth = true;
-            $mail->Username = 'ceutaportalempleados@gmail.com'; // Tu dirección de correo electrónico
+            $mail->Username = 'correo@gmail.com'; // Tu dirección de correo electrónico
             $mail->Password = 'cfgs zaum nfkn rsaj'; // Tu contraseña de correo electrónico
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
 
-            $mail->setFrom('ceutaportalempleados@gmail.com', 'Trace');
+            $mail->setFrom('correo@gmail.com', 'Trace');
             $mail->addAddress($email);
 
             $mail->isHTML(true);
